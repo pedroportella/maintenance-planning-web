@@ -11,3 +11,9 @@ Components should be compact, accessible and suited to repeated planner workflow
 - `@maintenance-planning/ui-library/theme.css` imports token custom properties and defines base component styling.
 
 Apps should import the theme stylesheet from this package before app-owned layout styles.
+
+## Component Boundary
+
+The package owns reusable presentation components such as `AppShell`, `PageHeader`, `StatusBadge`, `MetricSummary`, `DataTable`, `EmptyState`, `Alert`, `SegmentedNav`, `LoadingState` and `ErrorState`.
+
+It should not own API calls, scoring rules, simulator behavior or planner decision logic.

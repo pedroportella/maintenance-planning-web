@@ -4,7 +4,14 @@ export const workbenchTheme = {
 } as const;
 
 export const workbenchThemeClassNames = {
-  metricCard: "metric-card",
+  alert: "workbench-alert",
+  appShell: "app-shell",
+  dataTable: "data-table",
+  emptyState: "empty-state",
+  loadingState: "loading-state",
+  metricSummary: "metric-summary",
   panel: "workbench-panel",
-  statusPill: "status-pill"
+  pageHeader: "page-header",
+  segmentedNav: "segmented-nav",
+  statusBadge: "status-badge"
 } as const;

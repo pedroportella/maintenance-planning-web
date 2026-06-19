@@ -5,6 +5,7 @@ import {
   workbenchBrand,
   workbenchIconNames
 } from "@maintenance-planning/ui-assets";
+import { AppShell, type AppShellLinkProps, type AppShellNavItem } from "@maintenance-planning/ui-library";
 import { workbenchSections } from "@maintenance-planning/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,49 +15,41 @@ import { getLucideIcon } from "@/components/lucide-icon";
 export function WorkbenchShell({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = usePathname();
   const BrandIcon = getLucideIcon(workbenchIconNames.brand);
+  const navItems = workbenchSections.map<AppShellNavItem>((section) => {
+    const Icon = getLucideIcon(getWorkbenchSectionIconName(section.slug));
+
+    return {
+      description: section.navHint,
+      href: section.path,
+      icon: <Icon aria-hidden="true" size={20} />,
+      label: section.label
+    };
+  });
 
   return (
-    <div className="workbench-shell">
-      <aside className="sidebar">
-        <Link aria-label={workbenchBrand.ariaLabel} className="brand-lockup" href="/">
-          <span className="brand-mark">
-            <BrandIcon aria-hidden="true" size={22} />
-          </span>
-          <span className="brand-lockup-text">
-            <strong>{workbenchBrand.name}</strong>
-            <span>{workbenchBrand.tagline}</span>
-          </span>
-        </Link>
+    <AppShell
+      activeHref={pathname}
+      brand={{
+        ariaLabel: workbenchBrand.ariaLabel,
+        href: "/",
+        icon: <BrandIcon aria-hidden="true" size={22} />,
+        name: workbenchBrand.name,
+        tagline: workbenchBrand.tagline
+      }}
+      linkComponent={ShellLink}
+      navAriaLabel="Planner sections"
+      navItems={navItems}
+      sidebarNote="Local review uses synthetic placeholders only. API-backed service wiring is intentionally outside this shell."
+    >
+      {children}
+    </AppShell>
+  );
+}
 
-        <nav aria-label="Planner sections" className="shell-nav">
-          {workbenchSections.map((section) => {
-            const Icon = getLucideIcon(getWorkbenchSectionIconName(section.slug));
-            const isActive = pathname === section.path;
-
-            return (
-              <Link
-                aria-current={isActive ? "page" : undefined}
-                className={isActive ? "nav-link nav-link-active" : "nav-link"}
-                href={section.path}
-                key={section.slug}
-              >
-                <Icon aria-hidden="true" size={20} />
-                <span className="nav-link-copy">
-                  <strong>{section.label}</strong>
-                  <span>{section.navHint}</span>
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
-
-        <p className="sidebar-note">
-          Local review uses synthetic placeholders only. API-backed service wiring is intentionally
-          outside this shell.
-        </p>
-      </aside>
-
-      <div className="main-surface">{children}</div>
-    </div>
+function ShellLink({ children, href, ...linkProps }: AppShellLinkProps) {
+  return (
+    <Link href={href} {...linkProps}>
+      {children}
+    </Link>
   );
 }

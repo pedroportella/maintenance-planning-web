@@ -22,13 +22,13 @@ The workbench currently renders local task routes for:
 - operations posture;
 - scenario outcomes.
 
-These screens are placeholders that prove navigation, layout and package resolution without introducing service calls.
+The first screen is a static synthetic coordination queue that proves the workbench shell, metrics, table layout and route navigation without introducing service calls. The route screens remain thin task shells until recommendation, operations and backend-mode stages add service-backed views.
 
 ## Visual System
 
-The app imports the shared theme from `@maintenance-planning/ui-library/theme.css`. That stylesheet imports token custom properties from `@maintenance-planning/ui-tokens/theme.css`, then defines base element and shared component styling.
+The app imports the shared theme from `@maintenance-planning/ui-library/theme.css`. That stylesheet imports token custom properties from `@maintenance-planning/ui-tokens/theme.css`, then defines base element, app shell, navigation, page header, status, metrics, table, alert and empty/loading/error state styling.
 
-App-local CSS remains responsible for shell layout and route-specific composition. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
+App-local CSS remains responsible for route-specific composition. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
 
 ## Runtime Boundary
 
@@ -38,4 +38,4 @@ The services package supports mock data for local frontend review and API-backed
 - backend mode requires a configured API URL;
 - production-like mock mode requires an explicit mock override.
 
-Browser-visible source must not embed private backend origins. The current app shell still renders placeholder routes and does not call the services package from page code.
+Browser-visible source must not embed private backend origins. The current app shell renders static synthetic queue rows and route shells; it does not call the services package from page code.

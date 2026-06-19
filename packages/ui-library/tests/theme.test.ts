@@ -26,8 +26,14 @@ describe("ui-library theme", () => {
     }
 
     for (const tone of ["critical", "info", "neutral", "success", "warning"]) {
-      expect(themeCss).toContain(`.status-pill-${tone}`);
+      expect(themeCss).toContain(`.status-badge-${tone}`);
+      expect(themeCss).toContain(`.workbench-alert-${tone}`);
       expect(themeCss).toContain(`.metric-card[data-tone="${tone}"]`);
     }
+  });
+
+  it("defines keyboard focus styles for shell and segmented navigation", () => {
+    expect(themeCss).toContain(".app-shell-nav-link:focus-visible");
+    expect(themeCss).toContain(".segmented-nav-link:focus-visible");
   });
 });

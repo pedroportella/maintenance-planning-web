@@ -1,5 +1,32 @@
-import { MetricCard, StatusPill, WorkbenchPanel } from "@maintenance-planning/ui-library";
+import {
+  Alert,
+  DataTable,
+  MetricSummary,
+  PageHeader,
+  StatusBadge,
+  WorkbenchPanel,
+  type DataTableColumn
+} from "@maintenance-planning/ui-library";
 import { getWorkbenchSection, type WorkbenchSectionSlug } from "@maintenance-planning/utils";
+import type { PlannerTask } from "@maintenance-planning/utils";
+
+const placeholderTaskColumns: readonly DataTableColumn<PlannerTask>[] = [
+  {
+    header: "Task",
+    key: "task",
+    render: (task) => (
+      <span className="table-stack">
+        <strong>{task.label}</strong>
+        <span>{task.detail}</span>
+      </span>
+    )
+  },
+  {
+    header: "Status",
+    key: "status",
+    render: (task) => <StatusBadge tone={task.tone}>{task.status}</StatusBadge>
+  }
+];
 
 type RoutePlaceholderProps = {
   slug: WorkbenchSectionSlug;
@@ -10,40 +37,31 @@ export function RoutePlaceholder({ slug }: RoutePlaceholderProps) {
 
   return (
     <main className="page-stack">
-      <WorkbenchPanel className="queue-intro">
-        <div>
-          <StatusPill tone={section.tone === "critical" ? "info" : section.tone}>
-            Placeholder task shell
-          </StatusPill>
-          <h1>{section.label}</h1>
-          <p>{section.summary}</p>
-        </div>
-      </WorkbenchPanel>
+      <PageHeader
+        badge={<StatusBadge tone={section.tone}>Route shell</StatusBadge>}
+        description={section.summary}
+        title={section.label}
+      />
+
+      <MetricSummary ariaLabel={`${section.label} summary`} items={[section.metric]} />
+
+      <Alert title="Local shell scope" tone="neutral">
+        <p>{section.placeholderBody}</p>
+      </Alert>
 
       <section className="route-grid" aria-label={`${section.label} route details`}>
-        <MetricCard
-          detail={section.metric.detail}
-          label={section.metric.label}
-          tone={section.metric.tone}
-          value={section.metric.value}
-        />
-
-        <article className="route-card">
+        <WorkbenchPanel as="article" className="route-card">
           <p className="eyebrow">Planner focus</p>
           <h2>{section.placeholderTitle}</h2>
-          <p>{section.placeholderBody}</p>
-          <ul>
-            {section.placeholderTasks.map((task) => (
-              <li className="queue-item" key={task.label}>
-                <span>
-                  <strong>{task.label}</strong>
-                  <span>{task.detail}</span>
-                </span>
-                <StatusPill tone={task.tone}>{task.status}</StatusPill>
-              </li>
-            ))}
-          </ul>
-        </article>
+          <p>{section.coordinationCue}</p>
+        </WorkbenchPanel>
+
+        <DataTable
+          caption={`${section.label} placeholder tasks`}
+          columns={placeholderTaskColumns}
+          getRowKey={(task) => task.label}
+          rows={section.placeholderTasks}
+        />
       </section>
     </main>
   );

@@ -1,47 +1,33 @@
-import type { ReactNode } from "react";
-import type { StatusToneName } from "@maintenance-planning/ui-tokens";
-
-export type Tone = StatusToneName;
-
-type WorkbenchPanelProps = {
-  children: ReactNode;
-  className?: string;
-};
-
-export function WorkbenchPanel({ children, className }: WorkbenchPanelProps) {
-  return <section className={joinClasses("workbench-panel", className)}>{children}</section>;
-}
-
-type StatusPillProps = {
-  children: ReactNode;
-  tone?: Tone;
-};
-
-export function StatusPill({ children, tone = "neutral" }: StatusPillProps) {
-  return (
-    <span className={`status-pill status-pill-${tone}`} data-tone={tone}>
-      {children}
-    </span>
-  );
-}
-
-type MetricCardProps = {
-  detail: string;
-  label: string;
-  tone?: Tone;
-  value: string;
-};
-
-export function MetricCard({ detail, label, tone = "neutral", value }: MetricCardProps) {
-  return (
-    <article className="metric-card" data-tone={tone}>
-      <span className="metric-card-label">{label}</span>
-      <strong className="metric-card-value">{value}</strong>
-      <span className="metric-card-detail">{detail}</span>
-    </article>
-  );
-}
-
-function joinClasses(...classNames: Array<string | undefined>) {
-  return classNames.filter(Boolean).join(" ");
-}
+export type { AlertProps } from "./components/alert/alert";
+export { Alert } from "./components/alert/alert";
+export type {
+  AppShellBrand,
+  AppShellLinkProps,
+  AppShellNavItem,
+  AppShellProps
+} from "./components/app-shell/app-shell";
+export { AppShell } from "./components/app-shell/app-shell";
+export type { DataTableColumn, DataTableProps } from "./components/data-table/data-table";
+export { DataTable } from "./components/data-table/data-table";
+export type { EmptyStateProps } from "./components/empty-state/empty-state";
+export { EmptyState } from "./components/empty-state/empty-state";
+export type { ErrorStateProps, LoadingStateProps } from "./components/loading-state/loading-state";
+export { ErrorState, LoadingState } from "./components/loading-state/loading-state";
+export type {
+  MetricCardProps,
+  MetricSummaryItem,
+  MetricSummaryProps
+} from "./components/metric-summary/metric-summary";
+export { MetricCard, MetricSummary } from "./components/metric-summary/metric-summary";
+export type { PageHeaderProps } from "./components/page-header/page-header";
+export { PageHeader } from "./components/page-header/page-header";
+export type { WorkbenchPanelProps } from "./components/panel/panel";
+export { WorkbenchPanel } from "./components/panel/panel";
+export type {
+  SegmentedNavLinkProps,
+  SegmentedNavOption,
+  SegmentedNavProps
+} from "./components/segmented-nav/segmented-nav";
+export { SegmentedNav } from "./components/segmented-nav/segmented-nav";
+export type { StatusBadgeProps, Tone } from "./components/status-badge/status-badge";
+export { StatusBadge, StatusPill } from "./components/status-badge/status-badge";
