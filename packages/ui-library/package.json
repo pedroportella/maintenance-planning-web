@@ -3,5 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Shared React component boundary for the planner workbench."
+  "description": "Shared React component boundary for the planner workbench.",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "types": "./src/index.tsx",
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
 }

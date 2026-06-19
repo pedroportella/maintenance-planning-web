@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/workspace-runner.mjs build",
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
     "guard": "node scripts/quality-guards.mjs all",
     "guard:artifacts": "node scripts/quality-guards.mjs artifacts",
     "guard:browser-origins": "node scripts/quality-guards.mjs browser-origins",
@@ -12,6 +13,7 @@
     "guard:secrets": "node scripts/quality-guards.mjs secrets",
     "lint": "node scripts/workspace-runner.mjs lint",
     "test": "node scripts/workspace-runner.mjs test",
+    "test:e2e:mock": "playwright test --config playwright.config.mjs",
     "test:links": "node scripts/markdown-link-check.mjs",
     "test:reviewer-evidence": "node scripts/reviewer-evidence-smoke.mjs",
     "typecheck": "node scripts/workspace-runner.mjs typecheck",
@@ -19,6 +21,10 @@
   },
   "engines": {
     "node": ">=22 <23"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.0",
+    "@types/react": "19.2.17"
   },
   "packageManager": "pnpm@10.18.3"
 }

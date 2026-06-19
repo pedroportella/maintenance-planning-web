@@ -12,11 +12,14 @@ Use this runbook to inspect the repo foundation.
 ```sh
 pnpm install
 pnpm guard
+pnpm check
 pnpm test:links
+pnpm build
+pnpm test:e2e:mock
 pnpm test:reviewer-evidence
 pnpm verify
 ```
 
-The foundation checks do not require the API, simulator or cloud credentials.
+The local checks do not require the API, simulator or cloud credentials.
 
-The workspace `lint`, `typecheck`, `test` and `build` commands skip cleanly until feature packages add their own scripts.
+The mock end-to-end smoke starts the workbench locally and verifies that the planner shell and route navigation render.

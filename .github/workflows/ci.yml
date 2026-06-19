@@ -40,5 +40,11 @@ jobs:
       - name: Run workspace build
         run: pnpm build
 
+      - name: Install browser for mock smoke
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run mock end-to-end smoke
+        run: pnpm test:e2e:mock
+
       - name: Run reviewer evidence smoke
         run: pnpm test:reviewer-evidence

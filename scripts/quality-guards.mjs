@@ -13,6 +13,7 @@ const ignoredDirectories = new Set([".git", "node_modules"]);
 const generatedPathRules = [
   { label: "build output", pattern: /(^|\/)(\.next|\.turbo|dist|build|out)(\/|$)/ },
   { label: "coverage output", pattern: /(^|\/)(coverage|test-results|playwright-report)(\/|$)/ },
+  { label: "TypeScript build info", pattern: /\.tsbuildinfo$/i },
   { label: "local cloud config", pattern: /(^|\/)\.aws(\/|$)/ },
   { label: "log file", pattern: /\.log$/i }
 ];

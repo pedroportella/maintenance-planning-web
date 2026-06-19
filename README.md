@@ -2,7 +2,7 @@
 
 Planner workbench foundation for a synthetic maintenance-planning showcase.
 
-This repository will host a React and Next.js workbench for planners who review API-backed work-order recommendations, schedule posture and decision history. The current implementation is a repo foundation: workspace boundaries, public docs, guard scripts and CI wiring are in place before feature screens are added.
+This repository hosts a React and Next.js workbench for planners who review API-backed work-order recommendations, schedule posture and decision history. The current implementation includes the repo guardrails plus a local App Router shell that renders without backend configuration.
 
 ## Boundary
 
@@ -14,7 +14,7 @@ This repository will host a React and Next.js workbench for planners who review 
 
 ## Workspace
 
-- [apps/planner-workbench](apps/planner-workbench/README.md) - future Next.js app shell for the planner workbench.
+- [apps/planner-workbench](apps/planner-workbench/README.md) - Next.js app shell for the planner workbench.
 - [packages/services](packages/services/README.md) - API client and mock-service boundary.
 - [packages/ui-assets](packages/ui-assets/README.md) - static visual assets owned by the web repo.
 - [packages/ui-library](packages/ui-library/README.md) - shared UI components.
@@ -33,9 +33,11 @@ This repository will host a React and Next.js workbench for planners who review 
 
 ```sh
 pnpm guard
+pnpm check
 pnpm test:links
+pnpm test:e2e:mock
 pnpm test:reviewer-evidence
 pnpm verify
 ```
 
-The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. They skip cleanly until individual app or package scripts are introduced.
+The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app currently owns the executable checks while shared packages remain thin source boundaries.
