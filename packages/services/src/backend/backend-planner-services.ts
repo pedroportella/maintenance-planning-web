@@ -12,6 +12,8 @@ import {
   mapOperationsPosture,
   mapPlannerDecisionResult,
   mapPlanningRecommendations,
+  mapScenarioOutcome,
+  mapScenarioOutcomeSummary,
   mapSourceDataReadiness,
   mapWorkOrderBacklog
 } from "../mappers";
@@ -50,6 +52,19 @@ export function createBackendPlannerServices(
       return mapSourceDataReadiness(migration, mapOperationsPosture(posture));
     },
 
+    getScenarioOutcomeSummary: async () => {
+      const posture = await client.getJson<OperationsPostureReport>("api/v1/operations/posture");
+      const recommendations = await getBackendRecommendationResult(client, undefined);
+      const outcome = mapScenarioOutcome({
+        scenarioId: "backend-current",
+        label: "Current backend review state",
+        operationsPosture: posture,
+        recommendations
+      });
+
+      return mapScenarioOutcomeSummary([outcome], outcome.scenarioId, posture.checkedAtUtc);
+    },
+
     getRecommendationSet: async (query) => {
       return getBackendRecommendationSet(client, query);
     },
@@ -82,12 +97,17 @@ async function getBackendRecommendationSet(
   client: BackendHttpClient,
   query: RecommendationQuery | undefined
 ) {
+  return mapPlanningRecommendations(await getBackendRecommendationResult(client, query));
+}
+
+async function getBackendRecommendationResult(
+  client: BackendHttpClient,
+  query: RecommendationQuery | undefined
+) {
   const planningRunId = await resolvePlanningRunId(client, query);
-  const result = await client.getJson<PlanningRecommendationsResult>(
+  return client.getJson<PlanningRecommendationsResult>(
     `api/v1/planning-runs/${planningRunId}/recommendations`
   );
-
-  return mapPlanningRecommendations(result);
 }
 
 async function resolvePlanningRunId(

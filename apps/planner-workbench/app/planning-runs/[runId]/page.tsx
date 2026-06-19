@@ -104,9 +104,14 @@ export default async function PlanningRunDetailPage({ params }: PlanningRunDetai
       <main className="page-stack">
         <PageHeader
           actions={
-            <Link className="primary-link" href="/recommendations">
-              Open decision workbench
-            </Link>
+            <span className="action-row">
+              <Link className="primary-link" href="/recommendations">
+                Open decision workbench
+              </Link>
+              <Link className="secondary-link" href="/operations-posture">
+                Open operations posture
+              </Link>
+            </span>
           }
           badge={
             <span className="badge-stack">

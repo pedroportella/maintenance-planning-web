@@ -39,7 +39,7 @@ export function WorkbenchShell({ children }: Readonly<{ children: ReactNode }>) 
       linkComponent={ShellLink}
       navAriaLabel="Planner sections"
       navItems={navItems}
-      sidebarNote="Local review uses synthetic placeholders only. API-backed service wiring is intentionally outside this shell."
+      sidebarNote="Local review uses synthetic data through the server-side planner service boundary."
     >
       {children}
     </AppShell>

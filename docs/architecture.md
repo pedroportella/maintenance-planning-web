@@ -22,7 +22,7 @@ The workbench currently renders local task routes for:
 - operations posture;
 - scenario outcomes.
 
-The first screen is a static synthetic coordination queue that proves the workbench shell, metrics, table layout and route navigation without introducing a home-screen service call. The backlog, planning-run and recommendation routes now read from the server-side services package. Coordination exceptions, operations posture and scenario outcomes remain thin task shells until their later stages add deeper views.
+The first screen is a static synthetic coordination queue that proves the workbench shell, metrics, table layout and route navigation without introducing a home-screen service call. The backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome routes read from the server-side services package. Operations and scenario pages expose compact freshness, import, posture and scenario evidence for reviewer flow without adding a broad admin dashboard.
 
 ## Visual System
 

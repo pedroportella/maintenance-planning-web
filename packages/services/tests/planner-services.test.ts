@@ -10,8 +10,82 @@ import {
   type PlanningRecommendationsResult,
   type PlanningRunResult
 } from "../src";
+import { mapOperationsPosture } from "../src/mappers";
 
 describe("planner services", () => {
+  it("maps operations posture DTOs into planner-facing posture states", () => {
+    expect(
+      mapOperationsPosture({
+        databaseConfigured: true,
+        status: "ready",
+        latestImport: {
+          importId: "40000000-0000-4000-8000-000000009001",
+          sourceSystem: "synthetic-source",
+          importKind: "maintenance-events",
+          status: "completed",
+          receivedCount: 4,
+          acceptedCount: 4,
+          rejectedCount: 0,
+          ignoredDuplicateCount: 0,
+          ignoredStaleCount: 0,
+          receivedAtUtc: "2026-01-15T08:00:00.000Z",
+          completedAtUtc: "2026-01-15T08:01:00.000Z"
+        },
+        checkedAtUtc: "2026-01-15T08:01:00.000Z"
+      })
+    ).toMatchObject({
+      freshness: "fresh",
+      state: "healthy"
+    });
+
+    expect(
+      mapOperationsPosture({
+        databaseConfigured: true,
+        status: "ready",
+        latestImport: {
+          importId: "40000000-0000-4000-8000-000000009002",
+          sourceSystem: "synthetic-source",
+          importKind: "maintenance-events",
+          status: "completed",
+          receivedCount: 4,
+          acceptedCount: 3,
+          rejectedCount: 0,
+          ignoredDuplicateCount: 0,
+          ignoredStaleCount: 1,
+          receivedAtUtc: "2026-01-15T08:00:00.000Z",
+          completedAtUtc: "2026-01-15T08:01:00.000Z"
+        },
+        checkedAtUtc: "2026-01-15T08:01:00.000Z"
+      })
+    ).toMatchObject({
+      freshness: "stale",
+      state: "stale"
+    });
+
+    expect(
+      mapOperationsPosture({
+        databaseConfigured: true,
+        status: "ready",
+        latestImport: {
+          importId: "40000000-0000-4000-8000-000000009003",
+          sourceSystem: "synthetic-source",
+          importKind: "maintenance-events",
+          status: "completed",
+          receivedCount: 4,
+          acceptedCount: 3,
+          rejectedCount: 1,
+          ignoredDuplicateCount: 0,
+          ignoredStaleCount: 0,
+          receivedAtUtc: "2026-01-15T08:00:00.000Z",
+          completedAtUtc: "2026-01-15T08:01:00.000Z"
+        },
+        checkedAtUtc: "2026-01-15T08:01:00.000Z"
+      })
+    ).toMatchObject({
+      state: "degraded"
+    });
+  });
+
   it("maps mock scenario fixtures into planner-facing backlog states", async () => {
     const states = new Set<string>();
 
@@ -30,6 +104,27 @@ describe("planner services", () => {
     }
 
     expect([...states].sort()).toEqual(["blocked", "deferred", "ready"]);
+  });
+
+  it("summarizes mock scenario outcomes with healthy stale and degraded states", async () => {
+    const services = createPlannerServices({
+      env: {
+        [DATA_MODE_ENV]: "mock",
+        MAINTENANCE_PLANNING_WEB_MOCK_SCENARIO: "baseline-week"
+      }
+    });
+
+    const summary = await services.getScenarioOutcomeSummary();
+
+    expect(summary.latest).toMatchObject({
+      scenarioId: "baseline-week",
+      status: "healthy"
+    });
+    expect(summary.outcomes.map((outcome) => outcome.status).sort()).toEqual([
+      "degraded",
+      "healthy",
+      "stale"
+    ]);
   });
 
   it("records mock planner decisions and reflects them in recommendations and backlog", async () => {
@@ -157,6 +252,7 @@ describe("planner services", () => {
 
     await expect(services.getOperationsPosture()).resolves.toMatchObject({
       databaseConfigured: true,
+      state: "attention",
       status: "ready"
     });
     await expect(services.getRecommendationSet()).resolves.toMatchObject({
@@ -179,6 +275,85 @@ describe("planner services", () => {
       "POST https://api.example.test/api/v1/planning-runs",
       "GET https://api.example.test/api/v1/planning-runs/50000000-0000-4000-8000-000000009001/recommendations",
       "POST https://api.example.test/api/v1/packages/60000000-0000-4000-8000-000000009001/decisions"
+    ]);
+  });
+
+  it("derives backend scenario outcomes from posture and recommendation contracts", async () => {
+    const fetchCalls: string[] = [];
+    const fetchImpl: FetchLike = async (input, init) => {
+      fetchCalls.push(`${init?.method ?? "GET"} ${input}`);
+
+      if (input.endsWith("/api/v1/operations/posture")) {
+        return jsonResponse<OperationsPostureReport>({
+          databaseConfigured: true,
+          status: "ready",
+          latestImport: {
+            importId: "40000000-0000-4000-8000-000000009101",
+            sourceSystem: "synthetic-source",
+            importKind: "maintenance-events",
+            status: "completed",
+            receivedCount: 4,
+            acceptedCount: 3,
+            rejectedCount: 0,
+            ignoredDuplicateCount: 0,
+            ignoredStaleCount: 1,
+            receivedAtUtc: "2026-01-15T08:00:00.000Z",
+            completedAtUtc: "2026-01-15T08:01:00.000Z"
+          },
+          checkedAtUtc: "2026-01-15T08:01:00.000Z"
+        });
+      }
+
+      if (input.endsWith("/api/v1/planning-runs")) {
+        return jsonResponse<PlanningRunResult>(
+          {
+            id: "50000000-0000-4000-8000-000000009101",
+            runNumber: "RUN-BACKEND-POSTURE",
+            status: "Completed",
+            horizon: "two-week",
+            horizonStartUtc: "2026-01-15T00:00:00.000Z",
+            horizonEndUtc: "2026-01-29T00:00:00.000Z",
+            startedAtUtc: "2026-01-15T08:00:00.000Z",
+            completedAtUtc: "2026-01-15T08:01:00.000Z",
+            requestedBy: "planner-workbench",
+            recommendationCount: 0,
+            readyRecommendationCount: 0,
+            blockedRecommendationCount: 0
+          },
+          202
+        );
+      }
+
+      if (input.endsWith("/api/v1/planning-runs/50000000-0000-4000-8000-000000009101/recommendations")) {
+        return jsonResponse<PlanningRecommendationsResult>({
+          planningRunId: "50000000-0000-4000-8000-000000009101",
+          runNumber: "RUN-BACKEND-POSTURE",
+          status: "Completed",
+          recommendations: []
+        });
+      }
+
+      return jsonResponse({ error: "unexpected request" }, 404);
+    };
+
+    const services = createPlannerServices({
+      env: {
+        [DATA_MODE_ENV]: "backend",
+        [API_URL_ENV]: "https://api.example.test"
+      },
+      fetchImpl
+    });
+
+    await expect(services.getScenarioOutcomeSummary()).resolves.toMatchObject({
+      latest: {
+        label: "Current backend review state",
+        status: "stale"
+      }
+    });
+    expect(fetchCalls).toEqual([
+      "GET https://api.example.test/api/v1/operations/posture",
+      "POST https://api.example.test/api/v1/planning-runs",
+      "GET https://api.example.test/api/v1/planning-runs/50000000-0000-4000-8000-000000009101/recommendations"
     ]);
   });
 });

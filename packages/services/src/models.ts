@@ -12,11 +12,27 @@ export type PlannerRuntimeInfo = {
   readonly mockScenarioId?: string;
 };
 
+export type OperationsPostureState = "healthy" | "attention" | "stale" | "degraded";
+
+export type OperationsFreshnessState = "fresh" | "missing" | "stale" | "unknown";
+
+export type OperationsSignalView = {
+  readonly label: string;
+  readonly status: OperationsPostureState;
+  readonly summary: string;
+  readonly detail?: string | null;
+  readonly checkedAtUtc?: IsoDateTimeString | null;
+};
+
 export type OperationsPostureView = {
   readonly databaseConfigured: boolean;
   readonly status: string;
   readonly checkedAtUtc: IsoDateTimeString;
+  readonly freshness: OperationsFreshnessState;
   readonly latestImport?: LatestImportView | null;
+  readonly signals: readonly OperationsSignalView[];
+  readonly state: OperationsPostureState;
+  readonly summary: string;
 };
 
 export type LatestImportView = {
@@ -163,6 +179,31 @@ export type PlannerDecisionResultView = {
   readonly decisions: readonly PlannerDecisionRecord[];
 };
 
+export type ScenarioOutcomeState = "healthy" | "stale" | "degraded";
+
+export type ScenarioOutcomeView = {
+  readonly scenarioId: string;
+  readonly label: string;
+  readonly status: ScenarioOutcomeState;
+  readonly statusText: string;
+  readonly summary: string;
+  readonly checkedAtUtc: IsoDateTimeString;
+  readonly planningRunId: GuidString;
+  readonly runNumber: string;
+  readonly packageCount: number;
+  readonly readyPackageCount: number;
+  readonly blockedPackageCount: number;
+  readonly deferredDecisionCount: number;
+  readonly latestImport?: LatestImportView | null;
+  readonly signals: readonly OperationsSignalView[];
+};
+
+export type ScenarioOutcomeSummaryView = {
+  readonly generatedAtUtc: IsoDateTimeString;
+  readonly latest: ScenarioOutcomeView;
+  readonly outcomes: readonly ScenarioOutcomeView[];
+};
+
 export type RecommendationQuery = {
   readonly planningRunId?: GuidString;
   readonly createRunIfMissing?: boolean;
@@ -176,6 +217,7 @@ export type PlannerServices = {
   readonly getRuntimeInfo: () => PlannerRuntimeInfo;
   readonly getOperationsPosture: () => Promise<OperationsPostureView>;
   readonly getSourceDataReadiness: () => Promise<SourceDataReadinessView>;
+  readonly getScenarioOutcomeSummary: () => Promise<ScenarioOutcomeSummaryView>;
   readonly getRecommendationSet: (query?: RecommendationQuery) => Promise<PlannerRecommendationSet>;
   readonly getWorkOrderBacklog: (query?: RecommendationQuery) => Promise<WorkOrderBacklogView>;
   readonly recordPlannerDecision: (

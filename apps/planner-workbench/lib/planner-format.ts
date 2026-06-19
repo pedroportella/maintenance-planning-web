@@ -1,9 +1,16 @@
 import type {
+  OperationsFreshnessState,
+  OperationsPostureState,
+  OperationsPostureView,
   PlannerDecisionRecord,
   PlannerRecommendation,
   PlannerRecommendationSet,
   PlannerReadinessStatus,
   PlannerWorkOrderState,
+  ScenarioOutcomeState,
+  ScenarioOutcomeSummaryView,
+  ScenarioOutcomeView,
+  SourceDataReadinessView,
   WorkOrderBacklogView,
   WorkOrderBacklogItem
 } from "@maintenance-planning/services";
@@ -90,6 +97,88 @@ export function buildPlanningRunMetrics(
   ];
 }
 
+export function buildOperationsMetrics(
+  posture: OperationsPostureView,
+  sourceReadiness: SourceDataReadinessView,
+  latestOutcome: ScenarioOutcomeView
+): readonly MetricSummaryItem[] {
+  return [
+    {
+      detail: posture.summary,
+      label: "Posture",
+      tone: toneForPostureState(posture.state),
+      value: titleCase(posture.state)
+    },
+    {
+      detail: sourceReadiness.summary,
+      label: "Source-data readiness",
+      tone: toneForReadiness(sourceReadiness.status),
+      value: titleCase(sourceReadiness.status)
+    },
+    {
+      detail: `${latestOutcome.runNumber} is the current synthetic outcome.`,
+      label: "Latest scenario",
+      tone: toneForScenarioOutcome(latestOutcome.status),
+      value: latestOutcome.statusText
+    }
+  ];
+}
+
+export function buildScenarioOutcomeMetrics(
+  summary: ScenarioOutcomeSummaryView
+): readonly MetricSummaryItem[] {
+  const healthyCount = summary.outcomes.filter((outcome) => outcome.status === "healthy").length;
+  const staleCount = summary.outcomes.filter((outcome) => outcome.status === "stale").length;
+  const degradedCount = summary.outcomes.filter((outcome) => outcome.status === "degraded").length;
+
+  return [
+    {
+      detail: "Synthetic scenario outcomes with expected posture evidence.",
+      label: "Healthy",
+      tone: "success",
+      value: String(healthyCount)
+    },
+    {
+      detail: "Outcomes where stale source rows stayed visible.",
+      label: "Stale data",
+      tone: staleCount > 0 ? "warning" : "neutral",
+      value: String(staleCount)
+    },
+    {
+      detail: "Outcomes with rejected rows or degraded posture signals.",
+      label: "Needs attention",
+      tone: degradedCount > 0 ? "critical" : "neutral",
+      value: String(degradedCount)
+    }
+  ];
+}
+
+export function buildCoordinationExceptionMetrics(
+  backlog: WorkOrderBacklogView,
+  exceptionCount: number
+): readonly MetricSummaryItem[] {
+  return [
+    {
+      detail: "Backlog rows with blockers, deferrals or source-data review needs.",
+      label: "Exceptions",
+      tone: exceptionCount > 0 ? "warning" : "success",
+      value: String(exceptionCount)
+    },
+    {
+      detail: "Items blocked before planner packaging.",
+      label: "Blocked",
+      tone: backlog.counts.blocked > 0 ? "warning" : "neutral",
+      value: String(backlog.counts.blocked)
+    },
+    {
+      detail: "Items held by a planner decision.",
+      label: "Deferred",
+      tone: backlog.counts.deferred > 0 ? "info" : "neutral",
+      value: String(backlog.counts.deferred)
+    }
+  ];
+}
+
 export function formatUtc(value: string | null | undefined): string {
   if (!value) return "Not set";
 
@@ -133,6 +222,29 @@ export function toneForPlannerState(state: PlannerWorkOrderState): Tone {
   return "warning";
 }
 
+export function toneForPostureState(state: OperationsPostureState): Tone {
+  if (state === "healthy") return "success";
+  if (state === "degraded") return "critical";
+  if (state === "stale") return "warning";
+
+  return "info";
+}
+
+export function toneForFreshness(freshness: OperationsFreshnessState): Tone {
+  if (freshness === "fresh") return "success";
+  if (freshness === "stale") return "warning";
+  if (freshness === "missing") return "info";
+
+  return "critical";
+}
+
+export function toneForScenarioOutcome(status: ScenarioOutcomeState): Tone {
+  if (status === "healthy") return "success";
+  if (status === "stale") return "warning";
+
+  return "critical";
+}
+
 export function toneForDecision(decision: string | null | undefined): Tone {
   const normalized = decision?.toLowerCase();
 
@@ -167,4 +279,11 @@ export function isBlockedRecommendation(recommendation: PlannerRecommendation): 
     recommendation.blockers.length > 0 ||
     recommendation.status.toLowerCase().includes("blocked")
   );
+}
+
+function titleCase(value: string): string {
+  return value
+    .split(/[\s_-]/g)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }

@@ -15,6 +15,8 @@ The API URL is intentionally not a public browser environment variable. The pack
 
 Mock mode stores decisions in process for the local reviewer journey. It remains deterministic synthetic state and is not a persistence claim.
 
+The service facade returns mapped view models for backlog, coordination exceptions, planning runs, recommendations, operations posture and scenario outcome summaries. Scenario outcomes are derived from synthetic fixtures in mock mode and from existing posture plus recommendation contracts in backend mode.
+
 ## Checks
 
 ```sh

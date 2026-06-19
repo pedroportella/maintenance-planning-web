@@ -2,7 +2,7 @@
 
 Next.js application shell for the planner workbench.
 
-The app focuses on planner task routes for synthetic maintenance-planning review flows. It renders a local shell with a static coordination queue on the first screen, service-driven backlog, planning-run and recommendation routes, and thin route shells for coordination exceptions, operations posture and scenario outcomes.
+The app focuses on planner task routes for synthetic maintenance-planning review flows. It renders a local shell with a static coordination queue on the first screen, service-driven backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome routes.
 
 The app imports shared theme styles from `@maintenance-planning/ui-library/theme.css`. App-local global CSS should stay focused on route composition; reusable shell, table, status, alert and state styling belongs to the UI library.
 

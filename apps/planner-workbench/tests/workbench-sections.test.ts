@@ -11,10 +11,14 @@ import {
 } from "../lib/planner-decisions";
 import {
   buildBacklogMetrics,
+  buildOperationsMetrics,
   buildRecommendationMetrics,
+  buildScenarioOutcomeMetrics,
   formatHours,
   formatUtc,
-  toneForDecision
+  toneForDecision,
+  toneForPostureState,
+  toneForScenarioOutcome
 } from "../lib/planner-format";
 import { toPlannerRouteIssue } from "../lib/planner-route-state";
 import { coordinationQueueItems, plannerConsoleSummary } from "../lib/planner-console-data";
@@ -72,6 +76,8 @@ describe("workbench section model", () => {
     expect(formatUtc("2026-01-15T10:30:00.000Z")).toBe("2026-01-15 10:30 UTC");
     expect(formatHours(null)).toBe("No estimate");
     expect(toneForDecision("Rejected")).toBe("critical");
+    expect(toneForPostureState("degraded")).toBe("critical");
+    expect(toneForScenarioOutcome("stale")).toBe("warning");
     expect(
       buildBacklogMetrics({
         generatedAtUtc: "2026-01-15T08:00:00.000Z",
@@ -92,6 +98,102 @@ describe("workbench section model", () => {
         recommendations: []
       }).map((item) => item.label)
     ).toEqual(["Ready packages", "Cannot package yet", "Decision history"]);
+    expect(
+      buildOperationsMetrics(
+        {
+          checkedAtUtc: "2026-01-15T08:00:00.000Z",
+          databaseConfigured: true,
+          freshness: "stale",
+          latestImport: null,
+          signals: [],
+          state: "stale",
+          status: "ready",
+          summary: "Latest synthetic import includes stale rows."
+        },
+        {
+          blockedCount: 0,
+          checkedAtUtc: "2026-01-15T08:00:00.000Z",
+          databaseConfigured: true,
+          databaseReachable: true,
+          latestImport: null,
+          needsReviewCount: 0,
+          readyCount: 1,
+          status: "ready",
+          summary: "Source-data persistence is reachable for review."
+        },
+        {
+          blockedPackageCount: 0,
+          checkedAtUtc: "2026-01-15T08:00:00.000Z",
+          deferredDecisionCount: 0,
+          label: "Baseline Week",
+          latestImport: null,
+          packageCount: 1,
+          planningRunId: "run-id",
+          readyPackageCount: 1,
+          runNumber: "RUN-001",
+          scenarioId: "baseline-week",
+          signals: [],
+          status: "healthy",
+          statusText: "Healthy",
+          summary: "Operations evidence is available."
+        }
+      ).map((item) => item.label)
+    ).toEqual(["Posture", "Source-data readiness", "Latest scenario"]);
+    expect(
+      buildScenarioOutcomeMetrics({
+        generatedAtUtc: "2026-01-15T08:00:00.000Z",
+        latest: {
+          blockedPackageCount: 0,
+          checkedAtUtc: "2026-01-15T08:00:00.000Z",
+          deferredDecisionCount: 0,
+          label: "Baseline Week",
+          latestImport: null,
+          packageCount: 1,
+          planningRunId: "run-id",
+          readyPackageCount: 1,
+          runNumber: "RUN-001",
+          scenarioId: "baseline-week",
+          signals: [],
+          status: "healthy",
+          statusText: "Healthy",
+          summary: "Operations evidence is available."
+        },
+        outcomes: [
+          {
+            blockedPackageCount: 0,
+            checkedAtUtc: "2026-01-15T08:00:00.000Z",
+            deferredDecisionCount: 0,
+            label: "Baseline Week",
+            latestImport: null,
+            packageCount: 1,
+            planningRunId: "run-id",
+            readyPackageCount: 1,
+            runNumber: "RUN-001",
+            scenarioId: "baseline-week",
+            signals: [],
+            status: "healthy",
+            statusText: "Healthy",
+            summary: "Operations evidence is available."
+          },
+          {
+            blockedPackageCount: 0,
+            checkedAtUtc: "2026-01-15T08:00:00.000Z",
+            deferredDecisionCount: 0,
+            label: "Stale Scenario",
+            latestImport: null,
+            packageCount: 1,
+            planningRunId: "run-id-2",
+            readyPackageCount: 1,
+            runNumber: "RUN-002",
+            scenarioId: "stale-scenario",
+            signals: [],
+            status: "stale",
+            statusText: "Stale data",
+            summary: "Stale rows stayed visible."
+          }
+        ]
+      }).map((item) => `${item.label}:${item.value}`)
+    ).toEqual(["Healthy:1", "Stale data:1", "Needs attention:0"]);
   });
 
   it("classifies unauthorized planner service errors for route states", () => {

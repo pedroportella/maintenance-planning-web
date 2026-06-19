@@ -18,7 +18,10 @@ Current guardrails run without the API. The services package can resolve mock mo
 The planner routes call `createPlannerServices()` from server-side app code:
 
 - `/work-order-backlog` maps recommendation work orders into a planner inbox with ready, blocked and deferred states.
+- `/coordination-exceptions` filters the service-backed backlog for blocked, deferred or source-data review items.
 - `/planning-runs` lists the current service-supplied run and links to `/planning-runs/[runId]` for package detail.
 - `/recommendations` reads package recommendations and records accept, reject or defer decisions through a server action.
+- `/operations-posture` maps operations posture, source-data readiness and latest scenario evidence into planner-visible signals.
+- `/scenario-outcomes` summarizes deterministic synthetic scenario outcomes and backend-mode review state derived from existing service contracts.
 
 Mock mode keeps the decision journey deterministic and synthetic. Backend mode remains explicit and server-only.

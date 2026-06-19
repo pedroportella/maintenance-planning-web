@@ -337,10 +337,10 @@ const mockScenarioFixtures: Record<MockScenarioId, MockScenarioFixture> = {
     recommendations: [baselineRecommendation, baselineBlockedRecommendation],
     latestImportCounts: {
       receivedCount: 10,
-      acceptedCount: 7,
-      rejectedCount: 1,
-      ignoredDuplicateCount: 1,
-      ignoredStaleCount: 1
+      acceptedCount: 10,
+      rejectedCount: 0,
+      ignoredDuplicateCount: 0,
+      ignoredStaleCount: 0
     }
   }),
   "event-window-conflict": scenarioFixture({
@@ -363,9 +363,9 @@ const mockScenarioFixtures: Record<MockScenarioId, MockScenarioFixture> = {
     recommendations: [partsDelayDeferredRecommendation, partsDelayBlockedRecommendation],
     latestImportCounts: {
       receivedCount: 10,
-      acceptedCount: 8,
+      acceptedCount: 9,
       rejectedCount: 1,
-      ignoredDuplicateCount: 1,
+      ignoredDuplicateCount: 0,
       ignoredStaleCount: 0
     }
   })

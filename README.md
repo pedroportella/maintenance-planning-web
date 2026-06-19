@@ -2,7 +2,7 @@
 
 Planner workbench foundation for a synthetic maintenance-planning showcase.
 
-This repository hosts a React and Next.js workbench for planners who review work-order recommendations, schedule posture and decision history. The current implementation includes repo guardrails, a reusable component shell, a static synthetic coordination queue for local review, service-driven backlog, planning-run and recommendation screens, a typed service boundary that can run in deterministic mock mode or explicit backend mode, and a neutral visual foundation for the workbench.
+This repository hosts a React and Next.js workbench for planners who review work-order recommendations, schedule posture and decision history. The current implementation includes repo guardrails, a reusable component shell, a static synthetic coordination queue for local review, service-driven backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome screens, a typed service boundary that can run in deterministic mock mode or explicit backend mode, and a neutral visual foundation for the workbench.
 
 ## Boundary
 

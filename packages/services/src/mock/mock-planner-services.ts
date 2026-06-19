@@ -2,6 +2,8 @@ import {
   mapOperationsPosture,
   mapPlannerDecisionResult,
   mapPlanningRecommendations,
+  mapScenarioOutcome,
+  mapScenarioOutcomeSummary,
   mapSourceDataReadiness,
   mapWorkOrderBacklog
 } from "../mappers";
@@ -10,6 +12,7 @@ import type { MockRuntimeConfig } from "../runtime-config";
 import {
   getMockScenarioFixture,
   mockPackageDecisionResult,
+  mockScenarioIds,
   stableFixtureTimestamp
 } from "../testing/fixtures";
 import type {
@@ -35,6 +38,23 @@ export function createMockPlannerServices(config: MockRuntimeConfig): PlannerSer
         fixture.migrationReadiness,
         mapOperationsPosture(fixture.operationsPosture)
       ),
+
+    getScenarioOutcomeSummary: async () => {
+      const outcomes = mockScenarioIds.map((scenarioId) => {
+        const scenarioFixture = getMockScenarioFixture(scenarioId);
+
+        return mapScenarioOutcome({
+          scenarioId,
+          operationsPosture: scenarioFixture.operationsPosture,
+          recommendations: withRecordedDecisions(
+            scenarioFixture.recommendations,
+            scenarioId
+          )
+        });
+      });
+
+      return mapScenarioOutcomeSummary(outcomes, config.mockScenarioId, stableFixtureTimestamp);
+    },
 
     getRecommendationSet: async () =>
       mapPlanningRecommendations(withRecordedDecisions(fixture.recommendations, config.mockScenarioId)),

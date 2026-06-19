@@ -8,6 +8,29 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
   await expect(page.getByRole("table", { name: "Synthetic coordination queue" })).toBeVisible();
   await expect(page.getByText("WO-2101")).toBeVisible();
 
+  await page.getByRole("link", { name: /Review coordination/ }).first().click();
+  await expect(page).toHaveURL(/coordination-exceptions/);
+  await expect(page.getByRole("heading", { name: "Coordination exceptions" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "Coordination exception list" })).toBeVisible();
+  await expect(page.getByText("Estimated effort is not present in the source event.")).toBeVisible();
+
+  await page.getByRole("link", { name: "Open operations posture" }).click();
+  await expect(page).toHaveURL(/operations-posture/);
+  await expect(page.getByRole("heading", { name: "Operations posture" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "Operations posture signals" })).toBeVisible();
+  await expect(
+    page.getByLabel("Operations posture summary").getByText("Operations evidence is available")
+  ).toBeVisible();
+
+  await page.getByRole("link", { name: "Open scenario outcomes" }).click();
+  await expect(page).toHaveURL(/scenario-outcomes/);
+  await expect(page.getByRole("heading", { name: "Scenario outcomes" })).toBeVisible();
+  const scenarioTable = page.getByRole("table", { name: "Synthetic scenario outcomes" });
+  await expect(scenarioTable).toBeVisible();
+  await expect(scenarioTable.getByText("Baseline Week")).toBeVisible();
+  await expect(scenarioTable.getByText("Stale data")).toBeVisible();
+  await expect(scenarioTable.getByText("Degraded")).toBeVisible();
+
   await page
     .getByRole("navigation", { name: "Planner sections" })
     .getByRole("link", { name: /Recommendations/ })
