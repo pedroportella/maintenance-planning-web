@@ -2,7 +2,7 @@
 
 import { execFileSync } from "node:child_process";
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { extname, join, relative } from "node:path";
 
 const mode = process.argv[2] ?? "all";
 const root = process.cwd();
@@ -59,6 +59,17 @@ const browserVisibleExtensions = new Set([
   ".tsx"
 ]);
 
+const browserBundleScanTargets = [
+  {
+    extensions: new Set([".css", ".js", ".json", ".txt"]),
+    path: join("apps", "planner-workbench", ".next", "static")
+  },
+  {
+    extensions: new Set([".html", ".json", ".rsc", ".txt"]),
+    path: join("apps", "planner-workbench", ".next", "server", "app")
+  }
+];
+
 const privateBackendOriginPatterns = [
   { label: "local workstation origin", pattern: new RegExp("https?:\\/\\/(?:local" + "host|127\\.0\\.0\\.1|0\\.0\\.0\\.0)(?::\\d+)?", "i") },
   { label: "container host origin", pattern: new RegExp("https?:\\/\\/host\\.docker\\.internal(?::\\d+)?", "i") },
@@ -86,6 +97,17 @@ function listFiles(directory) {
   }
 
   return files;
+}
+
+function listFilesIfDirectory(directory) {
+  try {
+    const stats = statSync(directory);
+    if (!stats.isDirectory()) return [];
+  } catch {
+    return [];
+  }
+
+  return listFiles(directory);
 }
 
 function listGitCandidateFiles() {
@@ -208,6 +230,52 @@ function checkBrowserOrigins() {
   report("Browser-visible backend origin guard", failures);
 }
 
+function checkBrowserBundle() {
+  const buildRoot = join(root, "apps", "planner-workbench", ".next");
+
+  try {
+    const stats = statSync(buildRoot);
+    if (!stats.isDirectory()) {
+      throw new Error("not a directory");
+    }
+  } catch {
+    report("Browser bundle leakage guard", [
+      "apps/planner-workbench/.next is missing; run pnpm build before this guard"
+    ]);
+    return;
+  }
+
+  const failures = [];
+  const bundleFiles = browserBundleScanTargets.flatMap((target) =>
+    listFilesIfDirectory(join(root, target.path)).filter((filePath) =>
+      target.extensions.has(extname(filePath).toLowerCase())
+    )
+  );
+
+  if (bundleFiles.length === 0) {
+    failures.push("no browser bundle files were found under apps/planner-workbench/.next");
+  }
+
+  for (const filePath of bundleFiles) {
+    const rel = relativePath(filePath);
+    let contents;
+
+    try {
+      contents = readText(filePath);
+    } catch {
+      continue;
+    }
+
+    for (const origin of privateBackendOriginPatterns) {
+      if (origin.pattern.test(contents)) {
+        failures.push(`${rel} contains ${origin.label}`);
+      }
+    }
+  }
+
+  report("Browser bundle leakage guard", failures);
+}
+
 function isBrowserVisibleCandidate(rel) {
   if (!rel.startsWith("apps/") && !rel.startsWith("packages/")) return false;
   const extension = rel.includes(".") ? `.${rel.split(".").at(-1)}` : "";
@@ -229,6 +297,7 @@ function report(label, failures) {
 
 const checks = {
   artifacts: checkArtifacts,
+  "browser-bundle": checkBrowserBundle,
   "browser-origins": checkBrowserOrigins,
   "public-docs": checkPublicDocs,
   secrets: checkSecrets,

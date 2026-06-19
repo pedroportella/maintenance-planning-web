@@ -1,6 +1,6 @@
 # Reviewer Runbook
 
-Use this runbook to inspect the repo foundation.
+Use this runbook to inspect the planner workbench reviewer pack.
 
 ## Prerequisites
 
@@ -19,7 +19,9 @@ pnpm --filter @maintenance-planning/ui-assets check
 pnpm --filter @maintenance-planning/ui-library check
 pnpm test:links
 pnpm build
+pnpm guard:browser-bundle
 pnpm test:e2e:mock
+pnpm test:reviewer-pack
 pnpm test:visual:showcase
 pnpm test:reviewer-evidence
 pnpm verify
@@ -40,9 +42,21 @@ pnpm test:visual:showcase
 
 The generated baseline files under `e2e/__visual-baselines__` are reviewer evidence. Do not commit screenshots from `test-results` or `playwright-report`.
 
+Generate a compact screenshot pack when review notes need current app images:
+
+```sh
+pnpm test:reviewer-pack
+```
+
+The command writes ignored PNG files to `test-results/reviewer-pack`. Run it last when preparing a review packet because later Playwright runs may clear `test-results`. Keep those files out of commits unless a later review explicitly asks for checked-in image evidence.
+
 The services package check verifies runtime mode selection, deterministic synthetic fixtures, operations posture mapping, scenario outcome summaries, mock decision recording and backend adapter calls against typed contracts.
 
 The visual package checks verify token exports, theme custom properties, contrast-sensitive pairs, neutral asset metadata, shared component markup and the shared theme stylesheet entrypoint.
+
+The post-build browser-bundle leakage guard expects `pnpm build` to have produced `apps/planner-workbench/.next`. It scans generated browser assets for hard-coded private backend origins and is included in `pnpm verify`.
+
+See [docs/reviewer-pack.md](reviewer-pack.md) for the five-minute review path, screenshot workflow and optional review-hosting boundary.
 
 ## Optional Backend Smoke
 

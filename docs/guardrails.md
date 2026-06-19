@@ -14,9 +14,11 @@ The artefact guard blocks committed local environment files, generated build out
 
 The secret guard scans candidate files for credentials and sensitive connection strings. The browser-origin guard scans app and package source for hard-coded private backend origins.
 
+The browser-bundle leakage guard runs after `pnpm build` and scans generated app assets for hard-coded private backend origins. It is separate from the default source guard because it requires `apps/planner-workbench/.next`.
+
 ## Reviewer Evidence
 
-Reviewer evidence checks required repo files, workspace boundaries, root scripts, local Markdown links and the presence of the UI-library showcase smoke.
+Reviewer evidence checks required repo files, workspace boundaries, root scripts, local Markdown links, the reviewer-pack screenshot workflow and the presence of the UI-library showcase smoke.
 
 ## Visual Foundation
 

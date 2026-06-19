@@ -40,6 +40,9 @@ jobs:
       - name: Run workspace build
         run: pnpm build
 
+      - name: Run browser-bundle leakage guard
+        run: pnpm guard:browser-bundle
+
       - name: Install browser for mock smoke
         run: pnpm exec playwright install --with-deps chromium
 

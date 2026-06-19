@@ -12,10 +12,11 @@ pnpm --dir apps/planner-workbench lint
 pnpm --dir apps/planner-workbench typecheck
 pnpm --dir apps/planner-workbench test
 pnpm --dir apps/planner-workbench build
+pnpm test:reviewer-pack
 pnpm test:visual:showcase
 pnpm test:e2e:backend
 ```
 
-The app defaults to mock mode for local UI review. Backend mode is server-only and is exercised through the repo-level backend end-to-end smoke after the local API has been seeded with deterministic simulator data. Copy the repo root `.env.local.example` to `.env.local` when the backend smoke needs local API settings.
+The app defaults to mock mode for local UI review. The reviewer-pack screenshot workflow captures current planner and evidence surfaces under ignored test output. Backend mode is server-only and is exercised through the repo-level backend end-to-end smoke after the local API has been seeded with deterministic simulator data. Copy the repo root `.env.local.example` to `.env.local` when the backend smoke needs local API settings.
 
 See the repo [architecture](../../docs/architecture.md) and [API integration](../../docs/api-integration.md) notes.

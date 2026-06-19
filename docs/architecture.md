@@ -43,3 +43,5 @@ The services package supports mock data for local frontend review and API-backed
 - production-like mock mode requires an explicit mock override.
 
 Browser-visible source must not embed private backend origins. Service calls are made from server-side route code and server actions; the browser receives mapped planner-facing view state and form results, not backend configuration.
+
+Review hosting should keep that boundary intact by running the workbench as a server-rendered Next.js app. The post-build browser-bundle leakage guard scans generated assets after `pnpm build` to catch accidental backend-origin exposure before a review build is shared.
