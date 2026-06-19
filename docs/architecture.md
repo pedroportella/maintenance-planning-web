@@ -24,11 +24,15 @@ The workbench currently renders local task routes for:
 
 The first screen is a static synthetic coordination queue that proves the workbench shell, metrics, table layout and route navigation without introducing a home-screen service call. The backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome routes read from the server-side services package. Operations and scenario pages expose compact freshness, import, posture and scenario evidence for reviewer flow without adding a broad admin dashboard.
 
+The `/ui-library` route is separate from planner task navigation. It is a no-index reviewer/developer evidence page for reusable UI states and uses deterministic mock services only.
+
 ## Visual System
 
 The app imports the shared theme from `@maintenance-planning/ui-library/theme.css`. That stylesheet imports token custom properties from `@maintenance-planning/ui-tokens/theme.css`, then defines base element, app shell, navigation, page header, status, metrics, table, alert and empty/loading/error state styling.
 
 App-local CSS remains responsible for route-specific composition. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
+
+Focused Playwright visual baselines cover `/ui-library` across desktop and mobile viewports. They complement route-level smoke tests and do not replace service-boundary tests.
 
 ## Runtime Boundary
 

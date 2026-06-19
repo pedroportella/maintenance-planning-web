@@ -20,6 +20,7 @@ pnpm --filter @maintenance-planning/ui-library check
 pnpm test:links
 pnpm build
 pnpm test:e2e:mock
+pnpm test:visual:showcase
 pnpm test:reviewer-evidence
 pnpm verify
 ```
@@ -27,6 +28,17 @@ pnpm verify
 The local checks do not require the API, simulator or cloud credentials.
 
 The mock end-to-end smoke starts the workbench locally, verifies the planner shell, reviews coordination exceptions, operations posture and scenario outcomes, opens the recommendation workbench, records a mock planner decision, then checks planning-run detail and backlog state.
+
+The showcase visual smoke starts the workbench in deterministic mock mode and verifies `/ui-library` in desktop and mobile viewports. It checks accessible landmarks, route metadata, component family headings, table captions, live-region state names, tone contrast and focused screenshot baselines.
+
+Refresh the showcase baselines only after intentionally reviewing the UI change:
+
+```sh
+pnpm test:visual:showcase:update
+pnpm test:visual:showcase
+```
+
+The generated baseline files under `e2e/__visual-baselines__` are reviewer evidence. Do not commit screenshots from `test-results` or `playwright-report`.
 
 The services package check verifies runtime mode selection, deterministic synthetic fixtures, operations posture mapping, scenario outcome summaries, mock decision recording and backend adapter calls against typed contracts.
 

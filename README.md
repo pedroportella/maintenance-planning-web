@@ -2,7 +2,7 @@
 
 Planner workbench foundation for a synthetic maintenance-planning showcase.
 
-This repository hosts a React and Next.js workbench for planners who review work-order recommendations, schedule posture and decision history. The current implementation includes repo guardrails, a reusable component shell, a static synthetic coordination queue for local review, service-driven backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome screens, a typed service boundary that can run in deterministic mock mode or explicit backend mode, and a neutral visual foundation for the workbench.
+This repository hosts a React and Next.js workbench for planners who review work-order recommendations, schedule posture and decision history. The current implementation includes repo guardrails, a reusable component shell, a static synthetic coordination queue for local review, service-driven backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome screens, an internal UI-library evidence route, a typed service boundary that can run in deterministic mock mode or explicit backend mode, and a neutral visual foundation for the workbench.
 
 ## Boundary
 
@@ -36,10 +36,11 @@ pnpm guard
 pnpm check
 pnpm test:links
 pnpm test:e2e:mock
+pnpm test:visual:showcase
 cp .env.local.example .env.local
 pnpm test:e2e:backend
 pnpm test:reviewer-evidence
 pnpm verify
 ```
 
-The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The backend end-to-end smoke is optional and reads local backend settings from `.env.local` or process environment variables. It expects a local API that has already received a deterministic simulator scenario.
+The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` across desktop and mobile viewports. The backend end-to-end smoke is optional and reads local backend settings from `.env.local` or process environment variables. It expects a local API that has already received a deterministic simulator scenario.

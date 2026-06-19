@@ -37,7 +37,10 @@ const requiredFiles = [
   "scripts/run-backend-playwright.mjs",
   "scripts/reviewer-evidence-smoke.mjs",
   "playwright.backend.config.mjs",
-  "e2e/planner-workbench.backend.spec.ts"
+  "playwright.showcase.config.mjs",
+  "e2e/planner-workbench.backend.spec.ts",
+  "e2e/ui-library-showcase.spec.ts",
+  "e2e/ui-library-showcase.visual.spec.ts"
 ];
 
 const requiredReadmeText = [
@@ -49,6 +52,7 @@ const requiredReadmeText = [
   "docs/reviewer-runbook.md",
   "docs/future-hardening.md",
   "test:e2e:backend",
+  "test:visual:showcase",
   "apps/planner-workbench/README.md",
   "packages/services/README.md",
   "packages/ui-library/README.md"
@@ -66,6 +70,8 @@ const requiredRootScripts = [
   "test:links",
   "test:e2e:backend",
   "test:reviewer-evidence",
+  "test:visual:showcase",
+  "test:visual:showcase:update",
   "typecheck",
   "verify"
 ];

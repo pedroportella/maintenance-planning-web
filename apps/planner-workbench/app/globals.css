@@ -218,6 +218,34 @@
   list-style: none;
 }
 
+.ui-library-page {
+  padding-bottom: var(--mp-space-3xl);
+}
+
+.showcase-tone-grid,
+.showcase-state-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.showcase-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.showcase-loading-state {
+  display: grid;
+  min-height: 150px;
+  padding: var(--mp-space-xl);
+  place-items: center start;
+  background: var(--mp-color-surface-raised);
+  border: 1px dashed var(--mp-color-border-strong);
+  border-radius: var(--mp-radius-md);
+}
+
 .decision-history {
   display: grid;
   gap: var(--mp-space-md);
@@ -316,7 +344,9 @@
   .route-grid,
   .posture-grid,
   .recommendation-grid,
-  .decision-actions {
+  .decision-actions,
+  .showcase-tone-grid,
+  .showcase-state-grid {
     grid-template-columns: 1fr;
   }
 }

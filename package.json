@@ -17,6 +17,8 @@
     "test:e2e:mock": "node scripts/run-playwright.mjs test --config playwright.config.mjs",
     "test:links": "node scripts/markdown-link-check.mjs",
     "test:reviewer-evidence": "node scripts/reviewer-evidence-smoke.mjs",
+    "test:visual:showcase": "node scripts/run-playwright.mjs test --config playwright.showcase.config.mjs",
+    "test:visual:showcase:update": "node scripts/run-playwright.mjs test --config playwright.showcase.config.mjs --update-snapshots",
     "typecheck": "node scripts/workspace-runner.mjs typecheck",
     "verify": "pnpm guard && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm test:reviewer-evidence"
   },
