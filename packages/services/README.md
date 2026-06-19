@@ -1,5 +1,20 @@
 # Services Package
 
-Boundary for API clients, mock adapters and response mappers.
+Boundary for API clients, mock adapters and response mappers for the planner workbench.
 
-This package should keep browser-facing API origins configurable and should not hard-code workstation-only or private-network endpoints.
+## Runtime
+
+Use `createPlannerServices()` from server-side code. It resolves either mock mode or backend mode from environment configuration:
+
+- `MAINTENANCE_PLANNING_WEB_DATA_MODE=mock` uses deterministic synthetic fixtures.
+- `MAINTENANCE_PLANNING_WEB_DATA_MODE=backend` requires `MAINTENANCE_PLANNING_API_URL`.
+- `MAINTENANCE_PLANNING_WEB_MOCK_SCENARIO` can select `baseline-week`, `event-window-conflict` or `parts-delay-replan`.
+- `MAINTENANCE_PLANNING_WEB_ALLOW_MOCKS=true` is required before mock mode can be used in a production-like build.
+
+The API URL is intentionally not a public browser environment variable. The package should not hard-code workstation-only or private-network endpoints.
+
+## Checks
+
+```sh
+pnpm --filter @maintenance-planning/services check
+```

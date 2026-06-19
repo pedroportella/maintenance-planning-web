@@ -3,5 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "API client, mock-service and response-mapping boundary for the planner workbench."
+  "description": "API client, mock-service and response-mapping boundary for the planner workbench.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./contracts": "./src/contracts/index.ts",
+    "./testing": "./src/testing/index.ts"
+  },
+  "types": "./src/index.ts",
+  "scripts": {
+    "check": "pnpm typecheck && pnpm test",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "25.9.3",
+    "typescript": "6.0.3",
+    "vitest": "4.1.9"
+  }
 }

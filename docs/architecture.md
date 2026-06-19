@@ -5,7 +5,7 @@ The web repo is the planner-facing layer of the maintenance-planning showcase. I
 ## Shape
 
 - `apps/planner-workbench` hosts the Next.js App Router shell.
-- `packages/services` will hold API clients, mock adapters and response mappers.
+- `packages/services` holds API-facing contracts, mock adapters, backend adapters and response mappers.
 - `packages/ui-library`, `packages/ui-tokens` and `packages/ui-assets` hold reusable presentation boundaries.
 - `packages/utils` holds framework-neutral helpers such as planner route metadata.
 
@@ -24,6 +24,10 @@ These screens are placeholders that prove navigation, layout and package resolut
 
 ## Runtime Boundary
 
-The app should support mock data for local frontend review and API-backed data when an endpoint is explicitly configured. The repo guardrails and current app shell do not depend on a running API, simulator or cloud account.
+The services package supports mock data for local frontend review and API-backed data when an endpoint is explicitly configured. Runtime selection is server-only:
 
-Browser-visible source must not embed private backend origins. Runtime configuration should be introduced through reviewed environment examples and service adapters when feature screens begin.
+- mock mode uses deterministic synthetic scenario fixtures;
+- backend mode requires a configured API URL;
+- production-like mock mode requires an explicit mock override.
+
+Browser-visible source must not embed private backend origins. The current app shell still renders placeholder routes and does not call the services package from page code.

@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@maintenance-planning/services": "workspace:*",
     "@maintenance-planning/ui-library": "workspace:*",
     "@maintenance-planning/ui-tokens": "workspace:*",
     "@maintenance-planning/utils": "workspace:*",
