@@ -15,7 +15,7 @@ Use `createPlannerServices()` from server-side code. It resolves either mock mod
 
 The API URL is intentionally not a public browser environment variable. The package should not hard-code workstation-only or private-network endpoints.
 
-The repo-level `test:e2e:backend` command sets backend mode and baseline scenario horizon defaults for the workbench server, and requires `MAINTENANCE_PLANNING_API_URL`. If the API URL is missing or not an absolute HTTP(S) URL, the command exits before starting the browser.
+The repo-level `test:e2e:backend` command reads `.env.local`, sets backend mode and baseline scenario horizon defaults for the workbench server, and requires `MAINTENANCE_PLANNING_API_URL`. Process environment variables override `.env.local`. If the API URL is missing or not an absolute HTTP(S) URL, the command exits before starting the browser.
 
 Mock mode stores decisions in process for the local reviewer journey. It remains deterministic synthetic state and is not a persistence claim.
 

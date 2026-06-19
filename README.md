@@ -36,9 +36,10 @@ pnpm guard
 pnpm check
 pnpm test:links
 pnpm test:e2e:mock
-MAINTENANCE_PLANNING_API_URL=http://127.0.0.1:5000 pnpm test:e2e:backend
+cp .env.local.example .env.local
+pnpm test:e2e:backend
 pnpm test:reviewer-evidence
 pnpm verify
 ```
 
-The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The backend end-to-end smoke is optional and expects a local API that has already received a deterministic simulator scenario.
+The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The backend end-to-end smoke is optional and reads local backend settings from `.env.local` or process environment variables. It expects a local API that has already received a deterministic simulator scenario.
