@@ -31,6 +31,7 @@ const requiredFiles = [
   "scripts/workspace-runner.mjs",
   "scripts/quality-guards.mjs",
   "scripts/markdown-link-check.mjs",
+  "scripts/run-playwright.mjs",
   "scripts/reviewer-evidence-smoke.mjs"
 ];
 
