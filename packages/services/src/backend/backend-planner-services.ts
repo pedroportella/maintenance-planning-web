@@ -54,7 +54,11 @@ export function createBackendPlannerServices(
 
     getScenarioOutcomeSummary: async () => {
       const posture = await client.getJson<OperationsPostureReport>("api/v1/operations/posture");
-      const recommendations = await getBackendRecommendationResult(client, undefined);
+      const recommendations = await getBackendRecommendationResult(
+        client,
+        undefined,
+        config.defaultRecommendationQuery
+      );
       const outcome = mapScenarioOutcome({
         scenarioId: "backend-current",
         label: "Current backend review state",
@@ -66,11 +70,15 @@ export function createBackendPlannerServices(
     },
 
     getRecommendationSet: async (query) => {
-      return getBackendRecommendationSet(client, query);
+      return getBackendRecommendationSet(client, query, config.defaultRecommendationQuery);
     },
 
     getWorkOrderBacklog: async (query) => {
-      const recommendations = await getBackendRecommendationSet(client, query);
+      const recommendations = await getBackendRecommendationSet(
+        client,
+        query,
+        config.defaultRecommendationQuery
+      );
       return mapWorkOrderBacklog(recommendations, new Date().toISOString());
     },
 
@@ -95,19 +103,35 @@ export function createBackendPlannerServices(
 
 async function getBackendRecommendationSet(
   client: BackendHttpClient,
-  query: RecommendationQuery | undefined
+  query: RecommendationQuery | undefined,
+  defaultQuery: RecommendationQuery | undefined
 ) {
-  return mapPlanningRecommendations(await getBackendRecommendationResult(client, query));
+  return mapPlanningRecommendations(await getBackendRecommendationResult(client, query, defaultQuery));
 }
 
 async function getBackendRecommendationResult(
   client: BackendHttpClient,
-  query: RecommendationQuery | undefined
+  query: RecommendationQuery | undefined,
+  defaultQuery: RecommendationQuery | undefined
 ) {
-  const planningRunId = await resolvePlanningRunId(client, query);
+  const effectiveQuery = mergeRecommendationQuery(defaultQuery, query);
+  const planningRunId = await resolvePlanningRunId(client, effectiveQuery);
   return client.getJson<PlanningRecommendationsResult>(
     `api/v1/planning-runs/${planningRunId}/recommendations`
   );
+}
+
+function mergeRecommendationQuery(
+  defaultQuery: RecommendationQuery | undefined,
+  query: RecommendationQuery | undefined
+): RecommendationQuery | undefined {
+  if (!defaultQuery) return query;
+  if (!query) return defaultQuery;
+
+  return {
+    ...defaultQuery,
+    ...query
+  };
 }
 
 async function resolvePlanningRunId(

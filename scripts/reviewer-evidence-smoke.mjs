@@ -32,7 +32,10 @@ const requiredFiles = [
   "scripts/quality-guards.mjs",
   "scripts/markdown-link-check.mjs",
   "scripts/run-playwright.mjs",
-  "scripts/reviewer-evidence-smoke.mjs"
+  "scripts/run-backend-playwright.mjs",
+  "scripts/reviewer-evidence-smoke.mjs",
+  "playwright.backend.config.mjs",
+  "e2e/planner-workbench.backend.spec.ts"
 ];
 
 const requiredReadmeText = [
@@ -43,6 +46,7 @@ const requiredReadmeText = [
   "docs/guardrails.md",
   "docs/reviewer-runbook.md",
   "docs/future-hardening.md",
+  "test:e2e:backend",
   "apps/planner-workbench/README.md",
   "packages/services/README.md",
   "packages/ui-library/README.md"
@@ -58,6 +62,7 @@ const requiredRootScripts = [
   "lint",
   "test",
   "test:links",
+  "test:e2e:backend",
   "test:reviewer-evidence",
   "typecheck",
   "verify"

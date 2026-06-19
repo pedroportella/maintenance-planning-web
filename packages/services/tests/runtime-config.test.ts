@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   ALLOW_MOCKS_ENV,
   API_URL_ENV,
+  BACKEND_HORIZON_END_ENV,
+  BACKEND_HORIZON_START_ENV,
+  BACKEND_REQUESTED_BY_ENV,
   DATA_MODE_ENV,
   MOCK_SCENARIO_ENV,
   ServiceConfigurationError,
@@ -26,6 +29,36 @@ describe("resolvePlannerRuntimeConfig", () => {
       mode: "backend",
       apiBaseUrl: "https://api.example.test"
     });
+  });
+
+  it("accepts optional backend planning horizon defaults for local smoke runs", () => {
+    expect(
+      resolvePlannerRuntimeConfig({
+        [DATA_MODE_ENV]: "backend",
+        [API_URL_ENV]: "https://api.example.test/",
+        [BACKEND_HORIZON_START_ENV]: "2026-01-16T00:00:00Z",
+        [BACKEND_HORIZON_END_ENV]: "2026-01-30T00:00:00Z",
+        [BACKEND_REQUESTED_BY_ENV]: "planner-workbench-e2e"
+      })
+    ).toEqual({
+      mode: "backend",
+      apiBaseUrl: "https://api.example.test",
+      defaultRecommendationQuery: {
+        horizonStartUtc: "2026-01-16T00:00:00Z",
+        horizonEndUtc: "2026-01-30T00:00:00Z",
+        requestedBy: "planner-workbench-e2e"
+      }
+    });
+  });
+
+  it("requires backend planning horizon start and end together", () => {
+    expect(() =>
+      resolvePlannerRuntimeConfig({
+        [DATA_MODE_ENV]: "backend",
+        [API_URL_ENV]: "https://api.example.test/",
+        [BACKEND_HORIZON_START_ENV]: "2026-01-16T00:00:00Z"
+      })
+    ).toThrow(/must be set together/);
   });
 
   it("rejects backend mode without an API URL", () => {

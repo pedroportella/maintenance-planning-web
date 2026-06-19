@@ -278,8 +278,8 @@ function RecommendationBlockers({ blockers }: { blockers: readonly Recommendatio
   return (
     <Alert title="Package blockers" tone="warning">
       <ul className="plain-list">
-        {blockers.map((blocker) => (
-          <li key={blocker.code}>
+        {blockers.map((blocker, index) => (
+          <li key={`${blocker.code}-${blocker.workOrderNumbers.join("-")}-${index}`}>
             <strong>{blocker.code}</strong>: {blocker.summary}
           </li>
         ))}

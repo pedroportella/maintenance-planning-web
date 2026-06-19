@@ -13,6 +13,7 @@
     "guard:secrets": "node scripts/quality-guards.mjs secrets",
     "lint": "node scripts/workspace-runner.mjs lint",
     "test": "node scripts/workspace-runner.mjs test",
+    "test:e2e:backend": "node scripts/run-backend-playwright.mjs",
     "test:e2e:mock": "node scripts/run-playwright.mjs test --config playwright.config.mjs",
     "test:links": "node scripts/markdown-link-check.mjs",
     "test:reviewer-evidence": "node scripts/reviewer-evidence-smoke.mjs",

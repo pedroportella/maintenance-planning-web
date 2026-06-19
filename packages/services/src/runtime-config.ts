@@ -1,11 +1,14 @@
 import { ServiceConfigurationError } from "./errors";
-import type { PlannerRuntimeMode } from "./models";
+import type { PlannerRuntimeMode, RecommendationQuery } from "./models";
 import { isMockScenarioId, type MockScenarioId } from "./testing/fixtures";
 
 export const DATA_MODE_ENV = "MAINTENANCE_PLANNING_WEB_DATA_MODE";
 export const API_URL_ENV = "MAINTENANCE_PLANNING_API_URL";
 export const ALLOW_MOCKS_ENV = "MAINTENANCE_PLANNING_WEB_ALLOW_MOCKS";
 export const MOCK_SCENARIO_ENV = "MAINTENANCE_PLANNING_WEB_MOCK_SCENARIO";
+export const BACKEND_HORIZON_START_ENV = "MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_START_UTC";
+export const BACKEND_HORIZON_END_ENV = "MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_END_UTC";
+export const BACKEND_REQUESTED_BY_ENV = "MAINTENANCE_PLANNING_WEB_BACKEND_REQUESTED_BY";
 
 export type RuntimeEnvironment = Readonly<Record<string, string | undefined>>;
 
@@ -17,6 +20,7 @@ export type MockRuntimeConfig = {
 export type BackendRuntimeConfig = {
   readonly mode: "backend";
   readonly apiBaseUrl: string;
+  readonly defaultRecommendationQuery?: RecommendationQuery;
 };
 
 export type PlannerRuntimeConfig = MockRuntimeConfig | BackendRuntimeConfig;
@@ -69,10 +73,18 @@ export function resolvePlannerRuntimeConfig(
     );
   }
 
-  return {
+  const defaultRecommendationQuery = resolveBackendRecommendationQuery(env);
+  const backendConfig: BackendRuntimeConfig = {
     mode: "backend",
     apiBaseUrl: normalizeApiBaseUrl(apiBaseUrl)
   };
+
+  return defaultRecommendationQuery
+    ? {
+        ...backendConfig,
+        defaultRecommendationQuery
+      }
+    : backendConfig;
 }
 
 function parseMode(value: string | undefined): PlannerRuntimeMode | undefined {
@@ -109,6 +121,39 @@ function normalizeApiBaseUrl(value: string) {
   }
 
   return url.toString().replace(/\/$/, "");
+}
+
+function resolveBackendRecommendationQuery(env: RuntimeEnvironment): RecommendationQuery | undefined {
+  const horizonStartUtc = env[BACKEND_HORIZON_START_ENV]?.trim();
+  const horizonEndUtc = env[BACKEND_HORIZON_END_ENV]?.trim();
+  const requestedBy = env[BACKEND_REQUESTED_BY_ENV]?.trim();
+
+  if (!horizonStartUtc && !horizonEndUtc && !requestedBy) return undefined;
+
+  if (!horizonStartUtc || !horizonEndUtc) {
+    throw new ServiceConfigurationError(
+      "backend-horizon-required",
+      `${BACKEND_HORIZON_START_ENV} and ${BACKEND_HORIZON_END_ENV} must be set together.`
+    );
+  }
+
+  assertIsoDateTime(BACKEND_HORIZON_START_ENV, horizonStartUtc);
+  assertIsoDateTime(BACKEND_HORIZON_END_ENV, horizonEndUtc);
+
+  return {
+    horizonStartUtc,
+    horizonEndUtc,
+    requestedBy: requestedBy || "planner-workbench"
+  };
+}
+
+function assertIsoDateTime(envName: string, value: string) {
+  if (Number.isNaN(Date.parse(value))) {
+    throw new ServiceConfigurationError(
+      "invalid-backend-horizon",
+      `${envName} must be an ISO date-time value.`
+    );
+  }
 }
 
 function assertServerRuntime() {

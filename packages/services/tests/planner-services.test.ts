@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   API_URL_ENV,
+  BACKEND_HORIZON_END_ENV,
+  BACKEND_HORIZON_START_ENV,
+  BACKEND_REQUESTED_BY_ENV,
   DATA_MODE_ENV,
   createPlannerServices,
   mockScenarioIds,
+  type CreatePlanningRunRequest,
   type FetchLike,
   type OperationsPostureReport,
   type PackageDecisionResult,
@@ -276,6 +280,65 @@ describe("planner services", () => {
       "GET https://api.example.test/api/v1/planning-runs/50000000-0000-4000-8000-000000009001/recommendations",
       "POST https://api.example.test/api/v1/packages/60000000-0000-4000-8000-000000009001/decisions"
     ]);
+  });
+
+  it("passes backend smoke horizon defaults into automatic planning-run creation", async () => {
+    let createdRunRequest: CreatePlanningRunRequest | undefined;
+    const fetchImpl: FetchLike = async (input, init) => {
+      if (input.endsWith("/api/v1/planning-runs")) {
+        createdRunRequest = JSON.parse(String(init?.body)) as CreatePlanningRunRequest;
+
+        return jsonResponse<PlanningRunResult>(
+          {
+            id: "50000000-0000-4000-8000-000000009051",
+            runNumber: "RUN-BACKEND-HORIZON",
+            status: "Completed",
+            horizon: "two-week",
+            horizonStartUtc: "2026-01-16T00:00:00.000Z",
+            horizonEndUtc: "2026-01-30T00:00:00.000Z",
+            startedAtUtc: "2026-01-15T08:00:00.000Z",
+            completedAtUtc: "2026-01-15T08:01:00.000Z",
+            requestedBy: "planner-workbench-e2e",
+            recommendationCount: 0,
+            readyRecommendationCount: 0,
+            blockedRecommendationCount: 0
+          },
+          202
+        );
+      }
+
+      if (input.endsWith("/api/v1/planning-runs/50000000-0000-4000-8000-000000009051/recommendations")) {
+        return jsonResponse<PlanningRecommendationsResult>({
+          planningRunId: "50000000-0000-4000-8000-000000009051",
+          runNumber: "RUN-BACKEND-HORIZON",
+          status: "Completed",
+          recommendations: []
+        });
+      }
+
+      return jsonResponse({ error: "unexpected request" }, 404);
+    };
+
+    const services = createPlannerServices({
+      env: {
+        [DATA_MODE_ENV]: "backend",
+        [API_URL_ENV]: "https://api.example.test",
+        [BACKEND_HORIZON_START_ENV]: "2026-01-16T00:00:00Z",
+        [BACKEND_HORIZON_END_ENV]: "2026-01-30T00:00:00Z",
+        [BACKEND_REQUESTED_BY_ENV]: "planner-workbench-e2e"
+      },
+      fetchImpl
+    });
+
+    await expect(services.getRecommendationSet()).resolves.toMatchObject({
+      planningRunId: "50000000-0000-4000-8000-000000009051"
+    });
+    expect(createdRunRequest).toMatchObject({
+      horizon: "two-week",
+      horizonStartUtc: "2026-01-16T00:00:00Z",
+      horizonEndUtc: "2026-01-30T00:00:00Z",
+      requestedBy: "planner-workbench-e2e"
+    });
   });
 
   it("derives backend scenario outcomes from posture and recommendation contracts", async () => {

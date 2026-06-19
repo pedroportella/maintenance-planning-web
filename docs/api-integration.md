@@ -25,3 +25,22 @@ The planner routes call `createPlannerServices()` from server-side app code:
 - `/scenario-outcomes` summarizes deterministic synthetic scenario outcomes and backend-mode review state derived from existing service contracts.
 
 Mock mode keeps the decision journey deterministic and synthetic. Backend mode remains explicit and server-only.
+
+## Backend Mode Smoke
+
+The backend end-to-end smoke keeps mock review fast while proving the workbench can read the local API contract after deterministic simulator data has been loaded.
+
+Runtime inputs:
+
+- `MAINTENANCE_PLANNING_WEB_DATA_MODE=backend` selects the backend adapter.
+- `MAINTENANCE_PLANNING_API_URL` points the server-side adapter at the local API origin.
+- `MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_START_UTC` and `MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_END_UTC` can align automatic planning-run creation with the deterministic simulator scenario.
+- The API URL is not a public browser environment variable.
+
+Use the repo-level command after the local API and simulator scenario are ready:
+
+```sh
+MAINTENANCE_PLANNING_API_URL=http://127.0.0.1:5000 pnpm test:e2e:backend
+```
+
+The backend smoke uses the baseline scenario horizon by default, opens recommendations, verifies the deterministic imported work order is visible, then opens operations posture and verifies planner-visible posture evidence from the same local API.
