@@ -1,0 +1,7 @@
+{
+  "name": "@maintenance-planning/services",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "API client, mock-service and response-mapping boundary for the planner workbench."
+}

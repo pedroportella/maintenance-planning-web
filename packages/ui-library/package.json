@@ -1,0 +1,7 @@
+{
+  "name": "@maintenance-planning/ui-library",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared React component boundary for the planner workbench."
+}

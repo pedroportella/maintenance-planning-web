@@ -1,0 +1,21 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  apps/planner-workbench: {}
+
+  packages/services: {}
+
+  packages/ui-assets: {}
+
+  packages/ui-library: {}
+
+  packages/ui-tokens: {}
+
+  packages/utils: {}

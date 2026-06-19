@@ -1,0 +1,44 @@
+name: Web guardrails
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install workspace
+        run: pnpm install --frozen-lockfile
+
+      - name: Run guardrails
+        run: pnpm guard
+
+      - name: Run workspace lint
+        run: pnpm lint
+
+      - name: Run workspace typecheck
+        run: pnpm typecheck
+
+      - name: Run workspace tests
+        run: pnpm test
+
+      - name: Run workspace build
+        run: pnpm build
+
+      - name: Run reviewer evidence smoke
+        run: pnpm test:reviewer-evidence

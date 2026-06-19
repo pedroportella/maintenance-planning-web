@@ -1,0 +1,7 @@
+{
+  "name": "@maintenance-planning/utils",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Framework-neutral helper boundary for the planner workbench."
+}

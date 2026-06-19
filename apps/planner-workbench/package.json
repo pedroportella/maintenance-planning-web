@@ -1,0 +1,7 @@
+{
+  "name": "@maintenance-planning/planner-workbench",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Future Next.js planner workbench for synthetic maintenance-planning review flows."
+}
