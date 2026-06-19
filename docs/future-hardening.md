@@ -9,3 +9,4 @@ Future work should add the workbench implementation in small, reviewable slices.
 - Keep theme packages focused on reusable styling primitives, not runtime configuration or workflow logic.
 - Keep browser API origins runtime-configured and documented through safe examples.
 - Add deployed smoke coverage only when a temporary review host exists and its access boundary is intentionally configured.
+- Add SBOM generation, image provenance, signing and registry scanning policy before promoting container images beyond local review.

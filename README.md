@@ -25,6 +25,7 @@ This repository hosts a React and Next.js workbench for planners who review work
 
 - [Architecture](docs/architecture.md)
 - [API integration](docs/api-integration.md)
+- [Containerisation](docs/containerisation.md)
 - [Guardrails](docs/guardrails.md)
 - [Reviewer pack](docs/reviewer-pack.md)
 - [Reviewer runbook](docs/reviewer-runbook.md)
@@ -39,6 +40,8 @@ pnpm test:links
 pnpm test:e2e:mock
 pnpm test:reviewer-pack
 pnpm test:visual:showcase
+pnpm container:build
+pnpm container:smoke
 cp .env.local.example .env.local
 pnpm test:e2e:backend
 pnpm guard:browser-bundle
@@ -46,4 +49,4 @@ pnpm test:reviewer-evidence
 pnpm verify
 ```
 
-The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` across desktop and mobile viewports. The post-build browser-bundle guard checks generated app assets for private backend origins. The backend end-to-end smoke is optional and reads local backend settings from `.env.local` or process environment variables. It expects a local API that has already received a deterministic simulator scenario.
+The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` across desktop and mobile viewports. The post-build browser-bundle guard checks generated app assets for private backend origins. The container smoke builds the standalone Next.js runtime image, starts it in explicit mock mode and checks planner routes plus `/health/live`. The backend end-to-end smoke is optional and reads local backend settings from `.env.local` or process environment variables. It expects a local API that has already received a deterministic simulator scenario.

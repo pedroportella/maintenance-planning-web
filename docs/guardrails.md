@@ -16,9 +16,13 @@ The secret guard scans candidate files for credentials and sensitive connection 
 
 The browser-bundle leakage guard runs after `pnpm build` and scans generated app assets for hard-coded private backend origins. It is separate from the default source guard because it requires `apps/planner-workbench/.next`.
 
+## Container Evidence
+
+The container smoke builds or reuses the local image, starts the standalone Next.js runtime with restricted container flags, checks `/health/live` and key planner routes, and inspects the image for local-only files plus browser-visible private backend origins.
+
 ## Reviewer Evidence
 
-Reviewer evidence checks required repo files, workspace boundaries, root scripts, local Markdown links, the reviewer-pack screenshot workflow and the presence of the UI-library showcase smoke.
+Reviewer evidence checks required repo files, workspace boundaries, root scripts, local Markdown links, the reviewer-pack screenshot workflow, container scripts and the presence of the UI-library showcase smoke.
 
 ## Visual Foundation
 

@@ -9,6 +9,7 @@ pnpm install
 pnpm verify
 pnpm test:e2e:mock
 pnpm test:visual:showcase
+pnpm container:smoke
 ```
 
 Then inspect:
@@ -36,6 +37,7 @@ The default review verification path includes:
 - workspace lint, type checks and package tests;
 - a Next.js build;
 - a post-build browser-bundle leakage guard;
+- local standalone container build and smoke in CI;
 - reviewer evidence smoke for required docs, scripts, configs and local Markdown links.
 
 Run the post-build guard directly after `pnpm build` when checking deployment packaging:
@@ -57,3 +59,5 @@ Recommended review-hosting boundary:
 - place review access behind hosting-provider access controls or a temporary private review URL.
 
 Review hosting is demonstration infrastructure. It uses synthetic data, does not include an application auth layer, does not connect to live source systems and is not a readiness statement for customer traffic.
+
+See [docs/containerisation.md](containerisation.md) for the local image commands, health route and AWS review-runtime notes.

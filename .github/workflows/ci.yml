@@ -51,3 +51,9 @@ jobs:
 
       - name: Run reviewer evidence smoke
         run: pnpm test:reviewer-evidence
+
+      - name: Build local container image
+        run: pnpm container:build
+
+      - name: Run local container smoke
+        run: pnpm container:smoke --skip-build

@@ -6,6 +6,7 @@ Use this runbook to inspect the planner workbench reviewer pack.
 
 - Node.js 22.
 - pnpm through Corepack or an equivalent local install.
+- Docker for local container build and smoke checks.
 
 ## Commands
 
@@ -23,6 +24,8 @@ pnpm guard:browser-bundle
 pnpm test:e2e:mock
 pnpm test:reviewer-pack
 pnpm test:visual:showcase
+pnpm container:build
+pnpm container:smoke --skip-build
 pnpm test:reviewer-evidence
 pnpm verify
 ```
@@ -56,7 +59,9 @@ The visual package checks verify token exports, theme custom properties, contras
 
 The post-build browser-bundle leakage guard expects `pnpm build` to have produced `apps/planner-workbench/.next`. It scans generated browser assets for hard-coded private backend origins and is included in `pnpm verify`.
 
-See [docs/reviewer-pack.md](reviewer-pack.md) for the five-minute review path, screenshot workflow and optional review-hosting boundary.
+The container smoke starts the standalone runtime on a temporary local port with explicit mock-mode settings. It checks `/health/live`, core planner routes and the UI-library evidence page, then verifies that local-only files and private backend origins are not present in the final image.
+
+See [docs/reviewer-pack.md](reviewer-pack.md) for the five-minute review path, screenshot workflow and optional review-hosting boundary. See [docs/containerisation.md](containerisation.md) for image runtime notes.
 
 ## Optional Backend Smoke
 
