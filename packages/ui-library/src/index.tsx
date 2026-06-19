@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
+import type { StatusToneName } from "@maintenance-planning/ui-tokens";
 
-export type Tone = "critical" | "info" | "neutral" | "success" | "warning";
+export type Tone = StatusToneName;
 
 type WorkbenchPanelProps = {
   children: ReactNode;
@@ -17,7 +18,11 @@ type StatusPillProps = {
 };
 
 export function StatusPill({ children, tone = "neutral" }: StatusPillProps) {
-  return <span className={`status-pill status-pill-${tone}`}>{children}</span>;
+  return (
+    <span className={`status-pill status-pill-${tone}`} data-tone={tone}>
+      {children}
+    </span>
+  );
 }
 
 type MetricCardProps = {

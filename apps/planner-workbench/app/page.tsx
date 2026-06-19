@@ -1,15 +1,18 @@
+import { workbenchIconNames } from "@maintenance-planning/ui-assets";
 import { MetricCard, StatusPill, WorkbenchPanel } from "@maintenance-planning/ui-library";
 import {
   getPrimaryCoordinationSection,
   plannerSummaryItems,
   workbenchSections
 } from "@maintenance-planning/utils";
-import { ArrowRight, ClipboardCheck } from "lucide-react";
 import Link from "next/link";
+import { getLucideIcon } from "@/components/lucide-icon";
 
 export default function HomePage() {
   const primarySection = getPrimaryCoordinationSection();
   const prioritySections = workbenchSections.slice(0, 3);
+  const ForwardIcon = getLucideIcon(workbenchIconNames.actions.forward);
+  const ReviewIcon = getLucideIcon(workbenchIconNames.actions.review);
 
   return (
     <main className="page-stack">
@@ -23,9 +26,9 @@ export default function HomePage() {
           </p>
         </div>
         <Link className="primary-link" href={primarySection.path}>
-          <ClipboardCheck aria-hidden="true" size={18} />
+          <ReviewIcon aria-hidden="true" size={18} />
           Review coordination
-          <ArrowRight aria-hidden="true" size={16} />
+          <ForwardIcon aria-hidden="true" size={16} />
         </Link>
       </WorkbenchPanel>
 
@@ -57,7 +60,7 @@ export default function HomePage() {
                 <strong>{section.label}</strong>
                 <small>{section.coordinationCue}</small>
               </span>
-              <ArrowRight aria-hidden="true" size={16} />
+              <ForwardIcon aria-hidden="true" size={16} />
             </Link>
           ))}
         </div>

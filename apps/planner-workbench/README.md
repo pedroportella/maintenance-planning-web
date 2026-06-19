@@ -4,6 +4,8 @@ Next.js application shell for the planner workbench.
 
 The app focuses on planner task routes for synthetic maintenance-planning review flows. It renders a local shell with placeholders for backlog, planning runs, recommendations, coordination exceptions, operations posture and scenario outcomes.
 
+The app imports shared theme styles from `@maintenance-planning/ui-library/theme.css`. App-local global CSS should stay focused on shell layout and route composition.
+
 ```sh
 pnpm --dir apps/planner-workbench dev
 pnpm --dir apps/planner-workbench lint

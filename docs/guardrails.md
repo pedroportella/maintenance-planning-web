@@ -17,3 +17,7 @@ The secret guard scans candidate files for credentials and sensitive connection 
 ## Reviewer Evidence
 
 Reviewer evidence checks required repo files, workspace boundaries, root scripts and local Markdown links.
+
+## Visual Foundation
+
+Token tests cover required theme variables and contrast-sensitive foreground/background pairs. Asset tests cover neutral wordmark metadata, icon-map coverage and local provenance notes. Theme tests confirm that the UI-library stylesheet imports token custom properties before shared component styles.

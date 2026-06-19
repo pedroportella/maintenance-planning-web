@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { WorkbenchShell } from "@/components/workbench-shell";
+import "@maintenance-planning/ui-library/theme.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

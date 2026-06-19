@@ -1,47 +1,36 @@
 "use client";
 
-import { workbenchSections } from "@maintenance-planning/utils";
 import {
-  Activity,
-  AlertTriangle,
-  CalendarClock,
-  ClipboardList,
-  FlaskConical,
-  Lightbulb,
-  Route
-} from "lucide-react";
+  getWorkbenchSectionIconName,
+  workbenchBrand,
+  workbenchIconNames
+} from "@maintenance-planning/ui-assets";
+import { workbenchSections } from "@maintenance-planning/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-
-const sectionIcons = {
-  "work-order-backlog": ClipboardList,
-  "planning-runs": CalendarClock,
-  recommendations: Lightbulb,
-  "coordination-exceptions": AlertTriangle,
-  "operations-posture": Activity,
-  "scenario-outcomes": FlaskConical
-} as const;
+import { getLucideIcon } from "@/components/lucide-icon";
 
 export function WorkbenchShell({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = usePathname();
+  const BrandIcon = getLucideIcon(workbenchIconNames.brand);
 
   return (
     <div className="workbench-shell">
       <aside className="sidebar">
-        <Link aria-label="Planner workbench home" className="brand-lockup" href="/">
+        <Link aria-label={workbenchBrand.ariaLabel} className="brand-lockup" href="/">
           <span className="brand-mark">
-            <Route aria-hidden="true" size={22} />
+            <BrandIcon aria-hidden="true" size={22} />
           </span>
-          <span>
-            <strong>Planner Workbench</strong>
-            <span>Synthetic planning review</span>
+          <span className="brand-lockup-text">
+            <strong>{workbenchBrand.name}</strong>
+            <span>{workbenchBrand.tagline}</span>
           </span>
         </Link>
 
         <nav aria-label="Planner sections" className="shell-nav">
           {workbenchSections.map((section) => {
-            const Icon = sectionIcons[section.slug];
+            const Icon = getLucideIcon(getWorkbenchSectionIconName(section.slug));
             const isActive = pathname === section.path;
 
             return (
@@ -52,7 +41,7 @@ export function WorkbenchShell({ children }: Readonly<{ children: ReactNode }>) 
                 key={section.slug}
               >
                 <Icon aria-hidden="true" size={20} />
-                <span>
+                <span className="nav-link-copy">
                   <strong>{section.label}</strong>
                   <span>{section.navHint}</span>
                 </span>

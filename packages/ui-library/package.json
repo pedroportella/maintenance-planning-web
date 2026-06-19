@@ -5,10 +5,27 @@
   "type": "module",
   "description": "Shared React component boundary for the planner workbench.",
   "exports": {
-    ".": "./src/index.tsx"
+    ".": "./src/index.tsx",
+    "./theme": "./src/theme/index.ts",
+    "./theme.css": "./src/theme/theme.css"
   },
   "types": "./src/index.tsx",
+  "scripts": {
+    "check": "pnpm typecheck && pnpm test",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@maintenance-planning/ui-tokens": "workspace:*"
+  },
   "peerDependencies": {
     "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "25.9.3",
+    "@types/react": "19.2.17",
+    "react": "19.2.7",
+    "typescript": "6.0.3",
+    "vitest": "4.1.9"
   }
 }
