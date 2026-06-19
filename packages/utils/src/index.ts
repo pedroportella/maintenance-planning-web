@@ -41,7 +41,7 @@ export const workbenchSections = [
     path: "/work-order-backlog",
     navHint: "Ready, blocked and waiting",
     summary:
-      "A focused backlog shell for reviewing synthetic work orders before planner action.",
+      "A focused backlog view for reviewing synthetic work orders before planner action.",
     coordinationCue: "Confirm ready work and isolate blocked items.",
     tone: "info",
     metric: {
@@ -52,7 +52,7 @@ export const workbenchSections = [
     },
     placeholderTitle: "Backlog triage",
     placeholderBody:
-      "This route reserves space for work-order grouping, constraints and review state without calling a backend.",
+      "This route reviews work-order grouping, constraints and decision state through the planner service boundary.",
     placeholderTasks: [
       {
         label: "Ready for planning",
@@ -74,7 +74,7 @@ export const workbenchSections = [
     path: "/planning-runs",
     navHint: "Recent run context",
     summary:
-      "A route shell for planner-visible run history, readiness checks and review cadence.",
+      "A planner-visible run view for readiness checks and recommendation review cadence.",
     coordinationCue: "Check which run should anchor the next review.",
     tone: "success",
     metric: {
@@ -85,7 +85,7 @@ export const workbenchSections = [
     },
     placeholderTitle: "Run review",
     placeholderBody:
-      "This area will hold run state, timing and planner notes when the service boundary is added.",
+      "This area shows service-owned run state, package counts and planner review context.",
     placeholderTasks: [
       {
         label: "Latest run",
@@ -107,8 +107,8 @@ export const workbenchSections = [
     path: "/recommendations",
     navHint: "Accept, defer or reject",
     summary:
-      "A recommendation workbench shell for future planner decisions over API-supplied options.",
-    coordinationCue: "Review recommendation placeholders before decisions are wired.",
+      "A recommendation workbench for planner decisions over service-supplied package options.",
+    coordinationCue: "Review package explanations, blockers and decision history.",
     tone: "warning",
     metric: {
       label: "Decision slots",
@@ -118,7 +118,7 @@ export const workbenchSections = [
     },
     placeholderTitle: "Decision review",
     placeholderBody:
-      "Decision controls are intentionally absent until the service contracts are introduced.",
+      "Decision controls record accept, reject and defer outcomes through the planner service boundary.",
     placeholderTasks: [
       {
         label: "Review candidate",

@@ -35,29 +35,37 @@ export function getMockScenarioFixture(scenarioId: MockScenarioId): MockScenario
 
 export function mockPackageDecisionResult(input: {
   readonly packageId: string;
+  readonly packageNumber?: string;
   readonly decision: string;
   readonly reasonCode: string;
   readonly notes?: string | null;
   readonly decidedBy?: string | null;
   readonly workOrderIds: readonly string[];
 }): PackageDecisionResult {
+  const workOrderIds = input.workOrderIds.length > 0 ? input.workOrderIds : [null];
+
   return {
     packageId: input.packageId,
-    packageNumber: "PKG-MOCK-DECISION",
-    packageStatus: input.decision === "Deferred" ? "Deferred" : "PlannerReviewed",
-    decisions: [
-      {
-        id: "80000000-0000-4000-8000-000000009999",
-        packageId: input.packageId,
-        workOrderId: input.workOrderIds[0] ?? null,
-        decision: input.decision,
-        reasonCode: input.reasonCode,
-        notes: input.notes,
-        decidedAtUtc: stableFixtureTimestamp,
-        decidedBy: input.decidedBy ?? "planner-workbench"
-      }
-    ]
+    packageNumber: input.packageNumber ?? "PKG-MOCK-DECISION",
+    packageStatus: packageStatusForDecision(input.decision),
+    decisions: workOrderIds.map((workOrderId, index) => ({
+      id: `80000000-0000-4000-8000-00000000999${index}`,
+      packageId: input.packageId,
+      workOrderId,
+      decision: input.decision,
+      reasonCode: input.reasonCode,
+      notes: input.notes,
+      decidedAtUtc: stableFixtureTimestamp,
+      decidedBy: input.decidedBy ?? "planner-workbench"
+    }))
   };
+}
+
+function packageStatusForDecision(decision: string) {
+  if (decision === "Deferred") return "Deferred";
+  if (decision === "Rejected") return "Rejected";
+
+  return "PlannerReviewed";
 }
 
 const baselineRecommendation = recommendation({

@@ -22,7 +22,7 @@ The workbench currently renders local task routes for:
 - operations posture;
 - scenario outcomes.
 
-The first screen is a static synthetic coordination queue that proves the workbench shell, metrics, table layout and route navigation without introducing service calls. The route screens remain thin task shells until recommendation, operations and backend-mode stages add service-backed views.
+The first screen is a static synthetic coordination queue that proves the workbench shell, metrics, table layout and route navigation without introducing a home-screen service call. The backlog, planning-run and recommendation routes now read from the server-side services package. Coordination exceptions, operations posture and scenario outcomes remain thin task shells until their later stages add deeper views.
 
 ## Visual System
 
@@ -38,4 +38,4 @@ The services package supports mock data for local frontend review and API-backed
 - backend mode requires a configured API URL;
 - production-like mock mode requires an explicit mock override.
 
-Browser-visible source must not embed private backend origins. The current app shell renders static synthetic queue rows and route shells; it does not call the services package from page code.
+Browser-visible source must not embed private backend origins. Service calls are made from server-side route code and server actions; the browser receives mapped planner-facing view state and form results, not backend configuration.

@@ -13,6 +13,8 @@ Use `createPlannerServices()` from server-side code. It resolves either mock mod
 
 The API URL is intentionally not a public browser environment variable. The package should not hard-code workstation-only or private-network endpoints.
 
+Mock mode stores decisions in process for the local reviewer journey. It remains deterministic synthetic state and is not a persistence claim.
+
 ## Checks
 
 ```sh

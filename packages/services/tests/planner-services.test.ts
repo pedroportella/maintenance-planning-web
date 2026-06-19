@@ -6,6 +6,7 @@ import {
   mockScenarioIds,
   type FetchLike,
   type OperationsPostureReport,
+  type PackageDecisionResult,
   type PlanningRecommendationsResult,
   type PlanningRunResult
 } from "../src";
@@ -29,6 +30,49 @@ describe("planner services", () => {
     }
 
     expect([...states].sort()).toEqual(["blocked", "deferred", "ready"]);
+  });
+
+  it("records mock planner decisions and reflects them in recommendations and backlog", async () => {
+    const services = createPlannerServices({
+      env: {
+        [DATA_MODE_ENV]: "mock",
+        MAINTENANCE_PLANNING_WEB_MOCK_SCENARIO: "baseline-week"
+      }
+    });
+    const recommendationSet = await services.getRecommendationSet();
+    const recommendation = recommendationSet.recommendations[0];
+
+    if (!recommendation) {
+      throw new Error("Expected a baseline recommendation fixture.");
+    }
+
+    const result = await services.recordPlannerDecision({
+      decision: "Accepted",
+      packageId: recommendation.packageId,
+      reasonCode: "planner-accepted",
+      workOrderIds: recommendation.workOrders.map((workOrder) => workOrder.id)
+    });
+    const updatedRecommendationSet = await services.getRecommendationSet();
+    const updatedRecommendation = updatedRecommendationSet.recommendations.find(
+      (candidate) => candidate.packageId === recommendation.packageId
+    );
+    const backlog = await services.getWorkOrderBacklog();
+    const decidedBacklogItem = backlog.items.find(
+      (item) => item.packageId === recommendation.packageId
+    );
+
+    expect(result).toMatchObject({
+      packageNumber: recommendation.packageNumber,
+      packageStatus: "PlannerReviewed"
+    });
+    expect(updatedRecommendation?.decisions.at(-1)).toMatchObject({
+      decision: "Accepted",
+      reasonCode: "planner-accepted"
+    });
+    expect(decidedBacklogItem?.latestDecision).toMatchObject({
+      decision: "Accepted",
+      reasonCode: "planner-accepted"
+    });
   });
 
   it("uses the same service facade in backend mode", async () => {
@@ -74,6 +118,32 @@ describe("planner services", () => {
         });
       }
 
+      if (input.endsWith("/api/v1/packages/60000000-0000-4000-8000-000000009001/decisions")) {
+        expect(JSON.parse(String(init?.body))).toMatchObject({
+          decision: "Deferred",
+          reasonCode: "missing-parts",
+          workOrderIds: ["30000000-0000-4000-8000-000000009001"]
+        });
+
+        return jsonResponse<PackageDecisionResult>({
+          packageId: "60000000-0000-4000-8000-000000009001",
+          packageNumber: "PKG-BACKEND-001",
+          packageStatus: "Deferred",
+          decisions: [
+            {
+              id: "80000000-0000-4000-8000-000000009001",
+              packageId: "60000000-0000-4000-8000-000000009001",
+              workOrderId: "30000000-0000-4000-8000-000000009001",
+              decision: "Deferred",
+              reasonCode: "missing-parts",
+              notes: null,
+              decidedAtUtc: "2026-01-15T08:02:00.000Z",
+              decidedBy: "planner-workbench"
+            }
+          ]
+        });
+      }
+
       return jsonResponse({ error: "unexpected request" }, 404);
     };
 
@@ -92,11 +162,23 @@ describe("planner services", () => {
     await expect(services.getRecommendationSet()).resolves.toMatchObject({
       planningRunId: "50000000-0000-4000-8000-000000009001"
     });
+    await expect(
+      services.recordPlannerDecision({
+        decision: "Deferred",
+        packageId: "60000000-0000-4000-8000-000000009001",
+        reasonCode: "missing-parts",
+        workOrderIds: ["30000000-0000-4000-8000-000000009001"]
+      })
+    ).resolves.toMatchObject({
+      packageNumber: "PKG-BACKEND-001",
+      packageStatus: "Deferred"
+    });
 
     expect(fetchCalls).toEqual([
       "GET https://api.example.test/api/v1/operations/posture",
       "POST https://api.example.test/api/v1/planning-runs",
-      "GET https://api.example.test/api/v1/planning-runs/50000000-0000-4000-8000-000000009001/recommendations"
+      "GET https://api.example.test/api/v1/planning-runs/50000000-0000-4000-8000-000000009001/recommendations",
+      "POST https://api.example.test/api/v1/packages/60000000-0000-4000-8000-000000009001/decisions"
     ]);
   });
 });

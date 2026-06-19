@@ -91,6 +91,13 @@
   gap: 3px;
 }
 
+.badge-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
 .table-link {
   font-weight: 800;
   text-decoration: underline;
@@ -109,20 +116,189 @@
   padding: 18px;
 }
 
+.recommendation-list {
+  display: grid;
+  gap: var(--mp-space-xl);
+}
+
+.recommendation-card {
+  gap: var(--mp-space-xl);
+  padding: var(--mp-space-xl);
+  background: var(--mp-color-surface);
+  border: 1px solid var(--mp-color-border);
+  border-radius: var(--mp-radius-md);
+  box-shadow: var(--mp-shadow-soft);
+}
+
+.recommendation-card-header,
+.recommendation-grid {
+  display: grid;
+  gap: var(--mp-space-lg);
+}
+
+.recommendation-card-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.recommendation-grid {
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+}
+
+.detail-list {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+}
+
+.detail-list div {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.5fr) minmax(0, 1fr);
+  gap: var(--mp-space-md);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--mp-color-border);
+}
+
+.detail-list-compact div {
+  grid-template-columns: minmax(80px, 0.4fr) minmax(0, 1fr);
+}
+
+.detail-list dt {
+  color: var(--mp-color-text-muted);
+  font-size: var(--mp-font-size-sm);
+  font-weight: 700;
+}
+
+.detail-list dd {
+  margin: 0;
+  color: var(--mp-color-text);
+  font-weight: 800;
+}
+
+.plain-list {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.decision-history {
+  display: grid;
+  gap: var(--mp-space-md);
+}
+
+.decision-history li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.decision-history small {
+  color: var(--mp-color-text-muted);
+}
+
+.decision-form {
+  display: grid;
+  gap: var(--mp-space-md);
+  padding-top: var(--mp-space-md);
+  border-top: 1px solid var(--mp-color-border);
+}
+
+.decision-notes {
+  display: grid;
+  gap: 6px;
+  color: var(--mp-color-text);
+  font-weight: 800;
+}
+
+.decision-notes textarea {
+  width: 100%;
+  min-height: 74px;
+  padding: 10px 12px;
+  color: var(--mp-color-text);
+  background: var(--mp-color-surface-raised);
+  border: 1px solid var(--mp-color-border-strong);
+  border-radius: var(--mp-radius-md);
+  resize: vertical;
+}
+
+.decision-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.decision-button {
+  display: grid;
+  gap: 4px;
+  min-height: 82px;
+  padding: 12px;
+  color: var(--decision-text, var(--mp-color-text));
+  text-align: left;
+  background: var(--decision-bg, var(--mp-color-surface-raised));
+  border: 1px solid var(--decision-border, var(--mp-color-border));
+  border-radius: var(--mp-radius-md);
+  cursor: pointer;
+}
+
+.decision-button span {
+  font-weight: 800;
+}
+
+.decision-button small {
+  color: inherit;
+  line-height: 1.35;
+  opacity: 0.84;
+}
+
+.decision-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+.decision-button-critical {
+  --decision-bg: var(--mp-tone-critical-bg);
+  --decision-border: var(--mp-tone-critical-accent);
+  --decision-text: var(--mp-tone-critical-text);
+}
+
+.decision-button-success {
+  --decision-bg: var(--mp-tone-success-bg);
+  --decision-border: var(--mp-tone-success-accent);
+  --decision-text: var(--mp-tone-success-text);
+}
+
+.decision-button-warning {
+  --decision-bg: var(--mp-tone-warning-bg);
+  --decision-border: var(--mp-tone-warning-accent);
+  --decision-text: var(--mp-tone-warning-text);
+}
+
 @media (max-width: 980px) {
   .task-grid,
-  .route-grid {
+  .route-grid,
+  .recommendation-grid,
+  .decision-actions {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .section-heading {
+  .section-heading,
+  .recommendation-card-header {
     flex-direction: column;
+    grid-template-columns: 1fr;
     align-items: stretch;
   }
 
   .console-toolbar {
     align-items: stretch;
+  }
+
+  .detail-list div,
+  .detail-list-compact div {
+    grid-template-columns: 1fr;
   }
 }

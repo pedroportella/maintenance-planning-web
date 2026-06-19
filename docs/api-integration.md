@@ -14,3 +14,11 @@ The planner workbench is shaped around the maintenance-planning API contract. Th
 ## Local Review
 
 Current guardrails run without the API. The services package can resolve mock mode for local review or backend mode when an endpoint is explicitly configured. Feature screens should keep local mock review available so contributors can verify layout and planner workflows without external credentials.
+
+The planner routes call `createPlannerServices()` from server-side app code:
+
+- `/work-order-backlog` maps recommendation work orders into a planner inbox with ready, blocked and deferred states.
+- `/planning-runs` lists the current service-supplied run and links to `/planning-runs/[runId]` for package detail.
+- `/recommendations` reads package recommendations and records accept, reject or defer decisions through a server action.
+
+Mock mode keeps the decision journey deterministic and synthetic. Backend mode remains explicit and server-only.

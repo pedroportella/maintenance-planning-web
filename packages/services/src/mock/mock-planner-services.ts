@@ -12,6 +12,11 @@ import {
   mockPackageDecisionResult,
   stableFixtureTimestamp
 } from "../testing/fixtures";
+import type {
+  PackageRecommendationResult,
+  PlannerDecisionResult,
+  PlanningRecommendationsResult
+} from "../contracts";
 
 export function createMockPlannerServices(config: MockRuntimeConfig): PlannerServices {
   const fixture = getMockScenarioFixture(config.mockScenarioId);
@@ -31,13 +36,28 @@ export function createMockPlannerServices(config: MockRuntimeConfig): PlannerSer
         mapOperationsPosture(fixture.operationsPosture)
       ),
 
-    getRecommendationSet: async () => mapPlanningRecommendations(fixture.recommendations),
+    getRecommendationSet: async () =>
+      mapPlanningRecommendations(withRecordedDecisions(fixture.recommendations, config.mockScenarioId)),
 
     getWorkOrderBacklog: async () =>
-      mapWorkOrderBacklog(mapPlanningRecommendations(fixture.recommendations), stableFixtureTimestamp),
+      mapWorkOrderBacklog(
+        mapPlanningRecommendations(withRecordedDecisions(fixture.recommendations, config.mockScenarioId)),
+        stableFixtureTimestamp
+      ),
 
-    recordPlannerDecision: async (command) =>
-      mapPlannerDecisionResult(mockPackageDecisionResult(commandToFixtureInput(command)))
+    recordPlannerDecision: async (command) => {
+      const recommendation = fixture.recommendations.recommendations.find(
+        (candidate) => candidate.packageId === command.packageId
+      );
+      const result = mockPackageDecisionResult({
+        ...commandToFixtureInput(command),
+        packageNumber: recommendation?.packageNumber
+      });
+
+      recordMockDecisions(config.mockScenarioId, command.packageId, result.decisions);
+
+      return mapPlannerDecisionResult(result);
+    }
   };
 }
 
@@ -50,4 +70,60 @@ function commandToFixtureInput(command: PlannerDecisionCommand) {
     decidedBy: command.decidedBy,
     workOrderIds: command.workOrderIds ?? []
   };
+}
+
+const recordedDecisionStore = new Map<string, readonly PlannerDecisionResult[]>();
+
+function withRecordedDecisions(
+  recommendations: PlanningRecommendationsResult,
+  scenarioId: string
+): PlanningRecommendationsResult {
+  return {
+    ...recommendations,
+    recommendations: recommendations.recommendations.map((recommendation) =>
+      withRecordedPackageDecisions(recommendation, scenarioId)
+    )
+  };
+}
+
+function withRecordedPackageDecisions(
+  recommendation: PackageRecommendationResult,
+  scenarioId: string
+): PackageRecommendationResult {
+  const recordedDecisions = recordedDecisionStore.get(decisionStoreKey(scenarioId, recommendation.packageId));
+
+  if (!recordedDecisions || recordedDecisions.length === 0) {
+    return recommendation;
+  }
+
+  const latestDecision = recordedDecisions.at(-1);
+
+  return {
+    ...recommendation,
+    status: latestDecision ? packageStatusForDecision(latestDecision.decision) : recommendation.status,
+    decisions: [...recommendation.decisions, ...recordedDecisions]
+  };
+}
+
+function recordMockDecisions(
+  scenarioId: string,
+  packageId: string,
+  decisions: readonly PlannerDecisionResult[]
+) {
+  const key = decisionStoreKey(scenarioId, packageId);
+  const existingDecisions = recordedDecisionStore.get(key) ?? [];
+
+  recordedDecisionStore.set(key, [...existingDecisions, ...decisions]);
+}
+
+function decisionStoreKey(scenarioId: string, packageId: string) {
+  return `${scenarioId}:${packageId}`;
+}
+
+function packageStatusForDecision(decision: string) {
+  if (decision === "Accepted") return "PlannerReviewed";
+  if (decision === "Rejected") return "Rejected";
+  if (decision === "Deferred") return "Deferred";
+
+  return "Recommended";
 }
