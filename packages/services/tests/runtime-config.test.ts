@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   ALLOW_MOCKS_ENV,
+  API_TOKEN_ENV,
   API_URL_ENV,
   BACKEND_HORIZON_END_ENV,
   BACKEND_HORIZON_START_ENV,
@@ -28,6 +29,20 @@ describe("resolvePlannerRuntimeConfig", () => {
     ).toEqual({
       mode: "backend",
       apiBaseUrl: "https://api.example.test"
+    });
+  });
+
+  it("keeps the optional backend API token server-only", () => {
+    expect(
+      resolvePlannerRuntimeConfig({
+        [DATA_MODE_ENV]: "backend",
+        [API_URL_ENV]: "https://api.example.test/",
+        [API_TOKEN_ENV]: " local-reviewer-token "
+      })
+    ).toEqual({
+      mode: "backend",
+      apiBaseUrl: "https://api.example.test",
+      apiToken: "local-reviewer-token"
     });
   });
 
@@ -96,5 +111,6 @@ describe("resolvePlannerRuntimeConfig", () => {
 
   it("keeps the backend URL out of public environment variable names", () => {
     expect(API_URL_ENV.startsWith("NEXT_PUBLIC_")).toBe(false);
+    expect(API_TOKEN_ENV.startsWith("NEXT_PUBLIC_")).toBe(false);
   });
 });

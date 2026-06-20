@@ -4,10 +4,12 @@ export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>
 
 export class BackendHttpClient {
   private readonly apiBaseUrl: string;
+  private readonly apiToken: string | undefined;
   private readonly fetchImpl: FetchLike;
 
-  constructor(apiBaseUrl: string, fetchImpl: FetchLike = fetch) {
+  constructor(apiBaseUrl: string, fetchImpl: FetchLike = fetch, apiToken?: string) {
     this.apiBaseUrl = apiBaseUrl;
+    this.apiToken = apiToken;
     this.fetchImpl = fetchImpl;
   }
 
@@ -41,8 +43,14 @@ export class BackendHttpClient {
     init: RequestInit,
     expectedStatuses: readonly number[]
   ): Promise<TResponse> {
+    const headers = new Headers(init.headers);
+    if (this.apiToken && !headers.has("authorization")) {
+      headers.set("authorization", `Bearer ${this.apiToken}`);
+    }
+
     const response = await this.fetchImpl(this.resolveUrl(path), {
       ...init,
+      headers,
       cache: "no-store"
     });
 

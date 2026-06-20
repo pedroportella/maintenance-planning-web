@@ -43,6 +43,7 @@ function resolveContainerEnv() {
   }
 
   copyEnvIfPresent(values, "MAINTENANCE_PLANNING_API_URL");
+  copyEnvIfPresent(values, "MAINTENANCE_PLANNING_API_TOKEN");
   copyEnvIfPresent(values, "MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_START_UTC");
   copyEnvIfPresent(values, "MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_END_UTC");
   copyEnvIfPresent(values, "MAINTENANCE_PLANNING_WEB_BACKEND_REQUESTED_BY");

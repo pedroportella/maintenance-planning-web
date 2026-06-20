@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  API_TOKEN_ENV,
   API_URL_ENV,
   BACKEND_HORIZON_END_ENV,
   BACKEND_HORIZON_START_ENV,
@@ -178,6 +179,9 @@ describe("planner services", () => {
     const fetchCalls: string[] = [];
     const fetchImpl: FetchLike = async (input, init) => {
       fetchCalls.push(`${init?.method ?? "GET"} ${input}`);
+      expect(new Headers(init?.headers).get("authorization")).toBe(
+        "Bearer local-reviewer-token"
+      );
 
       if (input.endsWith("/api/v1/operations/posture")) {
         return jsonResponse<OperationsPostureReport>({
@@ -249,7 +253,8 @@ describe("planner services", () => {
     const services = createPlannerServices({
       env: {
         [DATA_MODE_ENV]: "backend",
-        [API_URL_ENV]: "https://api.example.test"
+        [API_URL_ENV]: "https://api.example.test",
+        [API_TOKEN_ENV]: "local-reviewer-token"
       },
       fetchImpl
     });

@@ -20,7 +20,10 @@ docker build -t maintenance-planning-web:local .
 - `/health/live` is a lightweight liveness route for container smoke and review load-balancer health checks.
 - Mock review mode requires `MAINTENANCE_PLANNING_WEB_DATA_MODE=mock` and `MAINTENANCE_PLANNING_WEB_ALLOW_MOCKS=true`.
 - Backend review mode requires `MAINTENANCE_PLANNING_WEB_DATA_MODE=backend` and a server-only `MAINTENANCE_PLANNING_API_URL`.
-- Do not add a `NEXT_PUBLIC_*` backend URL. The browser should receive rendered UI and action results, not private service origins.
+- Protected local backend review routes can also use a server-only `MAINTENANCE_PLANNING_API_TOKEN`.
+- Do not add a `NEXT_PUBLIC_*` backend URL or token. The browser should receive rendered UI and action results, not private service origins or credentials.
+
+For the cross-repo local Docker recipe, including API, simulator and web commands, see the [local Docker system runbook](https://github.com/pedroportella/maintenance-planning-api/blob/main/docs/local-docker-system.md).
 
 ## AWS Review Notes
 

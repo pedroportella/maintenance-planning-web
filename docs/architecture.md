@@ -39,7 +39,7 @@ Focused Playwright visual baselines cover `/ui-library` across desktop and mobil
 The services package supports mock data for local frontend review and API-backed data when an endpoint is explicitly configured. Runtime selection is server-only:
 
 - mock mode uses deterministic synthetic scenario fixtures;
-- backend mode requires a configured API URL;
+- backend mode requires a configured server-side API URL and can use a server-side API token for protected local routes;
 - production-like mock mode requires an explicit mock override.
 
 Browser-visible source must not embed private backend origins. Service calls are made from server-side route code and server actions; the browser receives mapped planner-facing view state and form results, not backend configuration.
@@ -50,4 +50,4 @@ Review hosting should keep that boundary intact by running the workbench as a se
 
 The repo builds a Node.js 22 Next.js standalone image from the workspace root. The image runs on port `8080`, exposes `/health/live` for liveness checks and copies only the standalone server output, static assets and public assets into the final runtime layer.
 
-Local container smoke starts the image in explicit mock mode and checks the first screen, recommendations, operations posture and UI-library routes. Backend review mode remains server-only through `MAINTENANCE_PLANNING_API_URL`; the browser must not receive a `NEXT_PUBLIC_*` backend origin.
+Local container smoke starts the image in explicit mock mode and checks the first screen, recommendations, operations posture and UI-library routes. Backend review mode remains server-only through `MAINTENANCE_PLANNING_API_URL` and optional token configuration; the browser must not receive a `NEXT_PUBLIC_*` backend origin or credential.

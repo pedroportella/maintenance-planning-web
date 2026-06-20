@@ -5,6 +5,7 @@ import { loadLocalEnv } from "./env-loader.mjs";
 
 const env = loadLocalEnv();
 const apiUrl = env.MAINTENANCE_PLANNING_API_URL?.trim();
+const apiToken = env.MAINTENANCE_PLANNING_API_TOKEN?.trim();
 
 if (!apiUrl) {
   console.error("Backend end-to-end smoke requires MAINTENANCE_PLANNING_API_URL.");
@@ -38,6 +39,7 @@ const child = spawn(
     env: {
       ...env,
       MAINTENANCE_PLANNING_API_URL: apiUrl,
+      ...(apiToken ? { MAINTENANCE_PLANNING_API_TOKEN: apiToken } : {}),
       MAINTENANCE_PLANNING_WEB_DATA_MODE: "backend"
     },
     stdio: "inherit"

@@ -53,9 +53,9 @@ The workbench should be hosted as a server-rendered Next.js app for review. Stat
 Recommended review-hosting boundary:
 
 - run Node.js 22 with the built Next.js app;
-- keep `MAINTENANCE_PLANNING_API_URL` as a server-only environment variable;
+- keep `MAINTENANCE_PLANNING_API_URL` and any local API token as server-only environment variables;
 - set `MAINTENANCE_PLANNING_WEB_DATA_MODE=mock` for deterministic standalone review, or `backend` only when a review API is intentionally available;
-- do not expose backend origins through `NEXT_PUBLIC_*` variables;
+- do not expose backend origins or credentials through `NEXT_PUBLIC_*` variables;
 - place review access behind hosting-provider access controls or a temporary private review URL.
 
 Review hosting is demonstration infrastructure. It uses synthetic data, does not include an application auth layer, does not connect to live source systems and is not a readiness statement for customer traffic.

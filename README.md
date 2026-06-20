@@ -22,6 +22,8 @@ This web workbench is one part of a three-repo synthetic maintenance-planning sh
 
 Reviewers can inspect this repo on its own through mock mode. Backend mode should only be used after the sibling API is running and seeded by the simulator, and backend origins must stay server-only.
 
+For a whole-system local Docker recipe, see the [local Docker system runbook](https://github.com/pedroportella/maintenance-planning-api/blob/main/docs/local-docker-system.md).
+
 ## Workspace
 
 - [apps/planner-workbench](apps/planner-workbench/README.md) - Next.js app shell for the planner workbench.

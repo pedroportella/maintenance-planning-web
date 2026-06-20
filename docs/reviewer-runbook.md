@@ -10,7 +10,7 @@ This workbench is the React planner surface in a three-repo synthetic showcase:
 - [maintenance-data-simulator](https://github.com/pedroportella/maintenance-data-simulator) seeds deterministic synthetic scenarios locally or publishes them to EventBridge for a review stack.
 - [maintenance-planning-web](https://github.com/pedroportella/maintenance-planning-web) shows the planner workflow through mock mode by default and server-side backend mode when the API has been seeded.
 
-Use mock checks for default review evidence. Use backend smoke only after the sibling API is healthy and populated by the simulator. Keep backend origins server-only and out of browser-visible bundles.
+Use mock checks for default review evidence. Use backend smoke only after the sibling API is healthy and populated by the simulator. Keep backend origins and tokens server-only and out of browser-visible bundles.
 
 ## Prerequisites
 

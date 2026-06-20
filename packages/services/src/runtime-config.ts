@@ -4,6 +4,7 @@ import { isMockScenarioId, type MockScenarioId } from "./testing/fixtures";
 
 export const DATA_MODE_ENV = "MAINTENANCE_PLANNING_WEB_DATA_MODE";
 export const API_URL_ENV = "MAINTENANCE_PLANNING_API_URL";
+export const API_TOKEN_ENV = "MAINTENANCE_PLANNING_API_TOKEN";
 export const ALLOW_MOCKS_ENV = "MAINTENANCE_PLANNING_WEB_ALLOW_MOCKS";
 export const MOCK_SCENARIO_ENV = "MAINTENANCE_PLANNING_WEB_MOCK_SCENARIO";
 export const BACKEND_HORIZON_START_ENV = "MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_START_UTC";
@@ -20,6 +21,7 @@ export type MockRuntimeConfig = {
 export type BackendRuntimeConfig = {
   readonly mode: "backend";
   readonly apiBaseUrl: string;
+  readonly apiToken?: string;
   readonly defaultRecommendationQuery?: RecommendationQuery;
 };
 
@@ -74,9 +76,11 @@ export function resolvePlannerRuntimeConfig(
   }
 
   const defaultRecommendationQuery = resolveBackendRecommendationQuery(env);
+  const apiToken = env[API_TOKEN_ENV]?.trim();
   const backendConfig: BackendRuntimeConfig = {
     mode: "backend",
-    apiBaseUrl: normalizeApiBaseUrl(apiBaseUrl)
+    apiBaseUrl: normalizeApiBaseUrl(apiBaseUrl),
+    ...(apiToken ? { apiToken } : {})
   };
 
   return defaultRecommendationQuery

@@ -1,6 +1,7 @@
 export type * from "./contracts";
 export {
   ALLOW_MOCKS_ENV,
+  API_TOKEN_ENV,
   API_URL_ENV,
   BACKEND_HORIZON_END_ENV,
   BACKEND_HORIZON_START_ENV,

@@ -23,6 +23,7 @@ export default defineConfig({
       MAINTENANCE_PLANNING_WEB_BACKEND_REQUESTED_BY:
         process.env.MAINTENANCE_PLANNING_WEB_BACKEND_REQUESTED_BY ?? "planner-workbench-e2e",
       MAINTENANCE_PLANNING_API_URL: process.env.MAINTENANCE_PLANNING_API_URL ?? "",
+      MAINTENANCE_PLANNING_API_TOKEN: process.env.MAINTENANCE_PLANNING_API_TOKEN ?? "",
       MAINTENANCE_PLANNING_WEB_DATA_MODE: "backend"
     },
     reuseExistingServer: false,

@@ -29,7 +29,7 @@ export function createBackendPlannerServices(
   config: BackendRuntimeConfig,
   fetchImpl?: FetchLike
 ): PlannerServices {
-  const client = new BackendHttpClient(config.apiBaseUrl, fetchImpl);
+  const client = new BackendHttpClient(config.apiBaseUrl, fetchImpl, config.apiToken);
 
   return {
     getRuntimeInfo: () => ({

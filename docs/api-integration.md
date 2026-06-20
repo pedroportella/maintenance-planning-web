@@ -34,8 +34,9 @@ Runtime inputs:
 
 - `MAINTENANCE_PLANNING_WEB_DATA_MODE=backend` selects the backend adapter.
 - `MAINTENANCE_PLANNING_API_URL` points the server-side adapter at the local API origin.
+- `MAINTENANCE_PLANNING_API_TOKEN` is an optional server-side bearer token for protected local review routes.
 - `MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_START_UTC` and `MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_END_UTC` can align automatic planning-run creation with the deterministic simulator scenario.
-- The API URL is not a public browser environment variable.
+- The API URL and token are not public browser environment variables.
 
 Copy the safe local example once, then use the repo-level command after the local API and simulator scenario are ready:
 
