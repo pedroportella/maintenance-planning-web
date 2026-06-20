@@ -12,6 +12,16 @@ This repository hosts a React and Next.js workbench for planners who review work
 - Does not require the API, simulator or cloud credentials for CI guardrails.
 - Avoids hard-coded private backend origins in browser-visible code.
 
+## Showcase Repos
+
+This web workbench is one part of a three-repo synthetic maintenance-planning showcase:
+
+- [maintenance-planning-api](https://github.com/pedroportella/maintenance-planning-api) owns persistence, planning recommendations, API contracts, operations posture, worker ingestion, replay and outbound events.
+- [maintenance-data-simulator](https://github.com/pedroportella/maintenance-data-simulator) produces deterministic synthetic source-system-shaped data for local HTTP feed checks and explicit AWS EventBridge publish checks.
+- [maintenance-planning-web](https://github.com/pedroportella/maintenance-planning-web) presents the planner journey over typed service adapters, using deterministic mock mode by default and server-side backend mode for API-backed review.
+
+Reviewers can inspect this repo on its own through mock mode. Backend mode should only be used after the sibling API is running and seeded by the simulator, and backend origins must stay server-only.
+
 ## Workspace
 
 - [apps/planner-workbench](apps/planner-workbench/README.md) - Next.js app shell for the planner workbench.

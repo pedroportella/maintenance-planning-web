@@ -2,6 +2,16 @@
 
 Use this runbook to inspect the planner workbench reviewer pack.
 
+## Cross-Repo Fit
+
+This workbench is the React planner surface in a three-repo synthetic showcase:
+
+- [maintenance-planning-api](https://github.com/pedroportella/maintenance-planning-api) owns recommendation, decision, posture, replay and event contracts.
+- [maintenance-data-simulator](https://github.com/pedroportella/maintenance-data-simulator) seeds deterministic synthetic scenarios locally or publishes them to EventBridge for a review stack.
+- [maintenance-planning-web](https://github.com/pedroportella/maintenance-planning-web) shows the planner workflow through mock mode by default and server-side backend mode when the API has been seeded.
+
+Use mock checks for default review evidence. Use backend smoke only after the sibling API is healthy and populated by the simulator. Keep backend origins server-only and out of browser-visible bundles.
+
 ## Prerequisites
 
 - Node.js 22.
@@ -75,7 +85,7 @@ docker compose --env-file .env.local --profile sqlserver up -d sqlserver
 set -a
 . ./.env.local
 set +a
-dotnet dotnet-ef database update --project src/MaintenancePlanning.Infrastructure/MaintenancePlanning.Infrastructure.csproj --startup-project src/MaintenancePlanning.Infrastructure/MaintenancePlanning.Infrastructure.csproj --context MaintenancePlanningDbContext
+dotnet dotnet-ef database update --project src/MaintenancePlanning.Infrastructure/MaintenancePlanning.Infrastructure.csproj --startup-project src/MaintenancePlanning.Api/MaintenancePlanning.Api.csproj --context MaintenancePlanningDbContext
 dotnet run --project src/MaintenancePlanning.Api/MaintenancePlanning.Api.csproj --urls http://127.0.0.1:5000
 ```
 
