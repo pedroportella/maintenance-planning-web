@@ -242,27 +242,6 @@ export const workbenchSections = [
   }
 ] as const satisfies readonly WorkbenchSection[];
 
-export const plannerSummaryItems = [
-  {
-    label: "Coordination focus",
-    value: "5",
-    detail: "Synthetic exceptions surfaced first.",
-    tone: "warning"
-  },
-  {
-    label: "Ready to review",
-    value: "18",
-    detail: "Placeholder backlog items in scope.",
-    tone: "success"
-  },
-  {
-    label: "Scenario shells",
-    value: "6",
-    detail: "Outcome routes ready for later data.",
-    tone: "info"
-  }
-] as const;
-
 export function getWorkbenchSection(slug: WorkbenchSectionSlug): WorkbenchSection {
   const section = workbenchSections.find((candidate) => candidate.slug === slug);
 
