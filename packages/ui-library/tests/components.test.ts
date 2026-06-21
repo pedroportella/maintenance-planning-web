@@ -9,6 +9,7 @@ import {
   ErrorState,
   LoadingState,
   PageHeader,
+  QuietNote,
   SegmentedNav,
   StatusBadge,
   type AppShellNavItem,
@@ -22,11 +23,13 @@ describe("ui-library components", () => {
     const navItems: AppShellNavItem[] = [
       {
         description: "Items needing review",
+        group: "Review",
         href: "/work-order-backlog",
         label: "Work-order backlog"
       },
       {
         description: "Decision queue",
+        group: "Review",
         href: "/recommendations",
         label: "Recommendations"
       }
@@ -51,6 +54,7 @@ describe("ui-library components", () => {
     expect(markup).toContain('aria-label="Planner workbench home"');
     expect(markup).toContain('aria-label="Planner sections"');
     expect(markup).toContain('aria-current="page"');
+    expect(markup).toContain("app-shell-nav-heading");
     expect(markup).toContain("Recommendations");
   });
 
@@ -62,15 +66,17 @@ describe("ui-library components", () => {
         createElement(PageHeader, {
           badge: createElement(StatusBadge, { children: "Static mock shell", tone: "info" }),
           description: "Synthetic route review.",
-          title: "Planner coordination queue"
+          title: "Planner Workbench"
         }),
-        createElement(Alert, { children: "Missing detail", title: "Needs review", tone: "warning" })
+        createElement(Alert, { children: "Missing detail", title: "Needs review", tone: "warning" }),
+        createElement(QuietNote, { children: "Synthetic local review only.", title: "Scope" })
       )
     );
 
-    expect(markup).toContain("<h1>Planner coordination queue</h1>");
+    expect(markup).toContain("<h1>Planner Workbench</h1>");
     expect(markup).toContain("status-badge-info");
     expect(markup).toContain('role="alert"');
+    expect(markup).toContain("quiet-note");
   });
 
   it("renders data tables with captions and empty states", () => {
@@ -94,7 +100,7 @@ describe("ui-library components", () => {
 
     const populated = renderToStaticMarkup(
       createElement(DataTable<Row>, {
-        caption: "Synthetic coordination queue",
+        caption: "Package recommendation queue",
         columns,
         getRowKey: (row) => row.workOrder,
         rows: [
@@ -114,7 +120,7 @@ describe("ui-library components", () => {
       })
     );
 
-    expect(populated).toContain("Synthetic coordination queue");
+    expect(populated).toContain("Package recommendation queue");
     expect(populated).toContain("<th");
     expect(populated).toContain("WO-1000");
     expect(empty).toContain("No rows to show");

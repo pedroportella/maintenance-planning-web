@@ -22,7 +22,7 @@ The workbench currently renders local task routes for:
 - operations posture;
 - scenario outcomes.
 
-The first screen is a static synthetic coordination queue that proves the workbench shell, metrics, table layout and route navigation without introducing a home-screen service call. The backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome routes read from the server-side services package. Operations and scenario pages expose compact freshness, import, posture and scenario evidence for reviewer flow without adding a broad admin dashboard.
+The first screen is a compact workbench start page that points reviewers into the service-backed recommendation, work-order triage and evidence routes without introducing a home-screen service call. The backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome routes read from the server-side services package. Operations and scenario pages expose compact freshness, import, posture and scenario evidence for reviewer flow without adding a broad admin dashboard.
 
 The `/ui-library` route is separate from planner task navigation. It is a no-index reviewer/developer evidence page for reusable UI states and uses deterministic mock services only.
 

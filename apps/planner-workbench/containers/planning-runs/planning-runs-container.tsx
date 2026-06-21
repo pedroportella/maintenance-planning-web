@@ -1,9 +1,9 @@
 import {
-  Alert,
   DataTable,
   EmptyState,
   MetricSummary,
   PageHeader,
+  QuietNote,
   StatusBadge,
   WorkbenchPanel,
   type DataTableColumn
@@ -101,14 +101,13 @@ export default async function PlanningRunsPage() {
         <MetricSummary
           ariaLabel="Planning run summary"
           items={buildPlanningRunMetrics(recommendationSet)}
+          variant="compact"
         />
 
-        <Alert title="Run list scope" tone="info">
-          <p>
-            This view lists the current synthetic planning run exposed by the service contract.
-            Historical run browsing is left to a later API-backed stage.
-          </p>
-        </Alert>
+        <QuietNote title="Run list scope">
+          This view lists the current synthetic planning run exposed by the service contract.
+          Historical run browsing is left to a later API-backed stage.
+        </QuietNote>
 
         <WorkbenchPanel className="console-panel" labelledBy="planning-run-list">
           <div className="section-heading">
@@ -123,6 +122,7 @@ export default async function PlanningRunsPage() {
           <DataTable
             caption="Planning run list"
             columns={planningRunColumns}
+            density="compact"
             emptyState={
               <EmptyState
                 description="The service returned no planning runs for this synthetic review state."

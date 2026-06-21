@@ -25,5 +25,5 @@ test("renders local API recommendations and operations posture", async ({ page }
   await expect(page.getByText("backend mode").first()).toBeVisible();
   await expect(page.getByRole("table", { name: "Operations posture signals" })).toBeVisible();
   await expect(page.getByText("synthetic-source").first()).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Current backend review state" })).toBeVisible();
+  await expect(page.getByText("Latest scenario: Current backend review state")).toBeVisible();
 });

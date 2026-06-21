@@ -21,7 +21,7 @@ export async function recordRecommendationDecision(formData: FormData) {
     packageIdForRedirect = packageId;
     planningRunIdForRedirect = planningRunId;
 
-    const action = resolvePlannerDecisionAction(requireFormText(formData, "actionCode"));
+    const action = resolvePlannerDecisionAction(resolveSubmittedActionCode(formData));
     const workOrderIds = formData
       .getAll("workOrderIds")
       .filter((value): value is string => typeof value === "string" && value.length > 0);
@@ -79,6 +79,16 @@ function requireFormText(formData: FormData, key: string): string {
   }
 
   return value.trim();
+}
+
+function resolveSubmittedActionCode(formData: FormData): string {
+  const actionCode = requireFormText(formData, "actionCode");
+
+  if (actionCode !== "defer") {
+    return actionCode;
+  }
+
+  return requireFormText(formData, "deferActionCode");
 }
 
 function readOptionalFormText(formData: FormData, key: string): string | undefined {

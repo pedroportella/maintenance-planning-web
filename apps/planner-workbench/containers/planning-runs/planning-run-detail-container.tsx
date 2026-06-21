@@ -139,6 +139,7 @@ export default async function PlanningRunDetailPage({ params }: PlanningRunDetai
         <MetricSummary
           ariaLabel="Planning run detail summary"
           items={buildPlanningRunMetrics(recommendationSet)}
+          variant="compact"
         />
 
         <Alert title="Run review posture" tone={blockedCount > 0 ? "warning" : "success"}>
@@ -161,6 +162,7 @@ export default async function PlanningRunDetailPage({ params }: PlanningRunDetai
           <DataTable
             caption="Planning run recommendation detail"
             columns={recommendationColumns}
+            density="compact"
             emptyState={
               <EmptyState
                 description="The service returned no recommendations for this planning run."

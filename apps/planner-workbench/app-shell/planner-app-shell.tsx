@@ -20,6 +20,7 @@ export function PlannerAppShell({ children }: Readonly<{ children: ReactNode }>)
 
     return {
       description: section.navHint,
+      group: section.navGroup,
       href: section.path,
       icon: <Icon aria-hidden="true" size={20} />,
       label: section.label

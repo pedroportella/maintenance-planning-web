@@ -24,6 +24,7 @@ export type WorkbenchSection = {
     tone: Exclude<Tone, "critical">;
     value: string;
   };
+  navGroup: "Evidence" | "Review";
   navHint: string;
   path: `/${WorkbenchSectionSlug}`;
   placeholderBody: string;
@@ -36,18 +37,53 @@ export type WorkbenchSection = {
 
 export const workbenchSections = [
   {
+    slug: "recommendations",
+    label: "Recommendations",
+    path: "/recommendations",
+    navGroup: "Review",
+    navHint: "Package decisions",
+    summary:
+      "A package recommendation queue for reviewing explanations, blockers and planner decisions.",
+    coordinationCue: "Open one package to understand readiness and record a decision.",
+    tone: "warning",
+    metric: {
+      label: "Packages",
+      value: "2",
+      detail: "Current synthetic package recommendations for review.",
+      tone: "warning"
+    },
+    placeholderTitle: "Decision review",
+    placeholderBody:
+      "Decision controls record accept, reject and defer outcomes through the planner service boundary.",
+    placeholderTasks: [
+      {
+        label: "Ready package",
+        detail: "Package can move forward after planner review.",
+        status: "Ready",
+        tone: "success"
+      },
+      {
+        label: "Blocked package",
+        detail: "Package needs coordination before acceptance.",
+        status: "Review",
+        tone: "warning"
+      }
+    ]
+  },
+  {
     slug: "work-order-backlog",
     label: "Work-order backlog",
     path: "/work-order-backlog",
-    navHint: "Ready, blocked and waiting",
+    navGroup: "Review",
+    navHint: "Work-order triage",
     summary:
-      "A focused backlog view for reviewing synthetic work orders before planner action.",
-    coordinationCue: "Confirm ready work and isolate blocked items.",
+      "A focused triage view for imported synthetic work orders, readiness and package links.",
+    coordinationCue: "Filter work orders by readiness and open the related package.",
     tone: "info",
     metric: {
-      label: "Backlog placeholder",
-      value: "18",
-      detail: "Synthetic items grouped for review.",
+      label: "Backlog items",
+      value: "2",
+      detail: "Synthetic work orders in the current planner service response.",
       tone: "info"
     },
     placeholderTitle: "Backlog triage",
@@ -69,18 +105,121 @@ export const workbenchSections = [
     ]
   },
   {
+    slug: "coordination-exceptions",
+    label: "Coordination exceptions",
+    path: "/coordination-exceptions",
+    navGroup: "Review",
+    navHint: "Exception filter",
+    summary:
+      "A filtered work-order triage route for blockers, deferrals and source-data gaps.",
+    coordinationCue: "Work through the items most likely to block planning flow.",
+    tone: "critical",
+    metric: {
+      label: "Exceptions",
+      value: "1",
+      detail: "Synthetic coordination items requiring attention.",
+      tone: "warning"
+    },
+    placeholderTitle: "Exception queue",
+    placeholderBody:
+      "This route keeps coordination work visible while source-system-shaped details stay synthetic.",
+    placeholderTasks: [
+      {
+        label: "Missing estimate",
+        detail: "Estimated effort needs source-data review.",
+        status: "Review",
+        tone: "warning"
+      },
+      {
+        label: "Deferred decision",
+        detail: "Planner rationale remains visible.",
+        status: "Hold",
+        tone: "info"
+      }
+    ]
+  },
+  {
+    slug: "operations-posture",
+    label: "Operations posture",
+    path: "/operations-posture",
+    navGroup: "Evidence",
+    navHint: "Trust summary",
+    summary:
+      "A planner-visible trust summary for freshness, source-data readiness and latest import state.",
+    coordinationCue: "Scan posture signals before starting deeper review.",
+    tone: "neutral",
+    metric: {
+      label: "Posture",
+      value: "Healthy",
+      detail: "Synthetic review evidence is available.",
+      tone: "info"
+    },
+    placeholderTitle: "Readiness view",
+    placeholderBody:
+      "The page shows API-owned posture state without implying live service connectivity.",
+    placeholderTasks: [
+      {
+        label: "Data freshness",
+        detail: "Latest synthetic import state.",
+        status: "Fresh",
+        tone: "success"
+      },
+      {
+        label: "Review cadence",
+        detail: "Planner-facing readiness signals.",
+        status: "Ready",
+        tone: "info"
+      }
+    ]
+  },
+  {
+    slug: "scenario-outcomes",
+    label: "Scenario outcomes",
+    path: "/scenario-outcomes",
+    navGroup: "Evidence",
+    navHint: "Scenario evidence",
+    summary:
+      "A scenario evidence view for deterministic synthetic outcomes and stale/rejected counts.",
+    coordinationCue: "Compare synthetic outcomes across review scenarios.",
+    tone: "info",
+    metric: {
+      label: "Scenarios",
+      value: "3",
+      detail: "Synthetic outcome rows in the current review set.",
+      tone: "info"
+    },
+    placeholderTitle: "Outcome review",
+    placeholderBody:
+      "Scenario evidence stays synthetic and local unless API-backed verification is explicitly added.",
+    placeholderTasks: [
+      {
+        label: "Baseline scenario",
+        detail: "Expected planner outcomes.",
+        status: "Ready",
+        tone: "success"
+      },
+      {
+        label: "Exception scenario",
+        detail: "Coordination-heavy outcome evidence.",
+        status: "Review",
+        tone: "info"
+      }
+    ]
+  },
+  {
     slug: "planning-runs",
     label: "Planning runs",
     path: "/planning-runs",
-    navHint: "Recent run context",
+    navGroup: "Evidence",
+    navHint: "Run context",
     summary:
-      "A planner-visible run view for readiness checks and recommendation review cadence.",
-    coordinationCue: "Check which run should anchor the next review.",
+      "A planner-visible run view for current recommendation context.",
+    coordinationCue: "Check which run anchors the current recommendation review.",
     tone: "success",
     metric: {
-      label: "Run shell",
-      value: "3",
-      detail: "Example run slots ready for later service data.",
+      label: "Current run",
+      value: "1",
+      detail: "Current service-supplied planning run.",
       tone: "success"
     },
     placeholderTitle: "Run review",
@@ -94,141 +233,9 @@ export const workbenchSections = [
         tone: "success"
       },
       {
-        label: "Prior run comparison",
-        detail: "Reserved for variance review.",
-        status: "Queued",
-        tone: "info"
-      }
-    ]
-  },
-  {
-    slug: "recommendations",
-    label: "Recommendations",
-    path: "/recommendations",
-    navHint: "Accept, defer or reject",
-    summary:
-      "A recommendation workbench for planner decisions over service-supplied package options.",
-    coordinationCue: "Review package explanations, blockers and decision history.",
-    tone: "warning",
-    metric: {
-      label: "Decision slots",
-      value: "7",
-      detail: "Synthetic slots for future recommendation review.",
-      tone: "warning"
-    },
-    placeholderTitle: "Decision review",
-    placeholderBody:
-      "Decision controls record accept, reject and defer outcomes through the planner service boundary.",
-    placeholderTasks: [
-      {
-        label: "Review candidate",
-        detail: "Placeholder for a future recommendation card.",
-        status: "Review",
-        tone: "warning"
-      },
-      {
-        label: "Deferred item",
-        detail: "Placeholder for planner rationale capture.",
-        status: "Later",
-        tone: "info"
-      }
-    ]
-  },
-  {
-    slug: "coordination-exceptions",
-    label: "Coordination exceptions",
-    path: "/coordination-exceptions",
-    navHint: "Items needing follow-up",
-    summary:
-      "A route shell for mismatches, missing details and coordination items that need planner attention.",
-    coordinationCue: "Work through the items most likely to block planning flow.",
-    tone: "critical",
-    metric: {
-      label: "Exceptions",
-      value: "5",
-      detail: "Synthetic coordination items requiring attention.",
-      tone: "warning"
-    },
-    placeholderTitle: "Exception queue",
-    placeholderBody:
-      "This route keeps coordination work visible while later stages add source-system-shaped details.",
-    placeholderTasks: [
-      {
-        label: "Window mismatch",
-        detail: "Planning window needs a coordinator review.",
-        status: "Review",
-        tone: "warning"
-      },
-      {
-        label: "Missing dependency",
-        detail: "Dependency detail is waiting on confirmation.",
-        status: "Hold",
-        tone: "info"
-      }
-    ]
-  },
-  {
-    slug: "operations-posture",
-    label: "Operations posture",
-    path: "/operations-posture",
-    navHint: "Readiness indicators",
-    summary:
-      "A compact route shell for future readiness, latency and planner-facing service indicators.",
-    coordinationCue: "Scan posture signals before starting deeper review.",
-    tone: "neutral",
-    metric: {
-      label: "Posture checks",
-      value: "4",
-      detail: "Synthetic indicators for layout review.",
-      tone: "info"
-    },
-    placeholderTitle: "Readiness view",
-    placeholderBody:
-      "The page reserves space for API-owned posture state without implying live service connectivity.",
-    placeholderTasks: [
-      {
-        label: "Data freshness",
-        detail: "Placeholder for service-supplied freshness.",
-        status: "Mock",
-        tone: "info"
-      },
-      {
-        label: "Review cadence",
-        detail: "Placeholder for planner workflow timing.",
-        status: "Mock",
-        tone: "info"
-      }
-    ]
-  },
-  {
-    slug: "scenario-outcomes",
-    label: "Scenario outcomes",
-    path: "/scenario-outcomes",
-    navHint: "Synthetic scenario evidence",
-    summary:
-      "A route shell for scenario result review once deterministic simulator outputs are connected.",
-    coordinationCue: "Compare synthetic outcomes across review scenarios.",
-    tone: "info",
-    metric: {
-      label: "Scenario shells",
-      value: "6",
-      detail: "Reserved outcome rows for reviewer flow.",
-      tone: "info"
-    },
-    placeholderTitle: "Outcome review",
-    placeholderBody:
-      "Scenario evidence stays synthetic and local until API-backed verification is explicitly added.",
-    placeholderTasks: [
-      {
-        label: "Baseline scenario",
-        detail: "Reserved row for expected planner outcomes.",
-        status: "Ready",
-        tone: "success"
-      },
-      {
-        label: "Exception scenario",
-        detail: "Reserved row for coordination-heavy outcomes.",
-        status: "Mock",
+        label: "Run detail",
+        detail: "Recommendation package context.",
+        status: "Open",
         tone: "info"
       }
     ]
@@ -267,5 +274,5 @@ export function getWorkbenchSection(slug: WorkbenchSectionSlug): WorkbenchSectio
 }
 
 export function getPrimaryCoordinationSection(): WorkbenchSection {
-  return getWorkbenchSection("coordination-exceptions");
+  return getWorkbenchSection("recommendations");
 }

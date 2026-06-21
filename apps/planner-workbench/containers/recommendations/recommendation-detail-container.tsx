@@ -1,14 +1,11 @@
 import {
   ErrorState,
-  MetricSummary,
   PageHeader,
   StatusBadge,
-  WorkbenchPanel,
-  type MetricSummaryItem
+  WorkbenchPanel
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
-  type PlannerRecommendation,
   type PlannerRecommendationSet,
   type PlannerRuntimeInfo
 } from "@maintenance-planning/services";
@@ -16,7 +13,6 @@ import { getWorkbenchSection } from "@maintenance-planning/utils";
 import Link from "next/link";
 import { PlannerRouteFailure } from "@/components/planner-route-state";
 import {
-  formatHours,
   toneForReadiness,
   toneForStatus
 } from "@/lib/planner-format";
@@ -95,11 +91,6 @@ export default async function RecommendationDetailContainer({
           title={recommendation.packageNumber}
         />
 
-        <MetricSummary
-          ariaLabel="Package recommendation summary"
-          items={buildPackageMetrics(recommendation)}
-        />
-
         <RecommendationDecisionNotice params={queryParams} />
 
         <RecommendationDetailPanel
@@ -154,39 +145,10 @@ function RecommendationNotFound({
       />
       <WorkbenchPanel>
         <ErrorState
-          description={`Open ${section.label.toLowerCase()} and choose a package from the current synthetic planning run.`}
+          description={`Open ${section.label.toLowerCase()} and choose a package from the current synthetic planning run. Visible package numbers are labels; package detail links use stable package ids.`}
           title="Package could not be found"
         />
       </WorkbenchPanel>
     </main>
   );
-}
-
-function buildPackageMetrics(recommendation: PlannerRecommendation): readonly MetricSummaryItem[] {
-  return [
-    {
-      detail: "Service score for this package grouping.",
-      label: "Score",
-      tone: toneForStatus(recommendation.status),
-      value: String(recommendation.score)
-    },
-    {
-      detail: "Estimated work inside the package.",
-      label: "Estimated work",
-      tone: "neutral",
-      value: formatHours(recommendation.estimatedHours)
-    },
-    {
-      detail: "Service-owned blockers to review before acceptance.",
-      label: "Blockers",
-      tone: recommendation.blockers.length > 0 ? "warning" : "success",
-      value: String(recommendation.blockers.length)
-    },
-    {
-      detail: "Work orders included in this package.",
-      label: "Work orders",
-      tone: "info",
-      value: String(recommendation.workOrders.length)
-    }
-  ];
 }

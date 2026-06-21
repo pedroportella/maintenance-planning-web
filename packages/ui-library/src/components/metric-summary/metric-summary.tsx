@@ -17,6 +17,7 @@ export type MetricSummaryProps = {
   ariaLabel: string;
   className?: string;
   items: readonly MetricSummaryItem[];
+  variant?: "cards" | "compact";
 };
 
 export function MetricCard({
@@ -35,9 +36,17 @@ export function MetricCard({
   );
 }
 
-export function MetricSummary({ ariaLabel, className, items }: MetricSummaryProps) {
+export function MetricSummary({
+  ariaLabel,
+  className,
+  items,
+  variant = "cards"
+}: MetricSummaryProps) {
   return (
-    <section aria-label={ariaLabel} className={joinClasses("metric-summary", className)}>
+    <section
+      aria-label={ariaLabel}
+      className={joinClasses("metric-summary", `metric-summary-${variant}`, className)}
+    >
       {items.map((item) => (
         <MetricCard
           detail={item.detail}

@@ -21,41 +21,40 @@ import {
   toneForScenarioOutcome
 } from "../lib/planner-format";
 import { toPlannerRouteIssue } from "../lib/planner-route-state";
-import { coordinationQueueItems, plannerConsoleSummary } from "../lib/planner-console-data";
 
 describe("workbench section model", () => {
   it("defines the planner task routes in a stable order", () => {
     expect(workbenchSections.map((section) => section.path)).toEqual([
-      "/work-order-backlog",
-      "/planning-runs",
       "/recommendations",
+      "/work-order-backlog",
       "/coordination-exceptions",
       "/operations-posture",
-      "/scenario-outcomes"
+      "/scenario-outcomes",
+      "/planning-runs"
     ]);
   });
 
-  it("selects coordination exceptions as the home focus", () => {
-    expect(getPrimaryCoordinationSection().slug).toBe("coordination-exceptions");
+  it("selects recommendations as the home focus", () => {
+    expect(getPrimaryCoordinationSection().slug).toBe("recommendations");
   });
 
   it("returns route metadata by slug", () => {
     expect(getWorkbenchSection("recommendations").label).toBe("Recommendations");
+    expect(getWorkbenchSection("recommendations").navGroup).toBe("Review");
     expect(getWorkbenchSection("recommendations").placeholderBody).toContain(
       "planner service boundary"
     );
   });
 
-  it("keeps the home console centered on coordination work", () => {
-    expect(plannerConsoleSummary.map((item) => item.label)).toEqual([
-      "Needs coordination",
-      "Ready without blocker",
-      "Deferred for review"
+  it("groups navigation into review and evidence sections", () => {
+    expect(workbenchSections.map((section) => section.navGroup)).toEqual([
+      "Review",
+      "Review",
+      "Review",
+      "Evidence",
+      "Evidence",
+      "Evidence"
     ]);
-    expect(coordinationQueueItems).toHaveLength(5);
-    expect(coordinationQueueItems.every((item) => item.workOrderNumber.startsWith("WO-"))).toBe(
-      true
-    );
   });
 
   it("maps planner decision controls to API-shaped command values", () => {

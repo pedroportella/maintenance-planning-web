@@ -19,6 +19,7 @@ export type AppShellBrand = {
 
 export type AppShellNavItem = {
   description?: string;
+  group?: string;
   href: string;
   icon?: ReactNode;
   label: string;
@@ -46,6 +47,7 @@ export function AppShell({
   sidebarNote
 }: AppShellProps) {
   const LinkComponent = linkComponent ?? DefaultShellLink;
+  const navGroups = groupNavItems(navItems);
 
   return (
     <div className={joinClasses("app-shell", className)}>
@@ -59,24 +61,34 @@ export function AppShell({
         </LinkComponent>
 
         <nav aria-label={navAriaLabel} className="app-shell-nav">
-          {navItems.map((item) => {
-            const isActive = activeHref === item.href;
+          {navGroups.map((group) => (
+            <div className="app-shell-nav-group" key={group.label ?? "primary"}>
+              {group.label ? <p className="app-shell-nav-heading">{group.label}</p> : null}
+              {group.items.map((item) => {
+                const isActive =
+                  activeHref === item.href ||
+                  Boolean(activeHref?.startsWith(`${item.href}/`));
 
-            return (
-              <LinkComponent
-                aria-current={isActive ? "page" : undefined}
-                className={joinClasses("app-shell-nav-link", isActive && "app-shell-nav-link-active")}
-                href={item.href}
-                key={item.href}
-              >
-                {item.icon ? <span className="app-shell-nav-icon">{item.icon}</span> : null}
-                <span className="app-shell-nav-copy">
-                  <strong>{item.label}</strong>
-                  {item.description ? <span>{item.description}</span> : null}
-                </span>
-              </LinkComponent>
-            );
-          })}
+                return (
+                  <LinkComponent
+                    aria-current={isActive ? "page" : undefined}
+                    className={joinClasses(
+                      "app-shell-nav-link",
+                      isActive && "app-shell-nav-link-active"
+                    )}
+                    href={item.href}
+                    key={item.href}
+                  >
+                    {item.icon ? <span className="app-shell-nav-icon">{item.icon}</span> : null}
+                    <span className="app-shell-nav-copy">
+                      <strong>{item.label}</strong>
+                      {item.description ? <span>{item.description}</span> : null}
+                    </span>
+                  </LinkComponent>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         {sidebarNote ? <div className="app-shell-note">{sidebarNote}</div> : null}
@@ -93,4 +105,22 @@ function DefaultShellLink({ children, href, ...linkProps }: AppShellLinkProps) {
       {children}
     </a>
   );
+}
+
+function groupNavItems(navItems: readonly AppShellNavItem[]) {
+  return navItems.reduce<Array<{ label?: string; items: AppShellNavItem[] }>>((groups, item) => {
+    const currentGroup = groups.at(-1);
+
+    if (!currentGroup || currentGroup.label !== item.group) {
+      groups.push({
+        label: item.group,
+        items: [item]
+      });
+
+      return groups;
+    }
+
+    currentGroup.items.push(item);
+    return groups;
+  }, []);
 }

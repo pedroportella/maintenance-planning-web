@@ -14,6 +14,7 @@ export type DataTableProps<TRow> = {
   caption: string;
   className?: string;
   columns: readonly DataTableColumn<TRow>[];
+  density?: "compact" | "default";
   emptyState?: ReactNode;
   getRowKey: (row: TRow) => string;
   rows: readonly TRow[];
@@ -23,6 +24,7 @@ export function DataTable<TRow>({
   caption,
   className,
   columns,
+  density = "default",
   emptyState,
   getRowKey,
   rows
@@ -37,7 +39,12 @@ export function DataTable<TRow>({
   return (
     <div className={joinClasses("data-table-region", className)}>
       <div className="data-table-scroll">
-        <table className="data-table">
+        <table
+          className={joinClasses(
+            "data-table",
+            density === "compact" && "data-table-compact"
+          )}
+        >
           <caption className="sr-only">{caption}</caption>
           <thead>
             <tr>

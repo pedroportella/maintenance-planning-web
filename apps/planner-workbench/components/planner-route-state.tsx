@@ -43,8 +43,13 @@ export function PlannerRouteLoading({ title }: PlannerRouteLoadingProps) {
         description="Preparing the synthetic planner review state through the service boundary."
         title={title}
       />
-      <WorkbenchPanel>
+      <WorkbenchPanel className="route-loading-panel">
         <LoadingState label="Loading planner review data" />
+        <div className="route-skeleton" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
       </WorkbenchPanel>
     </main>
   );

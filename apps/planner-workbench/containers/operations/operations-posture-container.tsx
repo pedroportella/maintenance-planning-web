@@ -4,6 +4,7 @@ import {
   EmptyState,
   MetricSummary,
   PageHeader,
+  QuietNote,
   StatusBadge,
   WorkbenchPanel,
   type DataTableColumn
@@ -20,8 +21,7 @@ import {
   buildOperationsMetrics,
   formatUtc,
   toneForFreshness,
-  toneForPostureState,
-  toneForScenarioOutcome
+  toneForPostureState
 } from "@/lib/planner-format";
 
 const signalColumns: readonly DataTableColumn<OperationsSignalView>[] = [
@@ -94,11 +94,16 @@ export default async function OperationsPosturePage() {
         <MetricSummary
           ariaLabel="Operations posture summary"
           items={buildOperationsMetrics(posture, sourceReadiness, latestOutcome)}
+          variant="compact"
         />
 
-        <Alert title="Operations review scope" tone={toneForPostureState(posture.state)}>
-          <p>{posture.summary}</p>
-        </Alert>
+        {posture.state === "healthy" ? (
+          <QuietNote title="Operations review scope">{posture.summary}</QuietNote>
+        ) : (
+          <Alert title="Operations review scope" tone={toneForPostureState(posture.state)}>
+            <p>{posture.summary}</p>
+          </Alert>
+        )}
 
         <section className="posture-grid" aria-label="Operations posture details">
           <WorkbenchPanel className="console-panel" labelledBy="posture-signals">
@@ -112,6 +117,7 @@ export default async function OperationsPosturePage() {
             <DataTable
               caption="Operations posture signals"
               columns={signalColumns}
+              density="compact"
               getRowKey={(signal) => signal.label}
               rows={posture.signals}
             />
@@ -129,38 +135,14 @@ export default async function OperationsPosturePage() {
           </WorkbenchPanel>
         </section>
 
-        <WorkbenchPanel className="console-panel" labelledBy="latest-scenario">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Latest scenario outcome</p>
-              <h2 id="latest-scenario">{latestOutcome.label}</h2>
-              <p>{latestOutcome.summary}</p>
-            </div>
-            <StatusBadge tone={toneForScenarioOutcome(latestOutcome.status)}>
-              {latestOutcome.statusText}
-            </StatusBadge>
-          </div>
-          <dl className="detail-list detail-list-compact">
-            <div>
-              <dt>Planning run</dt>
-              <dd>{latestOutcome.runNumber}</dd>
-            </div>
-            <div>
-              <dt>Packages</dt>
-              <dd>
-                {latestOutcome.readyPackageCount} ready, {latestOutcome.blockedPackageCount} blocked
-              </dd>
-            </div>
-            <div>
-              <dt>Deferred decisions</dt>
-              <dd>{latestOutcome.deferredDecisionCount}</dd>
-            </div>
-            <div>
-              <dt>Checked</dt>
-              <dd>{formatUtc(latestOutcome.checkedAtUtc)}</dd>
-            </div>
-          </dl>
-        </WorkbenchPanel>
+        <QuietNote title={`Latest scenario: ${latestOutcome.label}`}>
+          <p>{latestOutcome.summary}</p>
+          <p>
+            {latestOutcome.runNumber}: {latestOutcome.readyPackageCount} ready,{" "}
+            {latestOutcome.blockedPackageCount} blocked, checked{" "}
+            {formatUtc(latestOutcome.checkedAtUtc)}.
+          </p>
+        </QuietNote>
       </main>
     );
   } catch (error) {

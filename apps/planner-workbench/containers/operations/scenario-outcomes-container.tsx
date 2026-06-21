@@ -4,6 +4,7 @@ import {
   EmptyState,
   MetricSummary,
   PageHeader,
+  QuietNote,
   StatusBadge,
   WorkbenchPanel,
   type DataTableColumn
@@ -139,15 +140,22 @@ export default async function ScenarioOutcomesPage() {
         <MetricSummary
           ariaLabel="Scenario outcome summary"
           items={buildScenarioOutcomeMetrics(scenarioSummary)}
+          variant="compact"
         />
 
-        <Alert title="Scenario review scope" tone={attentionCount > 0 ? "warning" : "success"}>
-          <p>
-            {attentionCount > 0
-              ? `${attentionCount} synthetic scenario outcome has stale or degraded evidence visible for review.`
-              : "All synthetic scenario outcomes are in their expected healthy state."}
-          </p>
-        </Alert>
+        {attentionCount > 0 ? (
+          <Alert title="Scenario review scope" tone="warning">
+            <p>
+              {attentionCount} synthetic scenario outcome
+              {attentionCount === 1 ? " has" : "s have"} stale or degraded evidence visible for
+              review.
+            </p>
+          </Alert>
+        ) : (
+          <QuietNote title="Scenario review scope">
+            All synthetic scenario outcomes are in their expected healthy state.
+          </QuietNote>
+        )}
 
         <WorkbenchPanel className="console-panel" labelledBy="latest-scenario-outcome">
           <div className="section-heading">
@@ -163,6 +171,7 @@ export default async function ScenarioOutcomesPage() {
           <DataTable
             caption="Latest scenario outcome signals"
             columns={latestSignalColumns}
+            density="compact"
             emptyState={
               <EmptyState
                 description="No scenario signals were returned for this synthetic review state."
@@ -185,6 +194,7 @@ export default async function ScenarioOutcomesPage() {
           <DataTable
             caption="Synthetic scenario outcomes"
             columns={outcomeColumns}
+            density="compact"
             emptyState={
               <EmptyState
                 description="The service returned no synthetic scenario outcomes for this review state."

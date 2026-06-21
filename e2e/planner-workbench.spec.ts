@@ -3,18 +3,22 @@ import { expect, test } from "@playwright/test";
 test("reviews recommendations and records a mock planner decision", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { name: "Planner coordination queue" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Planner Workbench" })).toBeVisible();
   await expect(page.getByRole("navigation", { name: "Planner sections" })).toBeVisible();
-  await expect(page.getByRole("table", { name: "Synthetic coordination queue" })).toBeVisible();
-  await expect(page.getByText("WO-2101")).toBeVisible();
+  await expect(page.getByText("Local review boundary")).toBeVisible();
 
-  await page.getByRole("link", { name: /Review coordination/ }).first().click();
-  await expect(page).toHaveURL(/coordination-exceptions/);
-  await expect(page.getByRole("heading", { name: "Coordination exceptions" })).toBeVisible();
-  await expect(page.getByRole("table", { name: "Coordination exception list" })).toBeVisible();
-  await expect(page.getByText("Estimated effort is not present in the source event.")).toBeVisible();
+  await page.getByRole("link", { name: /Review recommendations/ }).first().click();
+  await expect(page).toHaveURL(/recommendations/);
+  await expect(page.getByRole("heading", { name: "Recommendations" })).toBeVisible();
+  const packageQueue = page.getByRole("table", { name: "Package recommendation queue" });
+  await expect(packageQueue).toBeVisible();
+  await expect(packageQueue.getByText("PKG-BASE-001").first()).toBeVisible();
+  await expect(packageQueue.getByText("Baseline weekly work package")).toBeVisible();
 
-  await page.getByRole("link", { name: "Open operations posture" }).click();
+  await page
+    .getByRole("navigation", { name: "Planner sections" })
+    .getByRole("link", { name: /Operations posture/ })
+    .click();
   await expect(page).toHaveURL(/operations-posture/);
   await expect(page.getByRole("heading", { name: "Operations posture" })).toBeVisible();
   await expect(page.getByRole("table", { name: "Operations posture signals" })).toBeVisible();
@@ -31,17 +35,8 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
   await expect(scenarioTable.getByText("Stale data")).toBeVisible();
   await expect(scenarioTable.getByText("Degraded")).toBeVisible();
 
-  await page
-    .getByRole("navigation", { name: "Planner sections" })
-    .getByRole("link", { name: /Recommendations/ })
-    .click();
-
+  await page.getByRole("link", { name: /Open recommendations/ }).click();
   await expect(page).toHaveURL(/recommendations/);
-  await expect(page.getByRole("heading", { name: "Recommendations" })).toBeVisible();
-  const packageQueue = page.getByRole("table", { name: "Package recommendation queue" });
-  await expect(packageQueue).toBeVisible();
-  await expect(packageQueue.getByText("PKG-BASE-001").first()).toBeVisible();
-  await expect(packageQueue.getByText("Baseline weekly work package")).toBeVisible();
 
   await packageQueue.getByRole("link", { name: /Open package PKG-BASE-001/ }).click();
   await expect(page).toHaveURL(/recommendations\/60000000-0000-4000-8000-000000002000/);
@@ -67,9 +62,25 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
     .click();
 
   await expect(page.getByRole("heading", { name: "Work-order backlog" })).toBeVisible();
-  const backlogTable = page.getByRole("table", { name: "Planner work-order backlog" });
+  const backlogTable = page.getByRole("table", { name: "Planner work-order triage" });
   await expect(backlogTable).toBeVisible();
   await expect(backlogTable.getByRole("cell", { name: "Accepted for planner-accepted" }).first()).toBeVisible();
+
+  await page
+    .getByRole("navigation", { name: "Planner sections" })
+    .getByRole("link", { name: /Coordination exceptions/ })
+    .click();
+  await expect(page).toHaveURL(/coordination-exceptions/);
+  await expect(page.getByRole("heading", { name: "Coordination exceptions" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "Planner work-order triage" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Exceptions/ })).toHaveAttribute("aria-current", "page");
+});
+
+test("resolves visible package numbers to stable package detail routes", async ({ page }) => {
+  await page.goto("/recommendations/package/PKG-BASE-001");
+
+  await expect(page).toHaveURL(/recommendations\/60000000-0000-4000-8000-000000002000/);
+  await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
 });
 
 test("renders a controlled state for an unknown package recommendation", async ({ page }) => {

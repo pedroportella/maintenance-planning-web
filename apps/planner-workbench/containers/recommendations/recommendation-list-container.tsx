@@ -4,6 +4,7 @@ import {
   EmptyState,
   MetricSummary,
   PageHeader,
+  QuietNote,
   StatusBadge,
   WorkbenchPanel,
   type DataTableColumn
@@ -152,17 +153,23 @@ export default async function RecommendationListContainer({
         <MetricSummary
           ariaLabel="Recommendation workbench summary"
           items={buildRecommendationMetrics(recommendationSet)}
+          variant="compact"
         />
 
         <RecommendationDecisionNotice params={params} />
 
-        <Alert title="Decision review scope" tone={blockedCount > 0 ? "warning" : "success"}>
-          <p>
-            {blockedCount > 0
-              ? "Some package groups cannot be packaged yet. Open a package to review blockers and record an accept, reject or defer decision through the service boundary."
-              : "All package groups in this synthetic response are ready for planner decision review."}
-          </p>
-        </Alert>
+        {blockedCount > 0 ? (
+          <Alert title="Decision review scope" tone="warning">
+            <p>
+              Some package groups cannot be packaged yet. Open a package to review blockers and
+              record an accept, reject or defer decision through the service boundary.
+            </p>
+          </Alert>
+        ) : (
+          <QuietNote title="Decision review scope">
+            All package groups in this synthetic response are ready for planner decision review.
+          </QuietNote>
+        )}
 
         <WorkbenchPanel className="console-panel" labelledBy="recommendation-queue">
           <div className="section-heading">
@@ -178,6 +185,7 @@ export default async function RecommendationListContainer({
           <DataTable
             caption="Package recommendation queue"
             columns={packageColumns}
+            density="compact"
             emptyState={
               <EmptyState
                 description="The service returned no package recommendations for this planning run."

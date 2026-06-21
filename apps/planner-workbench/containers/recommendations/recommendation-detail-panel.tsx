@@ -1,6 +1,7 @@
 import {
   Alert,
   DataTable,
+  QuietNote,
   StatusBadge,
   WorkbenchPanel,
   type DataTableColumn
@@ -66,14 +67,14 @@ export function RecommendationDetailPanel({
   recommendation,
   planningRunId
 }: RecommendationDetailPanelProps) {
-  const headingId = `recommendation-${recommendation.packageNumber.toLowerCase()}`;
+  const headingId = `recommendation-detail-${recommendation.packageId}`;
 
   return (
     <WorkbenchPanel as="article" className="recommendation-card" labelledBy={headingId}>
       <div className="recommendation-card-header">
         <div>
           <p className="eyebrow">Package recommendation</p>
-          <h2 id={headingId}>{recommendation.packageNumber}</h2>
+          <h2 id={headingId}>Why this package</h2>
           <p>{recommendation.title}</p>
         </div>
         <span className="badge-stack">
@@ -86,24 +87,33 @@ export function RecommendationDetailPanel({
         </span>
       </div>
 
+      <dl className="package-meta-row" aria-label={`${recommendation.packageNumber} summary`}>
+        <div>
+          <dt>Score</dt>
+          <dd>{recommendation.score}</dd>
+        </div>
+        <div>
+          <dt>Actionability</dt>
+          <dd>{recommendation.actionability}</dd>
+        </div>
+        <div>
+          <dt>Estimated work</dt>
+          <dd>{formatHours(recommendation.estimatedHours)}</dd>
+        </div>
+        <div>
+          <dt>Blockers</dt>
+          <dd>{recommendation.blockers.length}</dd>
+        </div>
+        <div>
+          <dt>Work orders</dt>
+          <dd>{recommendation.workOrders.length}</dd>
+        </div>
+      </dl>
+
       <div className="recommendation-grid">
         <section aria-label={`${recommendation.packageNumber} explanation`}>
           <h3>Recommendation explanation</h3>
           <p>{recommendation.explanation.text}</p>
-          <dl className="detail-list">
-            <div>
-              <dt>Score</dt>
-              <dd>{recommendation.score}</dd>
-            </div>
-            <div>
-              <dt>Actionability</dt>
-              <dd>{recommendation.actionability}</dd>
-            </div>
-            <div>
-              <dt>Estimated work</dt>
-              <dd>{formatHours(recommendation.estimatedHours)}</dd>
-            </div>
-          </dl>
         </section>
 
         <section aria-label={`${recommendation.packageNumber} source-data readiness`}>
@@ -131,6 +141,7 @@ export function RecommendationDetailPanel({
       <DataTable
         caption={`${recommendation.packageNumber} work orders`}
         columns={workOrderColumns}
+        density="compact"
         getRowKey={(item) => item.id}
         rows={recommendation.workOrders}
       />
@@ -148,9 +159,9 @@ export function RecommendationDetailPanel({
 function RecommendationBlockers({ blockers }: { blockers: readonly RecommendationBlockerView[] }) {
   if (blockers.length === 0) {
     return (
-      <Alert title="No package blockers" tone="success">
-        <p>Service-owned constraints do not show a blocker for this package group.</p>
-      </Alert>
+      <QuietNote title="No package blockers">
+        Service-owned constraints do not show a blocker for this package group.
+      </QuietNote>
     );
   }
 
@@ -174,9 +185,9 @@ function RecommendationDecisions({
 }) {
   if (decisions.length === 0) {
     return (
-      <Alert title="No decision recorded" tone="neutral">
-        <p>Record a planner decision when this recommendation has been reviewed.</p>
-      </Alert>
+      <QuietNote title="No decision recorded">
+        Record a planner decision when this recommendation has been reviewed.
+      </QuietNote>
     );
   }
 

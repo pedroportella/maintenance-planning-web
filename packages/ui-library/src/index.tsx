@@ -23,6 +23,8 @@ export type { PageHeaderProps } from "./components/page-header/page-header";
 export { PageHeader } from "./components/page-header/page-header";
 export type { WorkbenchPanelProps } from "./components/panel/panel";
 export { WorkbenchPanel } from "./components/panel/panel";
+export type { QuietNoteProps } from "./components/quiet-note/quiet-note";
+export { QuietNote } from "./components/quiet-note/quiet-note";
 export type {
   SegmentedNavLinkProps,
   SegmentedNavOption,

@@ -139,7 +139,21 @@ p {
 
 .app-shell-nav {
   display: grid;
+  gap: var(--mp-space-xl);
+}
+
+.app-shell-nav-group {
+  display: grid;
   gap: 6px;
+}
+
+.app-shell-nav-heading {
+  margin: 0 0 2px;
+  color: var(--mp-color-text-muted);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
 .app-shell-nav-link {
@@ -279,6 +293,14 @@ p {
   gap: 14px;
 }
 
+.metric-summary-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: stretch;
+  padding: 0;
+}
+
 .metric-card {
   min-height: 142px;
   padding: 18px;
@@ -286,6 +308,17 @@ p {
   border: 1px solid var(--mp-color-border);
   border-radius: var(--mp-radius-md);
   box-shadow: var(--mp-shadow-soft);
+}
+
+.metric-summary-compact .metric-card {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2px 8px;
+  align-items: baseline;
+  min-width: 150px;
+  min-height: 0;
+  padding: 9px 11px;
+  box-shadow: none;
 }
 
 .metric-card-label,
@@ -302,6 +335,16 @@ p {
   font-size: var(--mp-font-size-xl);
   font-weight: 800;
   line-height: 1;
+}
+
+.metric-summary-compact .metric-card-value {
+  margin: 0;
+  font-size: var(--mp-font-size-md);
+}
+
+.metric-summary-compact .metric-card-detail {
+  grid-column: 1 / -1;
+  font-size: var(--mp-font-size-xs);
 }
 
 .metric-card[data-tone="critical"] {
@@ -349,6 +392,11 @@ p {
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--mp-color-border);
+}
+
+.data-table-compact th,
+.data-table-compact td {
+  padding: 10px 12px;
 }
 
 .data-table th {
@@ -455,6 +503,22 @@ p {
   --alert-text: var(--mp-tone-warning-text);
 }
 
+.quiet-note {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  color: var(--mp-color-text-muted);
+  background: var(--mp-color-surface-muted);
+  border: 1px solid var(--mp-color-border);
+  border-radius: var(--mp-radius-md);
+  font-size: var(--mp-font-size-sm);
+  line-height: 1.45;
+}
+
+.quiet-note strong {
+  color: var(--mp-color-text);
+}
+
 .segmented-nav ul {
   display: inline-flex;
   flex-wrap: wrap;
@@ -531,6 +595,10 @@ button:focus-visible,
 
   .app-shell-nav {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell-nav-group {
+    align-content: start;
   }
 
   .app-shell-note {

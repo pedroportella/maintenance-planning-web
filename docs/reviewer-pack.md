@@ -27,7 +27,7 @@ Use the screenshot workflow when a compact review packet needs current app image
 pnpm test:reviewer-pack
 ```
 
-The command starts the planner workbench in deterministic mock mode and writes ignored PNG files to `test-results/reviewer-pack`. It captures the coordination queue, recommendations, operations posture, scenario outcomes and UI-library showcase. Run it last when preparing a review packet because later Playwright runs may clear `test-results`.
+The command starts the planner workbench in deterministic mock mode and writes ignored PNG files to `test-results/reviewer-pack`. It captures the workbench start page, recommendations, operations posture, scenario outcomes and UI-library showcase. Run it last when preparing a review packet because later Playwright runs may clear `test-results`.
 
 ## Evidence Checks
 

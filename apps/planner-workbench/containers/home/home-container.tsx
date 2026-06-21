@@ -1,149 +1,71 @@
 import { workbenchIconNames } from "@maintenance-planning/ui-assets";
 import {
-  Alert,
-  DataTable,
-  MetricSummary,
   PageHeader,
-  SegmentedNav,
+  QuietNote,
   StatusBadge,
-  WorkbenchPanel,
-  type DataTableColumn
+  WorkbenchPanel
 } from "@maintenance-planning/ui-library";
 import {
-  getWorkbenchSection,
   getPrimaryCoordinationSection,
-  workbenchSections
+  getWorkbenchSection
 } from "@maintenance-planning/utils";
 import Link from "next/link";
 import { getLucideIcon } from "@/components/lucide-icon";
-import {
-  coordinationQueueItems,
-  plannerConsoleSections,
-  plannerConsoleSummary,
-  type CoordinationQueueItem
-} from "@/lib/planner-console-data";
-
-const coordinationColumns: readonly DataTableColumn<CoordinationQueueItem>[] = [
-  {
-    header: "Work order",
-    key: "work-order",
-    render: (item) => (
-      <span className="table-stack">
-        <strong>{item.workOrderNumber}</strong>
-        <span>{item.title}</span>
-      </span>
-    )
-  },
-  {
-    header: "Readiness",
-    key: "readiness",
-    render: (item) => <StatusBadge tone={item.statusTone}>{item.readiness}</StatusBadge>
-  },
-  {
-    header: "Coordination note",
-    key: "issue",
-    render: (item) => item.issue
-  },
-  {
-    header: "Package",
-    key: "package",
-    render: (item) => item.packageNumber
-  },
-  {
-    align: "end",
-    header: "Due",
-    key: "due",
-    render: (item) => item.due
-  },
-  {
-    header: "Route",
-    key: "route",
-    render: (item) => {
-      const section = getWorkbenchSection(item.routeSlug);
-
-      return (
-        <Link className="table-link" href={section.path}>
-          {section.label}
-        </Link>
-      );
-    }
-  }
-];
 
 export default function HomePage() {
   const primarySection = getPrimaryCoordinationSection();
+  const backlogSection = getWorkbenchSection("work-order-backlog");
+  const postureSection = getWorkbenchSection("operations-posture");
+  const scenariosSection = getWorkbenchSection("scenario-outcomes");
   const ForwardIcon = getLucideIcon(workbenchIconNames.actions.forward);
   const ReviewIcon = getLucideIcon(workbenchIconNames.actions.review);
 
   return (
-    <main className="page-stack">
+    <main className="page-stack page-stack-compact">
       <PageHeader
         actions={
           <Link className="primary-link" href={primarySection.path}>
             <ReviewIcon aria-hidden="true" size={18} />
-            Review coordination
+            Review recommendations
             <ForwardIcon aria-hidden="true" size={16} />
           </Link>
         }
-        badge={<StatusBadge tone="info">Static mock shell</StatusBadge>}
-        description="Scan synthetic work orders that need planner coordination before later service-backed recommendation views are added."
-        title="Planner coordination queue"
+        badge={<StatusBadge tone="neutral">Synthetic review</StatusBadge>}
+        description="Start with package recommendations, then use work-order triage and evidence pages when a decision needs more context."
+        title="Planner Workbench"
       />
 
-      <div className="console-toolbar">
-        <SegmentedNav ariaLabel="Workbench page sections" options={plannerConsoleSections} />
-        <StatusBadge tone="neutral">No backend required</StatusBadge>
-      </div>
+      <QuietNote title="Local review boundary">
+        Synthetic data is read through the server-side planner service boundary. This page does not
+        claim live source-system connectivity or production operations evidence.
+      </QuietNote>
 
-      <MetricSummary ariaLabel="Planner coordination summary" items={plannerConsoleSummary} />
-
-      <Alert title="Local review scope" tone="info">
-        <p>
-          This shell uses synthetic static rows to exercise the planner layout. It does not call a
-          live API or claim source-system connectivity.
-        </p>
-      </Alert>
-
-      <WorkbenchPanel className="console-panel" labelledBy="coordination-queue">
+      <WorkbenchPanel className="console-panel launch-panel" labelledBy="launch-primary">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Work orders needing coordination</p>
-            <h2 id="coordination-queue">Coordination queue</h2>
+            <p className="eyebrow">Primary workflow</p>
+            <h2 id="launch-primary">Review package decisions</h2>
+            <p>{primarySection.coordinationCue}</p>
           </div>
-          <StatusBadge tone="warning">Planner attention</StatusBadge>
+          <StatusBadge tone={primarySection.tone}>Start here</StatusBadge>
         </div>
-        <DataTable
-          caption="Synthetic coordination queue"
-          columns={coordinationColumns}
-          getRowKey={(item) => item.workOrderNumber}
-          rows={coordinationQueueItems}
-        />
-      </WorkbenchPanel>
 
-      <WorkbenchPanel className="console-panel" labelledBy="route-map">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Workbench routes</p>
-            <h2 id="route-map">Task map</h2>
-          </div>
-          <StatusBadge tone="neutral">Component shell</StatusBadge>
-        </div>
-        <Link className="primary-link" href={primarySection.path}>
+        <Link className="primary-link launch-primary-link" href={primarySection.path}>
           <ReviewIcon aria-hidden="true" size={18} />
-          Review coordination
+          Open recommendations
           <ForwardIcon aria-hidden="true" size={16} />
         </Link>
-        <div className="task-grid">
-          {workbenchSections.map((section) => (
-            <Link className="task-card" href={section.path} key={section.slug}>
-              <span className={`task-accent task-accent-${section.tone}`} aria-hidden="true" />
-              <span>
-                <strong>{section.label}</strong>
-                <small>{section.coordinationCue}</small>
-              </span>
-              <ForwardIcon aria-hidden="true" size={16} />
-            </Link>
-          ))}
+
+        <div className="launch-link-row" aria-label="Supporting workbench routes">
+          <Link className="secondary-link" href={backlogSection.path}>
+            {backlogSection.label}
+          </Link>
+          <Link className="secondary-link" href={postureSection.path}>
+            {postureSection.label}
+          </Link>
+          <Link className="secondary-link" href={scenariosSection.path}>
+            {scenariosSection.label}
+          </Link>
         </div>
       </WorkbenchPanel>
     </main>
