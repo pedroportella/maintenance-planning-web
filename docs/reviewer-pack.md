@@ -6,10 +6,11 @@ This pack gives a compact review path for the synthetic planner workbench.
 
 ```sh
 pnpm install
-pnpm verify
+pnpm guard
+pnpm check
 pnpm test:e2e:mock
 pnpm test:visual:showcase
-pnpm container:smoke
+pnpm test:reviewer-pack
 ```
 
 Then inspect:
@@ -18,6 +19,8 @@ Then inspect:
 - the UI evidence page at `/ui-library`;
 - the focused baselines in `e2e/__visual-baselines__`;
 - the reviewer runbook in [docs/reviewer-runbook.md](reviewer-runbook.md).
+
+This path uses deterministic mock mode and does not require Docker, the API, the simulator or cloud credentials.
 
 ## Screenshot Capture
 
@@ -31,13 +34,11 @@ The command starts the planner workbench in deterministic mock mode and writes i
 
 ## Evidence Checks
 
-The default review verification path includes:
+The default local review verification path includes:
 
 - source guardrails for generated artefacts, public docs, secrets and browser-visible backend origins;
 - workspace lint, type checks and package tests;
-- a Next.js build;
-- a post-build browser-bundle leakage guard;
-- local standalone container build and smoke in CI;
+- mock-mode browser checks for the planner journey and UI-library showcase;
 - reviewer evidence smoke for required docs, scripts, configs and local Markdown links.
 
 Run the post-build guard directly after `pnpm build` when checking deployment packaging:
@@ -45,6 +46,8 @@ Run the post-build guard directly after `pnpm build` when checking deployment pa
 ```sh
 pnpm guard:browser-bundle
 ```
+
+Docker evidence remains useful for packaging review, but it is not part of the fast local mock workflow. Use `pnpm container:smoke` only when image/runtime packaging is the task.
 
 ## Optional Review Hosting
 

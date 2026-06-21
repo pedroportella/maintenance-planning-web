@@ -43,22 +43,71 @@ For a whole-system local Docker recipe, see the [local Docker system runbook](ht
 - [Reviewer runbook](docs/reviewer-runbook.md)
 - [Future hardening](docs/future-hardening.md)
 
-## Commands
+## Run Locally
+
+Run the planner workbench on local mock data without Docker, the API, the simulator or cloud credentials:
+
+```sh
+pnpm install
+pnpm --filter @maintenance-planning/planner-workbench dev
+```
+
+Open `http://localhost:3000`. The app defaults to deterministic mock mode for local development, so no `.env.local` file is required for this path.
+
+Useful mock-mode routes:
+
+- `/` - compact workbench start page.
+- `/recommendations` - package recommendation review and decision flow.
+- `/work-order-backlog` - work-order triage filters.
+- `/operations-posture` - planner-visible trust summary.
+- `/scenario-outcomes` - deterministic scenario evidence.
+- `/ui-library` - shared component evidence page.
+
+For fast UI iteration, use the mock checks:
+
+```sh
+pnpm test:e2e:mock
+pnpm test:reviewer-pack
+pnpm test:visual:showcase
+```
+
+These commands start the workbench locally in mock mode on temporary Playwright ports and do not need Docker.
+
+## Checks
+
+Focused local checks:
 
 ```sh
 pnpm guard
 pnpm check
 pnpm test:links
-pnpm test:e2e:mock
-pnpm test:reviewer-pack
-pnpm test:visual:showcase
+pnpm test:reviewer-evidence
+```
+
+Build and browser-bundle leakage check:
+
+```sh
+pnpm build
+pnpm guard:browser-bundle
+```
+
+Full non-Docker gate:
+
+```sh
+pnpm verify
+```
+
+The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` across desktop and mobile viewports. The post-build browser-bundle guard checks generated app assets for private backend origins.
+
+## Optional Docker And Backend Checks
+
+Use these only when container packaging or API-backed review is the task:
+
+```sh
 pnpm container:build
 pnpm container:smoke
 cp .env.local.example .env.local
 pnpm test:e2e:backend
-pnpm guard:browser-bundle
-pnpm test:reviewer-evidence
-pnpm verify
 ```
 
-The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` across desktop and mobile viewports. The post-build browser-bundle guard checks generated app assets for private backend origins. The container smoke builds the standalone Next.js runtime image, starts it in explicit mock mode and checks planner routes plus `/health/live`. The backend end-to-end smoke is optional and reads local backend settings from `.env.local` or process environment variables. It expects a local API that has already received a deterministic simulator scenario.
+The container smoke builds the standalone Next.js runtime image, starts it in explicit mock mode and checks planner routes plus `/health/live`. The backend end-to-end smoke is optional and reads local backend settings from `.env.local` or process environment variables. It expects a local API that has already received a deterministic simulator scenario.

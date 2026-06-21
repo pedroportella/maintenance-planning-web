@@ -16,35 +16,69 @@ Use mock checks for default review evidence. Use backend smoke only after the si
 
 - Node.js 22.
 - pnpm through Corepack or an equivalent local install.
-- Docker for local container build and smoke checks.
 
-## Commands
+Docker is only needed for the optional container packaging smoke, not for the default local reviewer workflow.
+
+## Fast Local Mock Workflow
+
+Use this path for UI review and day-to-day iteration. It runs entirely against deterministic mock services.
 
 ```sh
 pnpm install
 pnpm guard
 pnpm check
-pnpm --filter @maintenance-planning/services check
-pnpm --filter @maintenance-planning/ui-tokens check
-pnpm --filter @maintenance-planning/ui-assets check
-pnpm --filter @maintenance-planning/ui-library check
 pnpm test:links
-pnpm build
-pnpm guard:browser-bundle
 pnpm test:e2e:mock
 pnpm test:reviewer-pack
 pnpm test:visual:showcase
-pnpm container:build
-pnpm container:smoke --skip-build
 pnpm test:reviewer-evidence
-pnpm verify
 ```
 
-The local checks do not require the API, simulator or cloud credentials.
+The local mock checks do not require Docker, the API, the simulator or cloud credentials.
 
 The mock end-to-end smoke starts the workbench locally, verifies the planner shell, reviews coordination exceptions, operations posture and scenario outcomes, opens the recommendation workbench, records a mock planner decision, then checks planning-run detail and backlog state.
 
 The showcase visual smoke starts the workbench in deterministic mock mode and verifies `/ui-library` in desktop and mobile viewports. It checks accessible landmarks, route metadata, component family headings, table captions, live-region state names, tone contrast and focused screenshot baselines.
+
+Generate a compact screenshot pack when review notes need current app images:
+
+```sh
+pnpm test:reviewer-pack
+```
+
+The command writes ignored PNG files to `test-results/reviewer-pack`. Run it last when preparing a review packet because later Playwright runs may clear `test-results`. Keep those files out of commits unless a later review explicitly asks for checked-in image evidence.
+
+## Package Checks
+
+Run package-scoped checks when a change touches a specific package boundary:
+
+```sh
+pnpm --filter @maintenance-planning/services check
+pnpm --filter @maintenance-planning/ui-tokens check
+pnpm --filter @maintenance-planning/ui-assets check
+pnpm --filter @maintenance-planning/ui-library check
+```
+
+The services package check verifies runtime mode selection, deterministic synthetic fixtures, operations posture mapping, scenario outcome summaries, mock decision recording and backend adapter calls against typed contracts.
+
+The visual package checks verify token exports, theme custom properties, contrast-sensitive pairs, neutral asset metadata, shared component markup and the shared theme stylesheet entrypoint.
+
+## Handoff Checks
+
+Run the focused build check when generated browser assets need leakage verification:
+
+```sh
+pnpm build
+pnpm guard:browser-bundle
+```
+
+Run the full non-Docker gate before a broader handoff:
+
+```sh
+pnpm verify
+```
+
+The post-build browser-bundle leakage guard expects `pnpm build` to have produced `apps/planner-workbench/.next`. It scans generated browser assets for hard-coded private backend origins and is included in `pnpm verify`.
 
 Refresh the showcase baselines only after intentionally reviewing the UI change:
 
@@ -55,21 +89,14 @@ pnpm test:visual:showcase
 
 The generated baseline files under `e2e/__visual-baselines__` are reviewer evidence. Do not commit screenshots from `test-results` or `playwright-report`.
 
-Generate a compact screenshot pack when review notes need current app images:
-
-```sh
-pnpm test:reviewer-pack
-```
-
-The command writes ignored PNG files to `test-results/reviewer-pack`. Run it last when preparing a review packet because later Playwright runs may clear `test-results`. Keep those files out of commits unless a later review explicitly asks for checked-in image evidence.
-
-The services package check verifies runtime mode selection, deterministic synthetic fixtures, operations posture mapping, scenario outcome summaries, mock decision recording and backend adapter calls against typed contracts.
-
-The visual package checks verify token exports, theme custom properties, contrast-sensitive pairs, neutral asset metadata, shared component markup and the shared theme stylesheet entrypoint.
-
-The post-build browser-bundle leakage guard expects `pnpm build` to have produced `apps/planner-workbench/.next`. It scans generated browser assets for hard-coded private backend origins and is included in `pnpm verify`.
+## Optional Container Smoke
 
 The container smoke starts the standalone runtime on a temporary local port with explicit mock-mode settings. It checks `/health/live`, core planner routes and the UI-library evidence page, then verifies that local-only files and private backend origins are not present in the final image.
+
+```sh
+pnpm container:build
+pnpm container:smoke --skip-build
+```
 
 See [docs/reviewer-pack.md](reviewer-pack.md) for the five-minute review path, screenshot workflow and optional review-hosting boundary. See [docs/containerisation.md](containerisation.md) for image runtime notes.
 
