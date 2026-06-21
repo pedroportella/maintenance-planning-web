@@ -38,16 +38,23 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
 
   await expect(page).toHaveURL(/recommendations/);
   await expect(page.getByRole("heading", { name: "Recommendations" })).toBeVisible();
-  await expect(page.getByRole("article", { name: "PKG-BASE-001" })).toBeVisible();
+  const packageQueue = page.getByRole("table", { name: "Package recommendation queue" });
+  await expect(packageQueue).toBeVisible();
+  await expect(packageQueue.getByText("PKG-BASE-001").first()).toBeVisible();
+  await expect(packageQueue.getByText("Baseline weekly work package")).toBeVisible();
+
+  await packageQueue.getByRole("link", { name: /Open package PKG-BASE-001/ }).click();
+  await expect(page).toHaveURL(/recommendations\/60000000-0000-4000-8000-000000002000/);
+  await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
+  await expect(page.getByRole("table", { name: "PKG-BASE-001 work orders" })).toBeVisible();
   await expect(page.getByText("Ready work can be grouped inside the current planning horizon.")).toBeVisible();
 
-  const readyPackage = page.getByRole("article", { name: "PKG-BASE-001" });
-  await readyPackage.getByRole("textbox", { name: "Decision note" }).fill("Mock reviewer accepted the ready package.");
-  await readyPackage.getByRole("button", { name: /Accept package/ }).click();
+  await page.getByRole("textbox", { name: "Decision note" }).fill("Mock reviewer accepted the ready package.");
+  await page.getByRole("button", { name: /Accept package/ }).click();
 
   await expect(page).toHaveURL(/decisionResult=success/);
   await expect(page.getByText("Accepted was recorded for PKG-BASE-001")).toBeVisible();
-  await expect(readyPackage.getByText("planner-accepted")).toBeVisible();
+  await expect(page.getByText("planner-accepted")).toBeVisible();
 
   await page.getByRole("link", { name: "Open planning run" }).click();
   await expect(page).toHaveURL(/planning-runs\/50000000-0000-4000-8000-000000002000/);
@@ -63,4 +70,12 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
   const backlogTable = page.getByRole("table", { name: "Planner work-order backlog" });
   await expect(backlogTable).toBeVisible();
   await expect(backlogTable.getByRole("cell", { name: "Accepted for planner-accepted" }).first()).toBeVisible();
+});
+
+test("renders a controlled state for an unknown package recommendation", async ({ page }) => {
+  await page.goto("/recommendations/not-a-package");
+
+  await expect(page.getByRole("heading", { name: "Package recommendation not found" })).toBeVisible();
+  await expect(page.getByText("No package recommendation matched not-a-package")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back to recommendations" })).toBeVisible();
 });

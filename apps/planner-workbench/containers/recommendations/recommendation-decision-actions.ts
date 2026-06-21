@@ -8,12 +8,19 @@ import {
   resolvePlannerDecisionAction
 } from "@/lib/planner-decisions";
 import { toPlannerRouteIssue } from "@/lib/planner-route-state";
+import { packageRecommendationHref } from "./recommendation-links";
 
 export async function recordRecommendationDecision(formData: FormData) {
+  let packageIdForRedirect: string | undefined;
+  let planningRunIdForRedirect: string | undefined;
   let redirectPath: string;
 
   try {
     const packageId = requireFormText(formData, "packageId");
+    const planningRunId = readOptionalFormText(formData, "planningRunId");
+    packageIdForRedirect = packageId;
+    planningRunIdForRedirect = planningRunId;
+
     const action = resolvePlannerDecisionAction(requireFormText(formData, "actionCode"));
     const workOrderIds = formData
       .getAll("workOrderIds")
@@ -33,19 +40,32 @@ export async function recordRecommendationDecision(formData: FormData) {
     });
 
     revalidatePath("/recommendations");
+    revalidatePath(`/recommendations/${packageId}`);
     revalidatePath("/work-order-backlog");
+    revalidatePath("/coordination-exceptions");
+    if (planningRunId) {
+      revalidatePath(`/planning-runs/${planningRunId}`);
+    }
 
-    redirectPath = buildDecisionRedirect({
-      decision: action.decision,
-      decisionResult: "success",
-      packageNumber: result.packageNumber
-    });
+    redirectPath = buildDecisionRedirect(
+      {
+        decision: action.decision,
+        decisionResult: "success",
+        packageNumber: result.packageNumber
+      },
+      packageId,
+      planningRunId
+    );
   } catch (error) {
     const issue = toPlannerRouteIssue(error);
 
-    redirectPath = buildDecisionRedirect({
-      decisionResult: issue.kind === "unauthorized" ? "unauthorized" : "error"
-    });
+    redirectPath = buildDecisionRedirect(
+      {
+        decisionResult: issue.kind === "unauthorized" ? "unauthorized" : "error"
+      },
+      packageIdForRedirect,
+      planningRunIdForRedirect
+    );
   }
 
   redirect(redirectPath);
@@ -61,6 +81,27 @@ function requireFormText(formData: FormData, key: string): string {
   return value.trim();
 }
 
-function buildDecisionRedirect(params: Record<string, string>) {
-  return `/recommendations?${new URLSearchParams(params).toString()}`;
+function readOptionalFormText(formData: FormData, key: string): string | undefined {
+  const value = formData.get(key);
+
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+function buildDecisionRedirect(
+  params: Record<string, string>,
+  packageId?: string,
+  planningRunId?: string
+) {
+  const queryParams = planningRunId
+    ? {
+        ...params,
+        planningRunId
+      }
+    : params;
+
+  if (!packageId) {
+    return `/recommendations?${new URLSearchParams(queryParams).toString()}`;
+  }
+
+  return packageRecommendationHref(packageId, queryParams);
 }

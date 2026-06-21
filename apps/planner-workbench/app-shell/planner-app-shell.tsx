@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { getLucideIcon } from "@/components/lucide-icon";
 
-export function WorkbenchShell({ children }: Readonly<{ children: ReactNode }>) {
+export function PlannerAppShell({ children }: Readonly<{ children: ReactNode }>) {
   const pathname = usePathname();
   const BrandIcon = getLucideIcon(workbenchIconNames.brand);
   const navItems = workbenchSections.map<AppShellNavItem>((section) => {
