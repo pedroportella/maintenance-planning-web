@@ -21,8 +21,13 @@ test("renders local API recommendations and operations posture", async ({ page }
     .click();
 
   await expect(page).toHaveURL(/work-order-backlog/);
-  await expect(page.getByRole("table", { name: "Planner work-order triage" })).toBeVisible();
+  const backlogTable = page.getByRole("table", { name: "Planner work-order triage" });
+  await expect(backlogTable).toBeVisible();
   await expect(page.getByText("WO-2000").first()).toBeVisible();
+  await backlogTable.getByRole("link", { name: /Open package/ }).first().click();
+
+  await expect(page).toHaveURL(/recommendations\/[^/]+\?planningRunId=/);
+  await expect(page.getByRole("heading", { name: /PKG-/ })).toBeVisible();
 
   await page
     .getByRole("navigation", { name: "Planner sections" })

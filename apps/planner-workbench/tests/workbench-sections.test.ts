@@ -80,6 +80,7 @@ describe("workbench section model", () => {
     expect(
       buildBacklogMetrics({
         generatedAtUtc: "2026-01-15T08:00:00.000Z",
+        planningRunId: "run-id",
         counts: {
           blocked: 1,
           deferred: 1,

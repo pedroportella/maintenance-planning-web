@@ -36,69 +36,76 @@ type WorkOrderBacklogPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const backlogColumns: readonly DataTableColumn<WorkOrderBacklogItem>[] = [
-  {
-    header: "Work order",
-    key: "work-order",
-    render: (item) => (
-      <span className="table-stack">
-        <strong>{item.workOrderNumber}</strong>
-        <span>{item.title}</span>
-      </span>
-    )
-  },
-  {
-    header: "Readiness",
-    key: "readiness",
-    render: (item) => (
-      <span className="badge-stack">
-        <StatusBadge tone={toneForReadiness(item.readinessStatus)}>
-          {item.readinessStatus}
+function buildBacklogColumns(
+  planningRunId: string
+): readonly DataTableColumn<WorkOrderBacklogItem>[] {
+  return [
+    {
+      header: "Work order",
+      key: "work-order",
+      render: (item) => (
+        <span className="table-stack">
+          <strong>{item.workOrderNumber}</strong>
+          <span>{item.title}</span>
+        </span>
+      )
+    },
+    {
+      header: "Readiness",
+      key: "readiness",
+      render: (item) => (
+        <span className="badge-stack">
+          <StatusBadge tone={toneForReadiness(item.readinessStatus)}>
+            {item.readinessStatus}
+          </StatusBadge>
+          <StatusBadge tone={toneForPlannerState(item.plannerState)}>{item.plannerState}</StatusBadge>
+        </span>
+      )
+    },
+    {
+      header: "Coordination note",
+      key: "issue",
+      render: (item) => workOrderIssueText(item)
+    },
+    {
+      header: "Package",
+      key: "package",
+      render: (item) => (
+        <span className="table-stack">
+          <strong>{item.packageNumber}</strong>
+          <Link
+            className="table-link"
+            href={packageRecommendationHref(item.packageId, { planningRunId })}
+          >
+            Open package
+            <span className="sr-only"> {item.packageNumber}</span>
+          </Link>
+        </span>
+      )
+    },
+    {
+      align: "end",
+      header: "Hours",
+      key: "hours",
+      render: (item) => formatHours(item.estimatedHours)
+    },
+    {
+      align: "end",
+      header: "Due",
+      key: "due",
+      render: (item) => formatUtc(item.dueAtUtc)
+    },
+    {
+      header: "Latest decision",
+      key: "decision",
+      render: (item) => (
+        <StatusBadge tone={toneForDecision(item.latestDecision?.decision)}>
+          {latestDecisionText(item.latestDecision)}
         </StatusBadge>
-        <StatusBadge tone={toneForPlannerState(item.plannerState)}>{item.plannerState}</StatusBadge>
-      </span>
-    )
-  },
-  {
-    header: "Coordination note",
-    key: "issue",
-    render: (item) => workOrderIssueText(item)
-  },
-  {
-    header: "Package",
-    key: "package",
-    render: (item) => (
-      <span className="table-stack">
-        <strong>{item.packageNumber}</strong>
-        <Link className="table-link" href={packageRecommendationHref(item.packageId)}>
-          Open package
-          <span className="sr-only"> {item.packageNumber}</span>
-        </Link>
-      </span>
-    )
-  },
-  {
-    align: "end",
-    header: "Hours",
-    key: "hours",
-    render: (item) => formatHours(item.estimatedHours)
-  },
-  {
-    align: "end",
-    header: "Due",
-    key: "due",
-    render: (item) => formatUtc(item.dueAtUtc)
-  },
-  {
-    header: "Latest decision",
-    key: "decision",
-    render: (item) => (
-      <StatusBadge tone={toneForDecision(item.latestDecision?.decision)}>
-        {latestDecisionText(item.latestDecision)}
-      </StatusBadge>
-    )
-  }
-];
+      )
+    }
+  ];
+}
 
 export default async function WorkOrderBacklogPage({
   initialFilter,
@@ -117,6 +124,7 @@ export default async function WorkOrderBacklogPage({
     const filteredItems = filterWorkOrders(backlog.items, selectedFilter);
     const section = selectedFilter === "exceptions" ? exceptionsSection : backlogSection;
     const filterOptions = buildFilterOptions(selectedFilter, backlog.items, exceptionItems);
+    const backlogColumns = buildBacklogColumns(backlog.planningRunId);
 
     return (
       <main className="page-stack">

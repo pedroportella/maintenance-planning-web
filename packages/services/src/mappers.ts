@@ -85,6 +85,7 @@ export function mapWorkOrderBacklog(
 
   return {
     generatedAtUtc,
+    planningRunId: recommendations.planningRunId,
     counts: {
       ready: items.filter((item) => item.plannerState === "ready").length,
       blocked: items.filter((item) => item.plannerState === "blocked").length,

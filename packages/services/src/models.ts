@@ -112,6 +112,7 @@ export type RecommendationBlockerView = {
 
 export type WorkOrderBacklogView = {
   readonly generatedAtUtc: IsoDateTimeString;
+  readonly planningRunId: GuidString;
   readonly counts: WorkOrderBacklogCounts;
   readonly items: readonly WorkOrderBacklogItem[];
 };
