@@ -11,9 +11,18 @@ test("renders local API recommendations and operations posture", async ({ page }
 
   await expect(page).toHaveURL(/recommendations\/[^/]+/);
   await expect(page.getByText("backend mode").first()).toBeVisible();
-  await expect(page.getByRole("table", { name: /work orders/ })).toBeVisible();
+  const workOrderTable = page.getByRole("table", { name: /work orders/ });
+  await expect(workOrderTable).toBeVisible();
+  await expect(workOrderTable.getByText("Replace pump seals").first()).toBeVisible();
+
+  await page
+    .getByRole("navigation", { name: "Planner sections" })
+    .getByRole("link", { name: /Work-order backlog/ })
+    .click();
+
+  await expect(page).toHaveURL(/work-order-backlog/);
+  await expect(page.getByRole("table", { name: "Planner work-order triage" })).toBeVisible();
   await expect(page.getByText("WO-2000").first()).toBeVisible();
-  await expect(page.getByText("Replace pump seals").first()).toBeVisible();
 
   await page
     .getByRole("navigation", { name: "Planner sections" })
