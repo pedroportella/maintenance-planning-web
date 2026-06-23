@@ -1,10 +1,15 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { compile } from "sass";
 import { describe, expect, it } from "vitest";
 import { workbenchTheme, workbenchThemeClassNames } from "../src/theme";
 
 const packageRoot = fileURLToPath(new URL("../", import.meta.url));
+const packageManifest = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8")
+) as {
+  exports?: Record<string, string>;
+};
 const themeScssPath = fileURLToPath(new URL("../src/theme/theme.scss", import.meta.url));
 const themeScss = readFileSync(themeScssPath, "utf8");
 const compiledThemeCss = compile(themeScssPath, {
@@ -22,6 +27,12 @@ describe("ui-library theme", () => {
         "@maintenance-planning/ui-tokens/scss/styles/planner-product-palette.scss"
       ]
     });
+  });
+
+  it("keeps the theme package Sass-first without a generated CSS artifact", () => {
+    expect(packageManifest.exports?.["./theme.scss"]).toBe("./src/theme/theme.scss");
+    expect(packageManifest.exports?.["./theme.css"]).toBeUndefined();
+    expect(existsSync(new URL("../src/theme/theme.css", import.meta.url))).toBe(false);
   });
 
   it("imports Radix Themes CSS before token compatibility and component styles", () => {
