@@ -7,7 +7,8 @@
   "exports": {
     ".": "./src/index.tsx",
     "./theme": "./src/theme/index.ts",
-    "./theme.css": "./src/theme/theme.css"
+    "./theme.css": "./src/theme/theme.css",
+    "./theme.scss": "./src/theme/theme.scss"
   },
   "types": "./src/index.tsx",
   "scripts": {

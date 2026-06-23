@@ -1,0 +1,21 @@
+@mixin theme {
+  --mp-color-background: var(--mp-palette-page);
+  --mp-color-surface-default: var(--mp-palette-surface);
+  --mp-color-surface-elevated: var(--mp-palette-surface-raised);
+  --mp-color-surface-subtle: var(--mp-palette-surface-muted);
+  --mp-color-border-default: var(--mp-palette-border);
+  --mp-color-border-emphasis: var(--mp-palette-border-strong);
+  --mp-color-text-default: var(--mp-palette-text);
+  --mp-color-text-subtle: var(--mp-palette-text-muted);
+  --mp-color-link: var(--mp-color-accent-blue);
+  --mp-color-focus: var(--mp-color-accent-teal);
+  --mp-color-action-primary: var(--mp-color-accent-blue);
+  --mp-status-critical-bg: var(--mp-tone-critical-bg);
+  --mp-status-critical-text: var(--mp-tone-critical-text);
+  --mp-status-info-bg: var(--mp-tone-info-bg);
+  --mp-status-info-text: var(--mp-tone-info-text);
+  --mp-status-success-bg: var(--mp-tone-success-bg);
+  --mp-status-success-text: var(--mp-tone-success-text);
+  --mp-status-warning-bg: var(--mp-tone-warning-bg);
+  --mp-status-warning-text: var(--mp-tone-warning-text);
+}

@@ -1,0 +1,9 @@
+@use "planner-palette";
+@use "semantic-palette";
+
+@mixin theme {
+  color-scheme: light;
+
+  @include planner-palette.theme;
+  @include semantic-palette.theme;
+}

@@ -1,0 +1,5 @@
+/* RU0 owns Radix Theme imports and any reviewed Radix CSS variable overrides. */
+@mixin theme {
+  --mp-radix-accent: var(--mp-color-action-primary);
+  --mp-radix-focus: var(--mp-color-focus);
+}

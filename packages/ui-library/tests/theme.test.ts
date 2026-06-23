@@ -8,6 +8,7 @@ describe("ui-library theme", () => {
   it("publishes the package theme entrypoints", () => {
     expect(workbenchTheme).toEqual({
       cssEntrypoint: "@maintenance-planning/ui-library/theme.css",
+      sassEntrypoint: "@maintenance-planning/ui-library/theme.scss",
       tokenEntrypoint: "@maintenance-planning/ui-tokens/theme.css"
     });
   });

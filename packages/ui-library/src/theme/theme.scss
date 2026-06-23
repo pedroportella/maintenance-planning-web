@@ -1,0 +1,22 @@
+@use "palette/radix-bridge";
+@use "palette/variables-dark" as dark;
+@use "palette/variables-light" as light;
+@use "palette/variables-root";
+
+@import "@maintenance-planning/ui-tokens/theme.css";
+
+:root {
+  @include variables-root.theme;
+  @include radix-bridge.theme;
+}
+
+:root,
+.light,
+[data-theme="light"] {
+  @include light.theme;
+}
+
+.dark,
+[data-theme="dark"] {
+  @include dark.theme;
+}

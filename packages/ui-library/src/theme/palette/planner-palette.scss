@@ -1,0 +1,11 @@
+/* RU-1 scaffold: raw palette values stay in ui-tokens; these aliases are compatibility-only. */
+@mixin theme {
+  --mp-palette-page: var(--mp-color-page);
+  --mp-palette-surface: var(--mp-color-surface);
+  --mp-palette-surface-raised: var(--mp-color-surface-raised);
+  --mp-palette-surface-muted: var(--mp-color-surface-muted);
+  --mp-palette-border: var(--mp-color-border);
+  --mp-palette-border-strong: var(--mp-color-border-strong);
+  --mp-palette-text: var(--mp-color-text);
+  --mp-palette-text-muted: var(--mp-color-text-muted);
+}

@@ -1,0 +1,8 @@
+@mixin theme {
+  --mp-font-body: var(--mp-font-family-sans);
+  --mp-radius-control: var(--mp-radius-md);
+  --mp-radius-surface: var(--mp-radius-md);
+  --mp-radius-full: var(--mp-radius-pill);
+  --mp-space-page: var(--mp-space-4xl);
+  --mp-space-section: var(--mp-space-2xl);
+}
