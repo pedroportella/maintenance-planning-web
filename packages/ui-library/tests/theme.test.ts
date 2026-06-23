@@ -58,6 +58,7 @@ describe("ui-library theme", () => {
     expect(themeScss).toContain("../data/PlannerSummaryList/PlannerSummaryList");
     expect(themeScss).toContain("../radix/RadixDataList/RadixDataList");
     expect(themeScss).toContain("../radix/RadixTable/RadixTable");
+    expect(themeScss).toContain("../workflow/PlannerDecisionPanel/PlannerDecisionPanel");
     expect(themeScss).toContain("../workflow/PlannerMetadataPanel/PlannerMetadataPanel");
 
     for (const tone of ["critical", "info", "neutral", "success", "warning"]) {

@@ -5,5 +5,3 @@ export type {
   PlannerDecisionPanelProps
 } from "./PlannerDecisionPanel";
 export { PlannerDecisionPanel } from "./PlannerDecisionPanel";
-export type { PlannerMetadataPanelProps } from "./PlannerMetadataPanel";
-export { PlannerMetadataPanel } from "./PlannerMetadataPanel";

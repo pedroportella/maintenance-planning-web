@@ -9,6 +9,7 @@ import {
   PlannerAppLayout,
   PlannerContentSection,
   PlannerDataTable,
+  PlannerDecisionPanel,
   PlannerEmptyState,
   PlannerLoadingState,
   PlannerMetadataPanel,
@@ -48,10 +49,12 @@ import {
   buildOperationsMetrics,
   formatHours,
   formatUtc,
+  isReadyRecommendation,
   toneForPostureState,
   toneForReadiness,
   toneForStatus
 } from "@/lib/planner-format";
+import { plannerDecisionActions } from "@/lib/planner-decisions";
 
 export const metadata: Metadata = {
   title: "UI Library Evidence | Planner Workbench",
@@ -230,6 +233,12 @@ export default async function UiLibraryPage() {
       partsDelayServices.getSourceDataReadiness(),
       partsDelayServices.getScenarioOutcomeSummary()
     ]);
+  const readyDecisionRecommendation =
+    recommendationSet.recommendations.find((recommendation) => isReadyRecommendation(recommendation)) ??
+    recommendationSet.recommendations[0];
+  const blockedDecisionRecommendation =
+    recommendationSet.recommendations.find((recommendation) => !isReadyRecommendation(recommendation)) ??
+    readyDecisionRecommendation;
 
   return (
     <PlannerPage className="ui-library-page" id="ui-library-main" labelledBy="ui-library-title">
@@ -595,6 +604,46 @@ export default async function UiLibraryPage() {
         </div>
       </WorkbenchPanel>
 
+      {readyDecisionRecommendation && blockedDecisionRecommendation ? (
+        <WorkbenchPanel className="console-panel" labelledBy="showcase-decision-actions">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Component family</p>
+              <h2 id="showcase-decision-actions">Decision action surfaces</h2>
+            </div>
+            <StatusBadge tone="success">RU6</StatusBadge>
+          </div>
+          <div className="showcase-tone-grid">
+            <PlannerDecisionPanel
+              actions={buildShowcaseDecisionActions(readyDecisionRecommendation)}
+              blockers={buildShowcaseDecisionBlockers(readyDecisionRecommendation)}
+              facts={buildShowcaseDecisionFacts(readyDecisionRecommendation)}
+              packageId={readyDecisionRecommendation.packageId}
+              packageNumber={readyDecisionRecommendation.packageNumber}
+              planningRunId={recommendationSet.planningRunId}
+              recordAction="/ui-library"
+              secondaryAction={<RadixLink href="/recommendations">Back to queue</RadixLink>}
+              title="Ready package decision"
+              titleId="showcase-ready-decision"
+              workOrderIds={readyDecisionRecommendation.workOrders.map((workOrder) => workOrder.id)}
+            />
+            <PlannerDecisionPanel
+              actions={buildShowcaseDecisionActions(blockedDecisionRecommendation)}
+              blockers={buildShowcaseDecisionBlockers(blockedDecisionRecommendation)}
+              facts={buildShowcaseDecisionFacts(blockedDecisionRecommendation)}
+              packageId={blockedDecisionRecommendation.packageId}
+              packageNumber={blockedDecisionRecommendation.packageNumber}
+              planningRunId={recommendationSet.planningRunId}
+              recordAction="/ui-library"
+              secondaryAction={<RadixLink href="/work-order-backlog">Review work orders</RadixLink>}
+              title="Blocked package decision"
+              titleId="showcase-blocked-decision"
+              workOrderIds={blockedDecisionRecommendation.workOrders.map((workOrder) => workOrder.id)}
+            />
+          </div>
+        </WorkbenchPanel>
+      ) : null}
+
       <WorkbenchPanel className="console-panel" labelledBy="showcase-tables">
         <div className="section-heading">
           <div>
@@ -702,6 +751,54 @@ export default async function UiLibraryPage() {
       </WorkbenchPanel>
     </PlannerPage>
   );
+}
+
+function buildShowcaseDecisionActions(recommendation: PlannerRecommendation) {
+  const readyForAcceptance = isReadyRecommendation(recommendation);
+
+  return plannerDecisionActions.map((action) =>
+    action.decision === "Accepted"
+      ? {
+          ...action,
+          disabled: !readyForAcceptance,
+          disabledDescription: "Resolve blockers before accepting."
+        }
+      : action
+  );
+}
+
+function buildShowcaseDecisionBlockers(recommendation: PlannerRecommendation) {
+  return recommendation.blockers.map((blocker, index) => ({
+    id: `${blocker.code}-${index}`,
+    label: blocker.code,
+    summary: blocker.summary
+  }));
+}
+
+function buildShowcaseDecisionFacts(recommendation: PlannerRecommendation) {
+  return [
+    {
+      id: "package",
+      label: "Package",
+      value: recommendation.packageNumber
+    },
+    {
+      id: "readiness",
+      label: "Readiness",
+      tone: toneForReadiness(recommendation.sourceDataReadiness.status),
+      value: recommendation.sourceDataReadiness.status
+    },
+    {
+      id: "work-orders",
+      label: "Work orders",
+      value: recommendation.workOrders.length
+    },
+    {
+      id: "estimated-work",
+      label: "Estimated work",
+      value: formatHours(recommendation.estimatedHours)
+    }
+  ];
 }
 
 function ShowcaseRecommendationCard({

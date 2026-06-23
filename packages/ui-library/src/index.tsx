@@ -170,5 +170,14 @@ export type {
 export { SegmentedNav } from "./components/segmented-nav/segmented-nav";
 export type { StatusBadgeProps, Tone } from "./components/status-badge/status-badge";
 export { StatusBadge, StatusPill } from "./components/status-badge/status-badge";
-export type { PlannerMetadataPanelProps } from "./workflow";
-export { PlannerMetadataPanel } from "./workflow";
+export type {
+  PlannerDecisionKind,
+  PlannerDecisionPanelAction,
+  PlannerDecisionPanelBlocker,
+  PlannerDecisionPanelProps,
+  PlannerMetadataPanelProps
+} from "./workflow";
+export {
+  PlannerDecisionPanel,
+  PlannerMetadataPanel
+} from "./workflow";

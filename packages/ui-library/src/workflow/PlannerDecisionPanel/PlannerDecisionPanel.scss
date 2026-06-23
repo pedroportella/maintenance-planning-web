@@ -1,0 +1,128 @@
+.planner-decision-panel {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-4);
+  background: var(--gray-a2);
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-3);
+}
+
+.planner-decision-panel-header,
+.planner-decision-panel-copy,
+.planner-decision-panel-form {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.planner-decision-panel-eyebrow {
+  margin: 0;
+  color: var(--accent-11);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.planner-decision-panel h3,
+.planner-decision-panel p {
+  margin: 0;
+}
+
+.planner-decision-panel h3 {
+  color: var(--gray-12);
+  font-size: var(--mp-font-size-lg);
+  line-height: 1.25;
+}
+
+.planner-decision-panel-facts {
+  padding: var(--space-3);
+  background: var(--color-panel-solid);
+  border: 1px solid var(--gray-a5);
+  border-radius: var(--radius-3);
+}
+
+.planner-decision-panel-context {
+  margin: 0;
+}
+
+.planner-decision-panel-blockers {
+  display: grid;
+  gap: var(--space-1);
+  padding-left: var(--space-4);
+  margin: 0;
+}
+
+.planner-decision-panel-note {
+  min-width: 0;
+}
+
+.planner-decision-panel-choice,
+.planner-decision-panel-defer {
+  min-width: 0;
+}
+
+.planner-decision-panel-choice-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.planner-decision-panel-defer {
+  padding: var(--space-3);
+  background: var(--amber-a2);
+  border: 1px solid var(--amber-a6);
+  border-radius: var(--radius-3);
+}
+
+.planner-decision-panel-defer-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.planner-decision-panel-action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--gray-a6);
+}
+
+.planner-decision-panel-submit {
+  min-width: 11rem;
+}
+
+.planner-decision-panel-secondary {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  color: var(--accent-11);
+  font-size: var(--mp-font-size-sm);
+  font-weight: 700;
+}
+
+.planner-decision-panel-secondary a {
+  color: inherit;
+}
+
+@media (max-width: 860px) {
+  .planner-decision-panel-choice-list,
+  .planner-decision-panel-defer-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .planner-decision-panel {
+    padding: var(--space-3);
+  }
+
+  .planner-decision-panel-action-bar {
+    display: grid;
+    justify-content: stretch;
+  }
+
+  .planner-decision-panel-submit {
+    width: 100%;
+  }
+}

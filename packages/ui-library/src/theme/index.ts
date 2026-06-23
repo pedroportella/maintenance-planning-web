@@ -32,6 +32,7 @@ export const workbenchThemeClassNames = {
   appShell: "planner-app-layout",
   contentSection: "planner-content-section",
   dataTable: "data-table",
+  decisionPanel: "planner-decision-panel",
   emptyState: "planner-empty-state",
   loadingState: "planner-loading-state",
   metadataPanel: "planner-metadata-panel",
