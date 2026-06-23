@@ -117,13 +117,20 @@
 
 .planner-filter-toolbar {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) auto auto;
+  grid-template-columns: 1fr;
   gap: var(--space-3);
-  align-items: end;
+  align-items: stretch;
   padding: var(--space-3);
   background: var(--mp-color-surface-raised);
   border: 1px solid var(--mp-color-border);
   border-radius: var(--radius-3);
+}
+
+.planner-filter-toolbar-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: end;
 }
 
 .planner-filter-toolbar-search,
@@ -131,6 +138,10 @@
   display: grid;
   gap: var(--space-1);
   min-width: 0;
+}
+
+.planner-filter-toolbar-search {
+  flex: 1 1 260px;
 }
 
 .planner-filter-toolbar-search-field {
@@ -178,10 +189,12 @@
 
 .planner-filter-toolbar-summary {
   display: flex;
+  flex: 0 1 auto;
   flex-wrap: wrap;
   gap: var(--space-2);
   align-items: center;
   justify-content: flex-end;
+  margin-left: auto;
 }
 
 .planner-filter-toolbar-result {
@@ -194,8 +207,7 @@
 }
 
 @media (max-width: 900px) {
-  .planner-filter-toolbar {
-    grid-template-columns: 1fr;
+  .planner-filter-toolbar-controls {
     align-items: stretch;
   }
   .planner-filter-toolbar-summary {

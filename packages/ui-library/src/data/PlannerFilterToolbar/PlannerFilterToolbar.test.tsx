@@ -50,6 +50,16 @@ describe("PlannerFilterToolbar", () => {
     expect(markup).toContain('role="combobox"');
     expect(markup).toContain("Showing 3 of 12 rows");
     expect(markup).toContain("Reset");
+
+    const filtersIndex = markup.indexOf('class="planner-filter-toolbar-filters"');
+    const controlsIndex = markup.indexOf('class="planner-filter-toolbar-controls"');
+    const searchIndex = markup.indexOf('class="planner-filter-toolbar-search"');
+    const summaryIndex = markup.indexOf('class="planner-filter-toolbar-summary"');
+
+    expect(filtersIndex).toBeGreaterThan(-1);
+    expect(controlsIndex).toBeGreaterThan(filtersIndex);
+    expect(searchIndex).toBeGreaterThan(controlsIndex);
+    expect(summaryIndex).toBeGreaterThan(searchIndex);
   });
 
   it("preserves URL-safe filter links and current state", () => {

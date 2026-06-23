@@ -76,8 +76,6 @@ export function PlannerFilterToolbar({
       aria-label={ariaLabel}
       className={joinClasses("planner-filter-toolbar", className)}
     >
-      {search ? <PlannerFilterToolbarSearchControl search={search} /> : null}
-
       {filters.length > 0 ? (
         <div className="planner-filter-toolbar-filters">
           {filters.map((filter) => (
@@ -86,25 +84,29 @@ export function PlannerFilterToolbar({
         </div>
       ) : null}
 
-      <div className="planner-filter-toolbar-summary">
-        {resultSummary ? (
-          <RadixText as="p" className="planner-filter-toolbar-result" tone="muted">
-            {resultSummary}
-          </RadixText>
-        ) : null}
-        {clearAction ? (
-          <RadixButton
-            className="planner-filter-toolbar-clear"
-            disabled={clearAction.disabled}
-            onClick={clearAction.onClear}
-            tone="neutral"
-            variant="soft"
-          >
-            <RadixIcon decorative name="crossCircled" />
-            {clearAction.label}
-          </RadixButton>
-        ) : null}
-        {actions}
+      <div className="planner-filter-toolbar-controls">
+        {search ? <PlannerFilterToolbarSearchControl search={search} /> : null}
+
+        <div className="planner-filter-toolbar-summary">
+          {resultSummary ? (
+            <RadixText as="p" className="planner-filter-toolbar-result" tone="muted">
+              {resultSummary}
+            </RadixText>
+          ) : null}
+          {clearAction ? (
+            <RadixButton
+              className="planner-filter-toolbar-clear"
+              disabled={clearAction.disabled}
+              onClick={clearAction.onClear}
+              tone="neutral"
+              variant="soft"
+            >
+              <RadixIcon decorative name="crossCircled" />
+              {clearAction.label}
+            </RadixButton>
+          ) : null}
+          {actions}
+        </div>
       </div>
     </section>
   );
