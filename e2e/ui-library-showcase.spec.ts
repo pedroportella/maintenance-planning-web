@@ -39,22 +39,22 @@ test("renders the UI library evidence route with accessible landmarks and state 
   await expect(page.getByRole("article", { name: "PKG-PARTS-REPLAN" })).toBeVisible();
   await expect(page.getByRole("article", { name: "PKG-PARTS-BLOCKED" })).toBeVisible();
 
-  await expect(page.locator(".loading-state[role='status']")).toContainText(
+  await expect(page.locator(".planner-loading-state[role='status']")).toContainText(
     "Loading planner review data"
   );
-  await expect(page.locator(".error-state[role='alert']")).toContainText(
+  await expect(page.locator(".planner-empty-state[role='alert']")).toContainText(
     "Review state unavailable"
   );
-  await expect(page.locator(".workbench-alert-warning[role='alert']").first()).toContainText(
+  await expect(page.locator(".planner-alert-warning[role='alert']").first()).toContainText(
     "Warning alert"
   );
   await expect(
-    page.locator(".workbench-alert-info[role='status']").filter({ hasText: "Info alert" })
+    page.locator(".planner-alert-info[role='status']").filter({ hasText: "Info alert" })
   ).toBeVisible();
 
   for (const tone of tones) {
-    await expect(page.locator(`.status-badge-${tone}`).first()).toBeVisible();
-    await expect(page.locator(`.workbench-alert-${tone}`).first()).toBeVisible();
+    await expect(page.locator(`.planner-status-badge-${tone}`).first()).toBeVisible();
+    await expect(page.locator(`.planner-alert-${tone}`).first()).toBeVisible();
   }
 });
 
@@ -62,11 +62,11 @@ test("keeps contrast-sensitive showcase tones readable", async ({ page }) => {
   await page.goto("/ui-library");
 
   for (const tone of tones) {
-    const badgeRatio = await contrastRatio(page.locator(`.status-badge-${tone}`).first());
+    const badgeRatio = await contrastRatio(page.locator(`.planner-status-badge-${tone}`).first());
     expect(badgeRatio, `${tone} status badge contrast`).toBeGreaterThanOrEqual(4.5);
 
     const alertTitleRatio = await contrastRatio(
-      page.locator(`.workbench-alert-${tone} strong`).first()
+      page.locator(`.planner-alert-${tone} .radix-callout-title`).first()
     );
     expect(alertTitleRatio, `${tone} alert title contrast`).toBeGreaterThanOrEqual(4.5);
   }
@@ -93,25 +93,62 @@ async function contrastRatio(locator: Locator) {
       };
     }
 
-    function findOpaqueBackground(target: Element) {
+    function blend(
+      foreground: { alpha: number; blue: number; green: number; red: number },
+      background: { alpha: number; blue: number; green: number; red: number }
+    ) {
+      const alpha = foreground.alpha + background.alpha * (1 - foreground.alpha);
+
+      if (alpha === 0) {
+        return {
+          alpha: 0,
+          blue: 0,
+          green: 0,
+          red: 0
+        };
+      }
+
+      return {
+        alpha,
+        blue:
+          (foreground.blue * foreground.alpha +
+            background.blue * background.alpha * (1 - foreground.alpha)) /
+          alpha,
+        green:
+          (foreground.green * foreground.alpha +
+            background.green * background.alpha * (1 - foreground.alpha)) /
+          alpha,
+        red:
+          (foreground.red * foreground.alpha +
+            background.red * background.alpha * (1 - foreground.alpha)) /
+          alpha
+      };
+    }
+
+    function findCompositedBackground(target: Element) {
       let current: Element | null = target;
+      const backgrounds: Array<{ alpha: number; blue: number; green: number; red: number }> = [];
 
       while (current) {
         const background = parseCssColor(getComputedStyle(current).backgroundColor);
 
         if (background.alpha > 0) {
-          return background;
+          backgrounds.push(background);
+        }
+
+        if (background.alpha === 1) {
+          break;
         }
 
         current = current.parentElement;
       }
 
-      return {
+      return backgrounds.reverse().reduce((result, background) => blend(background, result), {
         alpha: 1,
         blue: 255,
         green: 255,
         red: 255
-      };
+      });
     }
 
     function relativeLuminance(color: { blue: number; green: number; red: number }) {
@@ -136,8 +173,8 @@ async function contrastRatio(locator: Locator) {
       return (lighter + 0.05) / (darker + 0.05);
     }
 
-    const foreground = parseCssColor(getComputedStyle(element).color);
-    const background = findOpaqueBackground(element);
+    const background = findCompositedBackground(element);
+    const foreground = blend(parseCssColor(getComputedStyle(element).color), background);
 
     return ratio(foreground, background);
   });

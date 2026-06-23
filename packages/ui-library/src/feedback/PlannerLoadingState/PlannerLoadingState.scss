@@ -1,0 +1,24 @@
+.planner-loading-state {
+  display: grid;
+  gap: var(--mp-space-md);
+  color: var(--gray-11);
+}
+
+.planner-loading-state-message {
+  display: inline-flex;
+  gap: var(--mp-space-sm);
+  align-items: center;
+  min-height: 40px;
+  width: fit-content;
+}
+
+.planner-loading-state-skeleton {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 360px);
+}
+
+.planner-loading-state-skeleton-row {
+  display: block;
+  border-radius: var(--radius-full);
+}

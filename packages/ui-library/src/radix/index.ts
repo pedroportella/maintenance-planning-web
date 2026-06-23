@@ -20,6 +20,10 @@ export type { RadixRadioGroupOption, RadixRadioGroupProps } from "./RadixRadioGr
 export { RadixRadioGroup } from "./RadixRadioGroup";
 export type { RadixSelectOption, RadixSelectProps } from "./RadixSelect";
 export { RadixSelect } from "./RadixSelect";
+export type { RadixSkeletonProps } from "./RadixSkeleton";
+export { RadixSkeleton } from "./RadixSkeleton";
+export type { RadixSpinnerProps } from "./RadixSpinner";
+export { RadixSpinner } from "./RadixSpinner";
 export type { RadixTableRootProps } from "./RadixTable";
 export {
   RadixTable,

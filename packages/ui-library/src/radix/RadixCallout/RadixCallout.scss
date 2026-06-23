@@ -1,3 +1,7 @@
+.radix-callout-content {
+  min-width: 0;
+}
+
 .radix-callout-title,
 .radix-callout-body {
   display: block;
@@ -5,4 +9,8 @@
 
 .radix-callout-title + .radix-callout-body {
   margin-top: 2px;
+}
+
+.radix-callout-body p:last-child {
+  margin-bottom: 0;
 }

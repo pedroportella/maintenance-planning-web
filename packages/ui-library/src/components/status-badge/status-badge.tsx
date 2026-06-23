@@ -1,28 +1,16 @@
-import type { ReactNode } from "react";
-import type { StatusToneName } from "@maintenance-planning/ui-tokens";
-import { joinClasses } from "../shared";
+import {
+  PlannerStatusBadge,
+  PlannerStatusPill,
+  type PlannerStatusBadgeProps,
+  type PlannerStatusTone
+} from "../../feedback";
 
-export type Tone = StatusToneName;
+export type Tone = PlannerStatusTone;
 
-export type StatusBadgeProps = {
-  children: ReactNode;
-  className?: string;
-  icon?: ReactNode;
-  tone?: Tone;
-};
+export type StatusBadgeProps = PlannerStatusBadgeProps;
 
-export function StatusBadge({
-  children,
-  className,
-  icon,
-  tone = "neutral"
-}: StatusBadgeProps) {
-  return (
-    <span className={joinClasses("status-badge", `status-badge-${tone}`, className)} data-tone={tone}>
-      {icon ? <span className="status-badge-icon">{icon}</span> : null}
-      <span>{children}</span>
-    </span>
-  );
+export function StatusBadge(props: StatusBadgeProps) {
+  return <PlannerStatusBadge {...props} />;
 }
 
-export const StatusPill = StatusBadge;
+export const StatusPill = PlannerStatusPill;

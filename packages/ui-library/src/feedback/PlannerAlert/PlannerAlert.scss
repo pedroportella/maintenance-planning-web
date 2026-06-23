@@ -1,0 +1,16 @@
+.planner-alert {
+  align-items: start;
+}
+
+.planner-alert .radix-callout-title {
+  font-weight: 800;
+}
+
+.planner-alert .radix-callout-body {
+  display: grid;
+  gap: var(--mp-space-xs);
+}
+
+.planner-alert p {
+  margin-bottom: 0;
+}

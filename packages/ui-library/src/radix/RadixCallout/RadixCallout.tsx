@@ -15,7 +15,7 @@ const iconByTone = {
   warning: "exclamationTriangle"
 } as const satisfies Record<RadixAdapterTone, RadixIconName>;
 
-export type RadixCalloutProps = Omit<CalloutRootProps, "children" | "color"> & {
+export type RadixCalloutProps = Omit<CalloutRootProps, "children" | "color" | "title"> & {
   children: ReactNode;
   iconName?: RadixIconName;
   title?: ReactNode;
@@ -43,10 +43,10 @@ export function RadixCallout({
       <Callout.Icon>
         <RadixIcon name={iconName ?? iconByTone[tone]} />
       </Callout.Icon>
-      <Callout.Text>
+      <div className="rt-CalloutText radix-callout-content">
         {title ? <strong className="radix-callout-title">{title}</strong> : null}
-        <span className="radix-callout-body">{children}</span>
-      </Callout.Text>
+        <div className="radix-callout-body">{children}</div>
+      </div>
     </Callout.Root>
   );
 }

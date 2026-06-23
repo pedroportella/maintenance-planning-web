@@ -1,23 +1,7 @@
-import type { ReactNode } from "react";
-import { joinClasses } from "../shared";
+import { PlannerEmptyState, type PlannerEmptyStateProps } from "../../feedback";
 
-export type EmptyStateProps = {
-  action?: ReactNode;
-  className?: string;
-  description?: ReactNode;
-  icon?: ReactNode;
-  title: string;
-};
+export type EmptyStateProps = PlannerEmptyStateProps;
 
-export function EmptyState({ action, className, description, icon, title }: EmptyStateProps) {
-  return (
-    <div className={joinClasses("empty-state", className)}>
-      {icon ? <div className="empty-state-icon">{icon}</div> : null}
-      <div>
-        <h2>{title}</h2>
-        {description ? <p>{description}</p> : null}
-      </div>
-      {action ? <div className="empty-state-action">{action}</div> : null}
-    </div>
-  );
+export function EmptyState(props: EmptyStateProps) {
+  return <PlannerEmptyState {...props} />;
 }

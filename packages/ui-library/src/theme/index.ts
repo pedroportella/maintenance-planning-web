@@ -28,17 +28,17 @@ export const workbenchTheme = {
 } as const;
 
 export const workbenchThemeClassNames = {
-  alert: "workbench-alert",
+  alert: "planner-alert",
   appShell: "planner-app-layout",
   contentSection: "planner-content-section",
   dataTable: "data-table",
-  emptyState: "empty-state",
-  loadingState: "loading-state",
+  emptyState: "planner-empty-state",
+  loadingState: "planner-loading-state",
   metricSummary: "metric-summary",
   panel: "workbench-panel",
   pageHeader: "planner-page-header",
   pageShell: "planner-page",
   segmentedNav: "segmented-nav",
   sideNav: "planner-side-nav",
-  statusBadge: "status-badge"
+  statusBadge: "planner-status-badge"
 } as const;

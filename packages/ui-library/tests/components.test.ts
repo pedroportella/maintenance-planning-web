@@ -80,9 +80,9 @@ describe("ui-library components", () => {
     );
 
     expect(markup).toContain("<h1>Planner Workbench</h1>");
-    expect(markup).toContain("status-badge-info");
+    expect(markup).toContain("planner-status-badge-info");
     expect(markup).toContain('role="alert"');
-    expect(markup).toContain("quiet-note");
+    expect(markup).toContain("planner-quiet-note");
   });
 
   it("renders data tables with captions and empty states", () => {
@@ -173,5 +173,6 @@ describe("ui-library components", () => {
     expect(markup).toContain('aria-busy="true"');
     expect(markup).toContain('role="status"');
     expect(markup).toContain('role="alert"');
+    expect(markup).toContain("rt-Spinner");
   });
 });

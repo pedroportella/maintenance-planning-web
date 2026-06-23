@@ -44,12 +44,7 @@ export function PlannerRouteLoading({ title }: PlannerRouteLoadingProps) {
         title={title}
       />
       <WorkbenchPanel className="route-loading-panel">
-        <LoadingState label="Loading planner review data" />
-        <div className="route-skeleton" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
+        <LoadingState label="Loading planner review data" skeletonRows={3} />
       </WorkbenchPanel>
     </main>
   );

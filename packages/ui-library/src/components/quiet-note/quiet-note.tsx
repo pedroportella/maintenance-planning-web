@@ -1,17 +1,7 @@
-import type { ReactNode } from "react";
-import { joinClasses } from "../shared";
+import { PlannerQuietNote, type PlannerQuietNoteProps } from "../../feedback";
 
-export type QuietNoteProps = {
-  children: ReactNode;
-  className?: string;
-  title?: string;
-};
+export type QuietNoteProps = PlannerQuietNoteProps;
 
-export function QuietNote({ children, className, title }: QuietNoteProps) {
-  return (
-    <aside className={joinClasses("quiet-note", className)}>
-      {title ? <strong>{title}</strong> : null}
-      <div>{children}</div>
-    </aside>
-  );
+export function QuietNote(props: QuietNoteProps) {
+  return <PlannerQuietNote {...props} />;
 }

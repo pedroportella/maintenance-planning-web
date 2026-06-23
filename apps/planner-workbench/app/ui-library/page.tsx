@@ -4,18 +4,23 @@ import {
   DataTable,
   EmptyState,
   ErrorState,
-  LoadingState,
   MetricSummary,
   PageHeader,
+  PlannerAlert,
   PlannerCheckbox,
   PlannerAppLayout,
   PlannerContentSection,
+  PlannerEmptyState,
+  PlannerLoadingState,
   PlannerPage,
   PlannerPageHeader,
+  PlannerQuietNote,
   PlannerRadioCards,
   PlannerRadioGroup,
   PlannerSelect,
   PlannerSideNav,
+  PlannerStatusBadge,
+  PlannerStatusPill,
   PlannerTextArea,
   PlannerTextInput,
   PlannerWorkflowLayout,
@@ -27,7 +32,6 @@ import {
   RadixLink,
   RadixText,
   StatusBadge,
-  StatusPill,
   WorkbenchPanel,
   type DataTableColumn,
   type Tone
@@ -418,21 +422,24 @@ export default async function UiLibraryPage() {
         </div>
         <div className="showcase-tone-grid">
           {toneExamples.map((example) => (
-            <Alert key={example.tone} title={`${example.label} alert`} tone={example.tone}>
+            <PlannerAlert key={example.tone} title={`${example.label} alert`} tone={example.tone}>
               <p>{example.detail}</p>
-            </Alert>
+            </PlannerAlert>
           ))}
+          <PlannerQuietNote title="Quiet note">
+            Secondary review context stays visible without announcing as an alert.
+          </PlannerQuietNote>
         </div>
         <section aria-label="Status badge tone examples" className="showcase-badge-row">
           {toneExamples.map((example) => (
-            <StatusBadge key={example.tone} tone={example.tone}>
+            <PlannerStatusBadge key={example.tone} tone={example.tone}>
               {example.label}
-            </StatusBadge>
+            </PlannerStatusBadge>
           ))}
           {toneExamples.map((example) => (
-            <StatusPill key={`${example.tone}-pill`} tone={example.tone}>
+            <PlannerStatusPill key={`${example.tone}-pill`} tone={example.tone}>
               {example.label} pill
-            </StatusPill>
+            </PlannerStatusPill>
           ))}
         </section>
       </WorkbenchPanel>
@@ -474,12 +481,12 @@ export default async function UiLibraryPage() {
           <StatusBadge tone="info">Live-region checks</StatusBadge>
         </div>
         <div className="showcase-state-grid">
-          <EmptyState
+          <PlannerEmptyState
             description="No synthetic package matches this reviewer filter."
             title="No package selected"
           />
           <div className="showcase-loading-state">
-            <LoadingState label="Loading planner review data" />
+            <PlannerLoadingState label="Loading planner review data" skeletonRows={3} />
           </div>
           <ErrorState
             description="The service boundary returned a configuration issue for this local review."

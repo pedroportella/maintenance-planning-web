@@ -48,10 +48,18 @@ describe("ui-library theme", () => {
       expect(compiledThemeCss).toContain(`.${className}`);
     }
 
+    expect(themeScss).toContain("../feedback/PlannerAlert/PlannerAlert");
+    expect(themeScss).toContain("../feedback/PlannerEmptyState/PlannerEmptyState");
+    expect(themeScss).toContain("../feedback/PlannerLoadingState/PlannerLoadingState");
+    expect(themeScss).toContain("../feedback/PlannerQuietNote/PlannerQuietNote");
+    expect(themeScss).toContain("../feedback/PlannerStatusBadge/PlannerStatusBadge");
+
     for (const tone of ["critical", "info", "neutral", "success", "warning"]) {
-      expect(compiledThemeCss).toContain(`.status-badge-${tone}`);
-      expect(compiledThemeCss).toContain(`.workbench-alert-${tone}`);
       expect(compiledThemeCss).toContain(`.metric-card[data-tone=${tone}]`);
+    }
+
+    for (const tone of ["critical", "info", "success", "warning"]) {
+      expect(compiledThemeCss).toContain(`.planner-empty-state[data-tone=${tone}]`);
     }
   });
 

@@ -1,0 +1,12 @@
+.planner-status-badge {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  width: fit-content;
+  font-weight: 700;
+}
+
+.planner-status-badge-icon {
+  display: inline-grid;
+  place-items: center;
+}

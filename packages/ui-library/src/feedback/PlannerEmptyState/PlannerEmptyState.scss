@@ -1,0 +1,54 @@
+.planner-empty-state {
+  display: grid;
+  gap: var(--mp-space-md);
+  padding: var(--mp-space-xl);
+  color: var(--gray-11);
+  background: var(--gray-a2);
+  border: 1px dashed var(--gray-a7);
+  border-radius: var(--radius-3);
+}
+
+.planner-empty-state-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: var(--accent-11);
+  background: var(--accent-a3);
+  border-radius: var(--radius-3);
+}
+
+.planner-empty-state-title {
+  margin-bottom: 4px;
+  color: var(--gray-12);
+}
+
+.planner-empty-state-description p:last-child {
+  margin-bottom: 0;
+}
+
+.planner-empty-state-action {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mp-space-sm);
+}
+
+.planner-empty-state[data-tone="critical"] .planner-empty-state-icon {
+  color: var(--red-11);
+  background: var(--red-a3);
+}
+
+.planner-empty-state[data-tone="info"] .planner-empty-state-icon {
+  color: var(--blue-11);
+  background: var(--blue-a3);
+}
+
+.planner-empty-state[data-tone="success"] .planner-empty-state-icon {
+  color: var(--green-11);
+  background: var(--green-a3);
+}
+
+.planner-empty-state[data-tone="warning"] .planner-empty-state-icon {
+  color: var(--amber-11);
+  background: var(--amber-a3);
+}

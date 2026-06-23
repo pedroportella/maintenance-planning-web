@@ -1,0 +1,27 @@
+.planner-quiet-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--mp-space-sm);
+  align-items: start;
+  padding: 10px 12px;
+  color: var(--gray-11);
+  background: var(--gray-a2);
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-3);
+  font-size: var(--mp-font-size-sm);
+  line-height: 1.45;
+}
+
+.planner-quiet-note-icon {
+  color: var(--gray-10);
+  transform: translateY(2px);
+}
+
+.planner-quiet-note-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.planner-quiet-note-title {
+  color: var(--gray-12);
+}
