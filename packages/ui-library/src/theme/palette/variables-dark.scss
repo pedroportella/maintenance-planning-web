@@ -4,6 +4,6 @@
 @mixin theme {
   color-scheme: dark;
 
-  @include planner-palette.theme;
+  @include planner-palette.theme(dark);
   @include semantic-palette.theme;
 }

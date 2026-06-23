@@ -4,7 +4,7 @@ Next.js application shell for the planner workbench.
 
 The app focuses on planner task routes for synthetic maintenance-planning review flows. It renders a compact workbench start page, service-driven recommendation, work-order triage, coordination exception, planning-run, operations posture and scenario outcome routes. The `/ui-library` route is an internal reviewer and developer evidence page for reusable component states.
 
-The app imports shared theme styles from `@maintenance-planning/ui-library/theme.css`. App-local global CSS should stay focused on route composition; reusable shell, table, status, alert and state styling belongs to the UI library.
+The app imports shared theme styles from `@maintenance-planning/ui-library/theme.scss`. App-local global CSS should stay focused on route composition; reusable shell, table, status, alert and state styling belongs to the UI library.
 
 ## Local Mock Development
 

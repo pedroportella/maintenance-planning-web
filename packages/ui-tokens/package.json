@@ -6,6 +6,8 @@
   "description": "Design token boundary for the planner workbench.",
   "exports": {
     ".": "./src/index.ts",
+    "./scss/styles/maintenance-primitive-palette.scss": "./src/scss/styles/maintenance-primitive-palette.scss",
+    "./scss/styles/planner-product-palette.scss": "./src/scss/styles/planner-product-palette.scss",
     "./theme.css": "./src/theme.css"
   },
   "types": "./src/index.ts",

@@ -11,6 +11,14 @@ import {
 } from "../src";
 
 const themeCss = readFileSync(new URL("../src/theme.css", import.meta.url), "utf8");
+const primitivePaletteScss = readFileSync(
+  new URL("../src/scss/styles/maintenance-primitive-palette.scss", import.meta.url),
+  "utf8"
+);
+const productPaletteScss = readFileSync(
+  new URL("../src/scss/styles/planner-product-palette.scss", import.meta.url),
+  "utf8"
+);
 
 describe("design tokens", () => {
   it("exports the required theme groups", () => {
@@ -45,6 +53,17 @@ describe("design tokens", () => {
     for (const variableName of requiredVariables) {
       expect(themeCss).toContain(`${variableName}:`);
     }
+  });
+
+  it("publishes Sass palette sources for the UI-library theme bridge", () => {
+    expect(primitivePaletteScss).toContain("$maintenance-primitive-palette");
+    expect(primitivePaletteScss).toContain("light:");
+    expect(primitivePaletteScss).toContain("dark:");
+    expect(productPaletteScss).toContain("$planner-product-palette");
+    expect(productPaletteScss).toContain("@mixin custom-properties");
+    expect(productPaletteScss).toContain("--mp-color-page");
+    expect(productPaletteScss).toContain("primitive.color(light, canvas)");
+    expect(productPaletteScss).toContain("primitive.color(dark, canvas)");
   });
 
   it("keeps contrast-critical text and state pairs above accessible thresholds", () => {

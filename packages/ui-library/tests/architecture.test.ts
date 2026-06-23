@@ -17,6 +17,7 @@ import {
 } from "../src";
 
 const requiredComponentFolders = [
+  "src/theme/PlannerThemeProvider",
   "src/layout/PlannerAppLayout",
   "src/layout/PlannerPage",
   "src/layout/PlannerWorkflowLayout",

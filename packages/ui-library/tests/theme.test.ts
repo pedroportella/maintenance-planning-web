@@ -1,40 +1,76 @@
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { compile } from "sass";
 import { describe, expect, it } from "vitest";
 import { workbenchTheme, workbenchThemeClassNames } from "../src/theme";
 
-const themeCss = readFileSync(new URL("../src/theme/theme.css", import.meta.url), "utf8");
+const packageRoot = fileURLToPath(new URL("../", import.meta.url));
+const themeScssPath = fileURLToPath(new URL("../src/theme/theme.scss", import.meta.url));
+const themeScss = readFileSync(themeScssPath, "utf8");
+const compiledThemeCss = compile(themeScssPath, {
+  loadPaths: [packageRoot],
+  style: "expanded"
+}).css;
 
 describe("ui-library theme", () => {
   it("publishes the package theme entrypoints", () => {
     expect(workbenchTheme).toEqual({
-      cssEntrypoint: "@maintenance-planning/ui-library/theme.css",
+      radixCssEntrypoint: "@radix-ui/themes/styles.css",
       sassEntrypoint: "@maintenance-planning/ui-library/theme.scss",
-      tokenEntrypoint: "@maintenance-planning/ui-tokens/theme.css"
+      tokenPaletteEntrypoints: [
+        "@maintenance-planning/ui-tokens/scss/styles/maintenance-primitive-palette.scss",
+        "@maintenance-planning/ui-tokens/scss/styles/planner-product-palette.scss"
+      ]
     });
   });
 
-  it("imports token custom properties before component styles", () => {
-    expect(themeCss.trimStart().startsWith('@import "@maintenance-planning/ui-tokens/theme.css";')).toBe(
-      true
-    );
-    expect(themeCss).toContain("body {");
-    expect(themeCss).toContain("var(--mp-color-page)");
+  it("imports Radix Themes CSS before token compatibility and component styles", () => {
+    const radixImport = themeScss.indexOf('@import "@radix-ui/themes/styles.css";');
+    const tokenImport = themeScss.indexOf('@import "@maintenance-planning/ui-tokens/theme.css";');
+    const bodyStyles = themeScss.indexOf("body {");
+
+    expect(radixImport).toBeGreaterThanOrEqual(0);
+    expect(tokenImport).toBeGreaterThan(radixImport);
+    expect(bodyStyles).toBeGreaterThan(tokenImport);
+    expect(compiledThemeCss).toContain('@import "@radix-ui/themes/styles.css";');
+    expect(compiledThemeCss).toContain("var(--mp-color-page)");
+  });
+
+  it("defines light and dark selectors from the Sass palette bridge", () => {
+    expect(themeScss).toContain('[data-theme="light"]');
+    expect(themeScss).toContain('[data-theme="dark"]');
+    expect(compiledThemeCss).toContain("--mp-color-page: #f6f7f2");
+    expect(compiledThemeCss).toContain("--mp-color-page: #0f1512");
   });
 
   it("includes shared classes used by exported components", () => {
     for (const className of Object.values(workbenchThemeClassNames)) {
-      expect(themeCss).toContain(`.${className}`);
+      expect(compiledThemeCss).toContain(`.${className}`);
     }
 
     for (const tone of ["critical", "info", "neutral", "success", "warning"]) {
-      expect(themeCss).toContain(`.status-badge-${tone}`);
-      expect(themeCss).toContain(`.workbench-alert-${tone}`);
-      expect(themeCss).toContain(`.metric-card[data-tone="${tone}"]`);
+      expect(compiledThemeCss).toContain(`.status-badge-${tone}`);
+      expect(compiledThemeCss).toContain(`.workbench-alert-${tone}`);
+      expect(compiledThemeCss).toContain(`.metric-card[data-tone=${tone}]`);
     }
   });
 
   it("defines keyboard focus styles for shell and segmented navigation", () => {
-    expect(themeCss).toContain(".app-shell-nav-link:focus-visible");
-    expect(themeCss).toContain(".segmented-nav-link:focus-visible");
+    expect(compiledThemeCss).toContain(".app-shell-nav-link:focus-visible");
+    expect(compiledThemeCss).toContain(".segmented-nav-link:focus-visible");
+  });
+
+  it("keeps the app root on the Sass entry before app globals", () => {
+    const layoutSource = readFileSync(
+      new URL("../../../apps/planner-workbench/app/layout.tsx", import.meta.url),
+      "utf8"
+    );
+    const themeImport = layoutSource.indexOf("@maintenance-planning/ui-library/theme.scss");
+    const globalsImport = layoutSource.indexOf("./globals.css");
+
+    expect(layoutSource).toContain("PlannerThemeProvider");
+    expect(layoutSource).not.toContain("@radix-ui/");
+    expect(themeImport).toBeGreaterThanOrEqual(0);
+    expect(globalsImport).toBeGreaterThan(themeImport);
   });
 });

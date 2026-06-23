@@ -1,0 +1,148 @@
+@use "sass:map";
+@use "maintenance-primitive-palette" as primitive;
+
+$planner-product-palette: (
+  light: (
+    page: primitive.color(light, canvas),
+    surface: primitive.color(light, surface),
+    surface-raised: primitive.color(light, surface-raised),
+    surface-muted: primitive.color(light, surface-muted),
+    border: primitive.color(light, border),
+    border-strong: primitive.color(light, border-strong),
+    text: primitive.color(light, text),
+    text-muted: primitive.color(light, text-muted),
+    accent-teal: primitive.color(light, teal),
+    accent-blue: primitive.color(light, blue),
+    accent-amber: primitive.color(light, amber),
+    accent-red: primitive.color(light, red),
+    accent-violet: primitive.color(light, violet),
+    soft-teal: primitive.color(light, teal-soft),
+    soft-blue: primitive.color(light, blue-soft),
+    soft-amber: primitive.color(light, amber-soft),
+    soft-red: primitive.color(light, red-soft),
+    soft-violet: primitive.color(light, violet-soft),
+    action-primary: primitive.color(light, teal),
+    action-primary-text: #ffffff,
+    tone-critical-accent: primitive.color(light, red),
+    tone-critical-bg: primitive.color(light, red-soft),
+    tone-critical-border: primitive.color(light, red-border),
+    tone-critical-text: primitive.color(light, red-text),
+    tone-info-accent: primitive.color(light, blue),
+    tone-info-bg: primitive.color(light, blue-soft),
+    tone-info-border: primitive.color(light, blue-border),
+    tone-info-text: primitive.color(light, blue-text),
+    tone-neutral-accent: primitive.color(light, violet),
+    tone-neutral-bg: primitive.color(light, surface-muted),
+    tone-neutral-border: primitive.color(light, border),
+    tone-neutral-text: primitive.color(light, neutral-text),
+    tone-success-accent: primitive.color(light, teal),
+    tone-success-bg: primitive.color(light, teal-soft),
+    tone-success-border: primitive.color(light, teal-border),
+    tone-success-text: primitive.color(light, teal-text),
+    tone-warning-accent: primitive.color(light, amber),
+    tone-warning-bg: primitive.color(light, amber-soft),
+    tone-warning-border: primitive.color(light, amber-border),
+    tone-warning-text: primitive.color(light, amber-text)
+  ),
+  dark: (
+    page: primitive.color(dark, canvas),
+    surface: primitive.color(dark, surface),
+    surface-raised: primitive.color(dark, surface-raised),
+    surface-muted: primitive.color(dark, surface-muted),
+    border: primitive.color(dark, border),
+    border-strong: primitive.color(dark, border-strong),
+    text: primitive.color(dark, text),
+    text-muted: primitive.color(dark, text-muted),
+    accent-teal: primitive.color(dark, teal),
+    accent-blue: primitive.color(dark, blue),
+    accent-amber: primitive.color(dark, amber),
+    accent-red: primitive.color(dark, red),
+    accent-violet: primitive.color(dark, violet),
+    soft-teal: primitive.color(dark, teal-soft),
+    soft-blue: primitive.color(dark, blue-soft),
+    soft-amber: primitive.color(dark, amber-soft),
+    soft-red: primitive.color(dark, red-soft),
+    soft-violet: primitive.color(dark, violet-soft),
+    action-primary: primitive.color(dark, teal),
+    action-primary-text: #ffffff,
+    tone-critical-accent: primitive.color(dark, red),
+    tone-critical-bg: primitive.color(dark, red-soft),
+    tone-critical-border: primitive.color(dark, red-border),
+    tone-critical-text: primitive.color(dark, red-text),
+    tone-info-accent: primitive.color(dark, blue),
+    tone-info-bg: primitive.color(dark, blue-soft),
+    tone-info-border: primitive.color(dark, blue-border),
+    tone-info-text: primitive.color(dark, blue-text),
+    tone-neutral-accent: primitive.color(dark, violet),
+    tone-neutral-bg: primitive.color(dark, surface-muted),
+    tone-neutral-border: primitive.color(dark, border),
+    tone-neutral-text: primitive.color(dark, neutral-text),
+    tone-success-accent: primitive.color(dark, teal),
+    tone-success-bg: primitive.color(dark, teal-soft),
+    tone-success-border: primitive.color(dark, teal-border),
+    tone-success-text: primitive.color(dark, teal-text),
+    tone-warning-accent: primitive.color(dark, amber),
+    tone-warning-bg: primitive.color(dark, amber-soft),
+    tone-warning-border: primitive.color(dark, amber-border),
+    tone-warning-text: primitive.color(dark, amber-text)
+  )
+) !default;
+
+@function color($mode, $token) {
+  $mode-palette: map.get($planner-product-palette, $mode);
+
+  @if $mode-palette == null {
+    @error "Unknown planner product palette mode `#{$mode}`.";
+  }
+
+  $value: map.get($mode-palette, $token);
+
+  @if $value == null {
+    @error "Unknown planner product palette token `#{$token}` for mode `#{$mode}`.";
+  }
+
+  @return $value;
+}
+
+@mixin custom-properties($mode) {
+  --mp-color-page: #{color($mode, page)};
+  --mp-color-surface: #{color($mode, surface)};
+  --mp-color-surface-raised: #{color($mode, surface-raised)};
+  --mp-color-surface-muted: #{color($mode, surface-muted)};
+  --mp-color-border: #{color($mode, border)};
+  --mp-color-border-strong: #{color($mode, border-strong)};
+  --mp-color-text: #{color($mode, text)};
+  --mp-color-text-muted: #{color($mode, text-muted)};
+  --mp-color-accent-teal: #{color($mode, accent-teal)};
+  --mp-color-accent-blue: #{color($mode, accent-blue)};
+  --mp-color-accent-amber: #{color($mode, accent-amber)};
+  --mp-color-accent-red: #{color($mode, accent-red)};
+  --mp-color-accent-violet: #{color($mode, accent-violet)};
+  --mp-color-soft-teal: #{color($mode, soft-teal)};
+  --mp-color-soft-blue: #{color($mode, soft-blue)};
+  --mp-color-soft-amber: #{color($mode, soft-amber)};
+  --mp-color-soft-red: #{color($mode, soft-red)};
+  --mp-color-soft-violet: #{color($mode, soft-violet)};
+  --mp-palette-action-primary: #{color($mode, action-primary)};
+  --mp-palette-action-primary-text: #{color($mode, action-primary-text)};
+  --mp-tone-critical-accent: #{color($mode, tone-critical-accent)};
+  --mp-tone-critical-bg: #{color($mode, tone-critical-bg)};
+  --mp-tone-critical-border: #{color($mode, tone-critical-border)};
+  --mp-tone-critical-text: #{color($mode, tone-critical-text)};
+  --mp-tone-info-accent: #{color($mode, tone-info-accent)};
+  --mp-tone-info-bg: #{color($mode, tone-info-bg)};
+  --mp-tone-info-border: #{color($mode, tone-info-border)};
+  --mp-tone-info-text: #{color($mode, tone-info-text)};
+  --mp-tone-neutral-accent: #{color($mode, tone-neutral-accent)};
+  --mp-tone-neutral-bg: #{color($mode, tone-neutral-bg)};
+  --mp-tone-neutral-border: #{color($mode, tone-neutral-border)};
+  --mp-tone-neutral-text: #{color($mode, tone-neutral-text)};
+  --mp-tone-success-accent: #{color($mode, tone-success-accent)};
+  --mp-tone-success-bg: #{color($mode, tone-success-bg)};
+  --mp-tone-success-border: #{color($mode, tone-success-border)};
+  --mp-tone-success-text: #{color($mode, tone-success-text)};
+  --mp-tone-warning-accent: #{color($mode, tone-warning-accent)};
+  --mp-tone-warning-bg: #{color($mode, tone-warning-bg)};
+  --mp-tone-warning-border: #{color($mode, tone-warning-border)};
+  --mp-tone-warning-text: #{color($mode, tone-warning-text)};
+}

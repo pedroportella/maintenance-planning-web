@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { PlannerAppShell } from "@/app-shell/planner-app-shell";
-import "@maintenance-planning/ui-library/theme.css";
+import { PlannerThemeProvider } from "@maintenance-planning/ui-library/theme";
+import "@maintenance-planning/ui-library/theme.scss";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,9 +15,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <PlannerAppShell>{children}</PlannerAppShell>
+        <PlannerThemeProvider>
+          <PlannerAppShell>{children}</PlannerAppShell>
+        </PlannerThemeProvider>
       </body>
     </html>
   );

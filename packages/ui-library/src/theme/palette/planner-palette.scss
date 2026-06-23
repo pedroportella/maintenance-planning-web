@@ -1,5 +1,8 @@
-/* RU-1 scaffold: raw palette values stay in ui-tokens; these aliases are compatibility-only. */
-@mixin theme {
+@use "../../../../ui-tokens/src/scss/styles/planner-product-palette" as product-palette;
+
+@mixin theme($mode) {
+  @include product-palette.custom-properties($mode);
+
   --mp-palette-page: var(--mp-color-page);
   --mp-palette-surface: var(--mp-color-surface);
   --mp-palette-surface-raised: var(--mp-color-surface-raised);

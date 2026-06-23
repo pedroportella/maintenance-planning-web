@@ -1,0 +1,78 @@
+@use "sass:map";
+
+$maintenance-primitive-palette: (
+  light: (
+    canvas: #f6f7f2,
+    surface: #ffffff,
+    surface-raised: #fbfcf8,
+    surface-muted: #eef3ee,
+    border: #d8ded5,
+    border-strong: #b9c4bb,
+    text: #17211b,
+    text-muted: #4f5b52,
+    teal: #0f766e,
+    blue: #2563eb,
+    amber: #b45309,
+    red: #b42318,
+    violet: #6d28d9,
+    teal-soft: #d9f1ec,
+    blue-soft: #dbeafe,
+    amber-soft: #fef3c7,
+    red-soft: #fee4e2,
+    violet-soft: #ede9fe,
+    teal-border: #a7e3d8,
+    blue-border: #bfdbfe,
+    amber-border: #fde68a,
+    red-border: #fecaca,
+    neutral-text: #405046,
+    teal-text: #0b665f,
+    blue-text: #1d4ed8,
+    amber-text: #92400e,
+    red-text: #9f1d16
+  ),
+  dark: (
+    canvas: #0f1512,
+    surface: #151d18,
+    surface-raised: #1a241e,
+    surface-muted: #243129,
+    border: #37443c,
+    border-strong: #52615a,
+    text: #f1f6f2,
+    text-muted: #b8c4bd,
+    teal: #0f766e,
+    blue: #93c5fd,
+    amber: #f59e0b,
+    red: #f87171,
+    violet: #c4b5fd,
+    teal-soft: #123c35,
+    blue-soft: #172554,
+    amber-soft: #3f2e12,
+    red-soft: #451a1a,
+    violet-soft: #2e2358,
+    teal-border: #1f6f63,
+    blue-border: #1d4ed8,
+    amber-border: #7c5b1a,
+    red-border: #991b1b,
+    neutral-text: #d3ded7,
+    teal-text: #99f6e4,
+    blue-text: #bfdbfe,
+    amber-text: #fde68a,
+    red-text: #fecaca
+  )
+) !default;
+
+@function color($mode, $token) {
+  $mode-palette: map.get($maintenance-primitive-palette, $mode);
+
+  @if $mode-palette == null {
+    @error "Unknown maintenance primitive palette mode `#{$mode}`.";
+  }
+
+  $value: map.get($mode-palette, $token);
+
+  @if $value == null {
+    @error "Unknown maintenance primitive palette token `#{$token}` for mode `#{$mode}`.";
+  }
+
+  @return $value;
+}

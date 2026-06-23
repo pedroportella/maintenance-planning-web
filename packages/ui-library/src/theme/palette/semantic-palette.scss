@@ -9,7 +9,8 @@
   --mp-color-text-subtle: var(--mp-palette-text-muted);
   --mp-color-link: var(--mp-color-accent-blue);
   --mp-color-focus: var(--mp-color-accent-teal);
-  --mp-color-action-primary: var(--mp-color-accent-blue);
+  --mp-color-action-primary: var(--mp-palette-action-primary);
+  --mp-color-action-primary-text: var(--mp-palette-action-primary-text);
   --mp-status-critical-bg: var(--mp-tone-critical-bg);
   --mp-status-critical-text: var(--mp-tone-critical-text);
   --mp-status-info-bg: var(--mp-tone-info-bg);

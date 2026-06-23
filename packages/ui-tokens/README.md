@@ -8,5 +8,6 @@ Tokens should support a restrained operational interface with clear contrast, st
 
 - `@maintenance-planning/ui-tokens` exports typed color, spacing, radius, typography, shadow and status tone tokens.
 - `@maintenance-planning/ui-tokens/theme.css` exposes the CSS custom properties consumed by the UI-library theme.
+- `@maintenance-planning/ui-tokens/scss/styles/maintenance-primitive-palette.scss` and `@maintenance-planning/ui-tokens/scss/styles/planner-product-palette.scss` expose Sass palette sources for the UI-library theme bridge.
 
 The package owns contrast-critical token tests so downstream components can reuse the palette without re-checking every primitive pair.

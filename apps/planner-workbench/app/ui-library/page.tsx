@@ -175,6 +175,27 @@ export default async function UiLibraryPage() {
         </p>
       </Alert>
 
+      <WorkbenchPanel className="console-panel" labelledBy="showcase-theme-foundation">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Theme foundation</p>
+            <h2 id="showcase-theme-foundation">Light, dark and system modes</h2>
+          </div>
+          <StatusBadge tone="success">Radix theme provider</StatusBadge>
+        </div>
+        <div className="showcase-tone-grid" aria-label="Theme mode evidence">
+          <Alert className="light" title="Light mode" tone="neutral">
+            <p>Uses the planner light palette from shared tokens.</p>
+          </Alert>
+          <Alert className="dark" title="Dark mode" tone="neutral">
+            <p>Uses the planner dark palette from shared tokens.</p>
+          </Alert>
+          <Alert title="System mode" tone="neutral">
+            <p>Inherits the active document mode from the root theme provider.</p>
+          </Alert>
+        </div>
+      </WorkbenchPanel>
+
       <WorkbenchPanel className="console-panel" labelledBy="showcase-alerts">
         <div className="section-heading">
           <div>

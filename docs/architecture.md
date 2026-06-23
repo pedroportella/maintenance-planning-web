@@ -6,9 +6,9 @@ The web repo is the planner-facing layer of the maintenance-planning showcase. I
 
 - `apps/planner-workbench` hosts the Next.js App Router shell.
 - `packages/services` holds API-facing contracts, mock adapters, backend adapters and response mappers.
-- `packages/ui-tokens` holds typed visual primitives and CSS custom properties.
+- `packages/ui-tokens` holds typed visual primitives, CSS custom properties and Sass palette sources.
 - `packages/ui-assets` holds neutral wordmark metadata, generic icon names and asset provenance notes.
-- `packages/ui-library` holds reusable presentation primitives and the shared theme stylesheet entrypoint.
+- `packages/ui-library` holds reusable presentation primitives and the shared Sass theme entrypoint.
 - `packages/utils` holds framework-neutral helpers such as planner route metadata.
 
 ## App Shell
@@ -28,7 +28,7 @@ The `/ui-library` route is separate from planner task navigation. It is a no-ind
 
 ## Visual System
 
-The app imports the shared theme from `@maintenance-planning/ui-library/theme.css`. That stylesheet imports token custom properties from `@maintenance-planning/ui-tokens/theme.css`, then defines base element, app shell, navigation, page header, status, metrics, table, alert and empty/loading/error state styling.
+The app imports the shared theme from `@maintenance-planning/ui-library/theme.scss`. That Sass entry imports Radix Themes CSS, maps token custom properties from `@maintenance-planning/ui-tokens`, then defines base element, app shell, navigation, page header, status, metrics, table, alert and empty/loading/error state styling.
 
 App-local CSS remains responsible for route-specific composition. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
 

@@ -16,7 +16,7 @@ import {
   type DataTableColumn
 } from "../src";
 
-const themeCss = readFileSync(new URL("../src/theme/theme.css", import.meta.url), "utf8");
+const themeScss = readFileSync(new URL("../src/theme/theme.scss", import.meta.url), "utf8");
 
 describe("ui-library components", () => {
   it("renders an accessible app shell with active navigation", () => {
@@ -146,8 +146,8 @@ describe("ui-library components", () => {
 
     expect(markup).toContain('href="#queue"');
     expect(markup).toContain('aria-current="page"');
-    expect(themeCss).toContain(".app-shell-nav-link:focus-visible");
-    expect(themeCss).toContain(".segmented-nav-link:focus-visible");
+    expect(themeScss).toContain(".app-shell-nav-link:focus-visible");
+    expect(themeScss).toContain(".segmented-nav-link:focus-visible");
   });
 
   it("publishes loading and error states with live-region roles", () => {
