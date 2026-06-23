@@ -1,0 +1,59 @@
+.planner-summary-list {
+  width: 100%;
+  margin: 0;
+}
+
+.planner-summary-list .rt-DataListItem {
+  padding-block: 8px;
+  border-bottom: 1px solid var(--gray-a6);
+}
+
+.planner-summary-list .rt-DataListItem:first-child {
+  padding-top: 0;
+}
+
+.planner-summary-list .rt-DataListItem:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.planner-summary-list-label {
+  color: var(--gray-11);
+  font-weight: 700;
+}
+
+.planner-summary-list-value {
+  color: var(--gray-12);
+}
+
+.planner-summary-list-value-content {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.planner-summary-list-value-text {
+  overflow-wrap: anywhere;
+}
+
+.planner-summary-list-detail {
+  line-height: 1.35;
+}
+
+.planner-summary-list-compact .rt-DataListItem {
+  padding-block: 5px;
+}
+
+.planner-summary-list-compact .planner-summary-list-label {
+  font-size: var(--mp-font-size-xs);
+}
+
+@media (max-width: 640px) {
+  .planner-summary-list {
+    --data-list-label-width: 100%;
+  }
+
+  .planner-summary-list .rt-DataListItem {
+    grid-template-columns: 1fr;
+  }
+}

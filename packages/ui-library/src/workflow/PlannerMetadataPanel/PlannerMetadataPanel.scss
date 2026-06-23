@@ -1,0 +1,69 @@
+.planner-metadata-panel {
+  display: grid;
+  gap: var(--mp-space-md);
+  min-width: 0;
+  padding: 14px;
+  background: var(--gray-a2);
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-3);
+}
+
+.planner-metadata-panel[data-density="compact"] {
+  gap: var(--mp-space-sm);
+  padding: 12px;
+}
+
+.planner-metadata-panel-header {
+  display: flex;
+  gap: var(--mp-space-md);
+  align-items: start;
+  justify-content: space-between;
+}
+
+.planner-metadata-panel-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.planner-metadata-panel-eyebrow {
+  margin: 0;
+  color: var(--accent-11);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.planner-metadata-panel h3,
+.planner-metadata-panel-description {
+  margin: 0;
+}
+
+.planner-metadata-panel h3 {
+  color: var(--gray-12);
+  font-size: var(--mp-font-size-md);
+  line-height: 1.25;
+}
+
+.planner-metadata-panel-description {
+  color: var(--gray-11);
+  font-size: var(--mp-font-size-sm);
+  line-height: 1.45;
+}
+
+.planner-metadata-panel-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.planner-metadata-panel-body {
+  display: grid;
+  gap: var(--mp-space-sm);
+}
+
+@media (max-width: 640px) {
+  .planner-metadata-panel-header {
+    display: grid;
+  }
+}

@@ -34,11 +34,13 @@ export const workbenchThemeClassNames = {
   dataTable: "data-table",
   emptyState: "planner-empty-state",
   loadingState: "planner-loading-state",
-  metricSummary: "metric-summary",
+  metadataPanel: "planner-metadata-panel",
+  metricSummary: "planner-metric-summary",
   panel: "workbench-panel",
   pageHeader: "planner-page-header",
   pageShell: "planner-page",
   segmentedNav: "segmented-nav",
   sideNav: "planner-side-nav",
+  summaryList: "planner-summary-list",
   statusBadge: "planner-status-badge"
 } as const;

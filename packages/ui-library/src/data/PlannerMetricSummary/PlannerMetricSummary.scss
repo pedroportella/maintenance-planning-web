@@ -1,0 +1,76 @@
+.planner-metric-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mp-space-md);
+}
+
+.planner-metric-summary-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mp-space-sm);
+  align-items: stretch;
+}
+
+.planner-metric-card {
+  display: grid;
+  gap: 8px;
+  min-height: 118px;
+  padding: 14px;
+  background: var(--gray-a2);
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-3);
+}
+
+.planner-metric-summary-compact .planner-metric-card {
+  grid-template-columns: auto auto;
+  gap: 2px 8px;
+  align-items: baseline;
+  min-width: 150px;
+  min-height: 0;
+  padding: 8px 10px;
+}
+
+.planner-metric-card-label,
+.planner-metric-card-detail {
+  line-height: 1.35;
+}
+
+.planner-metric-card-value {
+  display: block;
+  overflow-wrap: anywhere;
+  line-height: 1;
+}
+
+.planner-metric-summary-compact .planner-metric-card-value {
+  font-size: var(--mp-font-size-md);
+}
+
+.planner-metric-summary-compact .planner-metric-card-detail {
+  grid-column: 1 / -1;
+}
+
+.planner-metric-card[data-tone="critical"] {
+  border-color: var(--red-a7);
+}
+
+.planner-metric-card[data-tone="info"] {
+  border-color: var(--blue-a7);
+}
+
+.planner-metric-card[data-tone="neutral"] {
+  border-color: var(--gray-a7);
+}
+
+.planner-metric-card[data-tone="success"] {
+  border-color: var(--green-a7);
+}
+
+.planner-metric-card[data-tone="warning"] {
+  border-color: var(--amber-a7);
+}
+
+@media (max-width: 980px) {
+  .planner-metric-summary {
+    grid-template-columns: 1fr;
+  }
+}

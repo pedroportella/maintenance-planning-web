@@ -1,6 +1,8 @@
 import {
   Alert,
   DataTable,
+  PlannerMetadataPanel,
+  PlannerSummaryList,
   QuietNote,
   StatusBadge,
   WorkbenchPanel,
@@ -87,28 +89,41 @@ export function RecommendationDetailPanel({
         </span>
       </div>
 
-      <dl className="package-meta-row" aria-label={`${recommendation.packageNumber} summary`}>
-        <div>
-          <dt>Score</dt>
-          <dd>{recommendation.score}</dd>
-        </div>
-        <div>
-          <dt>Actionability</dt>
-          <dd>{recommendation.actionability}</dd>
-        </div>
-        <div>
-          <dt>Estimated work</dt>
-          <dd>{formatHours(recommendation.estimatedHours)}</dd>
-        </div>
-        <div>
-          <dt>Blockers</dt>
-          <dd>{recommendation.blockers.length}</dd>
-        </div>
-        <div>
-          <dt>Work orders</dt>
-          <dd>{recommendation.workOrders.length}</dd>
-        </div>
-      </dl>
+      <PlannerSummaryList
+        ariaLabel={`${recommendation.packageNumber} summary`}
+        className="recommendation-package-summary"
+        items={[
+          {
+            id: "score",
+            label: "Score",
+            tone: "info",
+            value: recommendation.score
+          },
+          {
+            id: "actionability",
+            label: "Actionability",
+            tone: recommendation.actionability === "ready" ? "success" : "warning",
+            value: recommendation.actionability
+          },
+          {
+            id: "estimated-work",
+            label: "Estimated work",
+            value: formatHours(recommendation.estimatedHours)
+          },
+          {
+            id: "blockers",
+            label: "Blockers",
+            tone: recommendation.blockers.length > 0 ? "warning" : "success",
+            value: recommendation.blockers.length
+          },
+          {
+            id: "work-orders",
+            label: "Work orders",
+            value: recommendation.workOrders.length
+          }
+        ]}
+        variant="compact"
+      />
 
       <div className="recommendation-grid">
         <section aria-label={`${recommendation.packageNumber} explanation`}>
@@ -116,24 +131,33 @@ export function RecommendationDetailPanel({
           <p>{recommendation.explanation.text}</p>
         </section>
 
-        <section aria-label={`${recommendation.packageNumber} source-data readiness`}>
-          <h3>Source-data readiness</h3>
-          <p>{recommendation.sourceDataReadiness.summary}</p>
-          <dl className="detail-list detail-list-compact">
-            <div>
-              <dt>Ready</dt>
-              <dd>{recommendation.sourceDataReadiness.readyCount}</dd>
-            </div>
-            <div>
-              <dt>Review</dt>
-              <dd>{recommendation.sourceDataReadiness.needsReviewCount}</dd>
-            </div>
-            <div>
-              <dt>Blocked</dt>
-              <dd>{recommendation.sourceDataReadiness.blockedCount}</dd>
-            </div>
-          </dl>
-        </section>
+        <PlannerMetadataPanel
+          description={recommendation.sourceDataReadiness.summary}
+          density="compact"
+          items={[
+            {
+              id: "ready",
+              label: "Ready",
+              tone: "success",
+              value: recommendation.sourceDataReadiness.readyCount
+            },
+            {
+              id: "review",
+              label: "Review",
+              tone: "warning",
+              value: recommendation.sourceDataReadiness.needsReviewCount
+            },
+            {
+              id: "blocked",
+              label: "Blocked",
+              tone: "critical",
+              value: recommendation.sourceDataReadiness.blockedCount
+            }
+          ]}
+          summaryAriaLabel={`${recommendation.packageNumber} source-data readiness facts`}
+          title="Source-data readiness"
+          titleId={`${headingId}-source-readiness`}
+        />
       </div>
 
       <RecommendationBlockers blockers={recommendation.blockers} />

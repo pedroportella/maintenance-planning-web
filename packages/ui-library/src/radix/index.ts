@@ -6,6 +6,19 @@ export type { RadixCalloutProps } from "./RadixCallout";
 export { RadixCallout } from "./RadixCallout";
 export type { RadixCheckboxProps } from "./RadixCheckbox";
 export { RadixCheckbox } from "./RadixCheckbox";
+export type {
+  RadixDataListItemProps,
+  RadixDataListLabelProps,
+  RadixDataListRootProps,
+  RadixDataListValueProps
+} from "./RadixDataList";
+export {
+  RadixDataList,
+  RadixDataListItem,
+  RadixDataListLabel,
+  RadixDataListRoot,
+  RadixDataListValue
+} from "./RadixDataList";
 export type { RadixFormFieldControlProps, RadixFormFieldProps } from "./RadixFormField";
 export { RadixFormField } from "./RadixFormField";
 export type { RadixHeadingProps } from "./RadixHeading";

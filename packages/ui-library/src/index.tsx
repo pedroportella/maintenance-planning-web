@@ -9,8 +9,22 @@ export type {
 export { AppShell } from "./components/app-shell/app-shell";
 export type { DataTableColumn, DataTableProps } from "./components/data-table/data-table";
 export { DataTable } from "./components/data-table/data-table";
-export type { PlannerDataTableColumn, PlannerDataTableProps } from "./data";
-export { PlannerDataTable } from "./data";
+export type {
+  PlannerDataTableColumn,
+  PlannerDataTableProps,
+  PlannerMetricCardProps,
+  PlannerMetricSummaryItem,
+  PlannerMetricSummaryProps,
+  PlannerMetricSummarySlot,
+  PlannerSummaryListItem,
+  PlannerSummaryListProps
+} from "./data";
+export {
+  PlannerDataTable,
+  PlannerMetricCard,
+  PlannerMetricSummary,
+  PlannerSummaryList
+} from "./data";
 export type { EmptyStateProps } from "./components/empty-state/empty-state";
 export { EmptyState } from "./components/empty-state/empty-state";
 export type { ErrorStateProps, LoadingStateProps } from "./components/loading-state/loading-state";
@@ -71,11 +85,14 @@ export {
   PlannerWorkflowLayout
 } from "./layout";
 export type {
-  MetricCardProps,
-  MetricSummaryItem,
-  MetricSummaryProps
-} from "./components/metric-summary/metric-summary";
-export { MetricCard, MetricSummary } from "./components/metric-summary/metric-summary";
+  PlannerMetricCardProps as MetricCardProps,
+  PlannerMetricSummaryItem as MetricSummaryItem,
+  PlannerMetricSummaryProps as MetricSummaryProps
+} from "./data";
+export {
+  PlannerMetricCard as MetricCard,
+  PlannerMetricSummary as MetricSummary
+} from "./data";
 export type { PageHeaderProps } from "./components/page-header/page-header";
 export { PageHeader } from "./components/page-header/page-header";
 export type { WorkbenchPanelProps } from "./components/panel/panel";
@@ -89,6 +106,10 @@ export type {
   RadixButtonVariant,
   RadixCalloutProps,
   RadixCheckboxProps,
+  RadixDataListItemProps,
+  RadixDataListLabelProps,
+  RadixDataListRootProps,
+  RadixDataListValueProps,
   RadixFormFieldControlProps,
   RadixFormFieldProps,
   RadixHeadingProps,
@@ -114,6 +135,11 @@ export {
   RadixButton,
   RadixCallout,
   RadixCheckbox,
+  RadixDataList,
+  RadixDataListItem,
+  RadixDataListLabel,
+  RadixDataListRoot,
+  RadixDataListValue,
   RadixFormField,
   RadixHeading,
   RadixIcon,
@@ -144,3 +170,5 @@ export type {
 export { SegmentedNav } from "./components/segmented-nav/segmented-nav";
 export type { StatusBadgeProps, Tone } from "./components/status-badge/status-badge";
 export { StatusBadge, StatusPill } from "./components/status-badge/status-badge";
+export type { PlannerMetadataPanelProps } from "./workflow";
+export { PlannerMetadataPanel } from "./workflow";

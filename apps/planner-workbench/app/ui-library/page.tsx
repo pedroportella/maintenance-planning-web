@@ -4,7 +4,6 @@ import {
   DataTable,
   EmptyState,
   ErrorState,
-  MetricSummary,
   PageHeader,
   PlannerAlert,
   PlannerCheckbox,
@@ -12,6 +11,8 @@ import {
   PlannerContentSection,
   PlannerEmptyState,
   PlannerLoadingState,
+  PlannerMetadataPanel,
+  PlannerMetricSummary,
   PlannerPage,
   PlannerPageHeader,
   PlannerQuietNote,
@@ -21,6 +22,7 @@ import {
   PlannerSideNav,
   PlannerStatusBadge,
   PlannerStatusPill,
+  PlannerSummaryList,
   PlannerTextArea,
   PlannerTextInput,
   PlannerWorkflowLayout,
@@ -444,6 +446,124 @@ export default async function UiLibraryPage() {
         </section>
       </WorkbenchPanel>
 
+      <WorkbenchPanel className="console-panel" labelledBy="showcase-metadata">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Component family</p>
+            <h2 id="showcase-metadata">Metadata and data lists</h2>
+          </div>
+          <StatusBadge tone="success">RU4</StatusBadge>
+        </div>
+        <PlannerMetricSummary
+          ariaLabel="Showcase metadata metric summary"
+          items={[
+            {
+              detail: "Ready for planner review",
+              label: "Ready packages",
+              tone: "success",
+              value: "12"
+            },
+            {
+              detail: "Needs source-data review",
+              label: "Review packages",
+              tone: "warning",
+              value: "4"
+            },
+            {
+              detail: "Blocked by package facts",
+              label: "Blocked packages",
+              tone: "critical",
+              value: "2"
+            }
+          ]}
+          variant="compact"
+        />
+        <div className="showcase-tone-grid">
+          <PlannerMetadataPanel
+            badge={<StatusBadge tone="info">Desktop</StatusBadge>}
+            description="Standard metadata panels use Radix DataList semantics for package facts."
+            eyebrow="Metadata panel"
+            items={[
+              {
+                id: "package",
+                label: "Package",
+                value: "PKG-PARTS-REPLAN"
+              },
+              {
+                id: "score",
+                label: "Score",
+                tone: "info",
+                value: "91"
+              },
+              {
+                id: "estimated-work",
+                label: "Estimated work",
+                value: "48h"
+              }
+            ]}
+            summaryAriaLabel="Desktop package metadata"
+            title="Package facts"
+            titleId="showcase-desktop-metadata"
+          />
+          <PlannerMetadataPanel
+            badge={<StatusBadge tone="neutral">Tablet</StatusBadge>}
+            density="compact"
+            description="Compact metadata keeps repeated facts scannable inside constrained panels."
+            eyebrow="Metadata panel"
+            items={[
+              {
+                id: "run",
+                label: "Run",
+                value: "RUN-BASE-001"
+              },
+              {
+                id: "freshness",
+                label: "Freshness",
+                tone: "success",
+                value: "Current"
+              },
+              {
+                id: "exceptions",
+                label: "Exceptions",
+                tone: "warning",
+                value: "3"
+              }
+            ]}
+            summaryAriaLabel="Tablet run metadata"
+            title="Run facts"
+            titleId="showcase-tablet-metadata"
+          />
+          <section aria-label="Phone metadata fixture">
+            <h3>Phone fact stack</h3>
+            <PlannerSummaryList
+              ariaLabel="Phone package readiness facts"
+              items={[
+                {
+                  id: "ready",
+                  label: "Ready",
+                  tone: "success",
+                  value: "8"
+                },
+                {
+                  id: "review",
+                  label: "Review",
+                  tone: "warning",
+                  value: "2"
+                },
+                {
+                  id: "blocked",
+                  label: "Blocked",
+                  tone: "critical",
+                  value: "1"
+                }
+              ]}
+              orientation="vertical"
+              variant="compact"
+            />
+          </section>
+        </div>
+      </WorkbenchPanel>
+
       <WorkbenchPanel className="console-panel" labelledBy="showcase-tables">
         <div className="section-heading">
           <div>
@@ -525,7 +645,7 @@ export default async function UiLibraryPage() {
           </div>
           <StatusBadge tone={toneForPostureState(posture.state)}>{posture.state}</StatusBadge>
         </div>
-        <MetricSummary
+        <PlannerMetricSummary
           ariaLabel="Showcase operations posture summary"
           items={buildOperationsMetrics(posture, sourceReadiness, scenarioSummary.latest)}
         />
@@ -567,40 +687,56 @@ function ShowcaseRecommendationCard({
         <section aria-label={`${recommendation.packageNumber} explanation`}>
           <h3>Explanation</h3>
           <p>{recommendation.explanation.text}</p>
-          <dl className="detail-list">
-            <div>
-              <dt>Score</dt>
-              <dd>{recommendation.score}</dd>
-            </div>
-            <div>
-              <dt>Actionability</dt>
-              <dd>{recommendation.actionability}</dd>
-            </div>
-            <div>
-              <dt>Estimated work</dt>
-              <dd>{formatHours(recommendation.estimatedHours)}</dd>
-            </div>
-          </dl>
+          <PlannerSummaryList
+            ariaLabel={`${recommendation.packageNumber} explanation facts`}
+            items={[
+              {
+                id: "score",
+                label: "Score",
+                tone: "info",
+                value: recommendation.score
+              },
+              {
+                id: "actionability",
+                label: "Actionability",
+                value: recommendation.actionability
+              },
+              {
+                id: "estimated-work",
+                label: "Estimated work",
+                value: formatHours(recommendation.estimatedHours)
+              }
+            ]}
+          />
         </section>
 
-        <section aria-label={`${recommendation.packageNumber} readiness`}>
-          <h3>Readiness</h3>
-          <p>{recommendation.sourceDataReadiness.summary}</p>
-          <dl className="detail-list detail-list-compact">
-            <div>
-              <dt>Ready</dt>
-              <dd>{recommendation.sourceDataReadiness.readyCount}</dd>
-            </div>
-            <div>
-              <dt>Review</dt>
-              <dd>{recommendation.sourceDataReadiness.needsReviewCount}</dd>
-            </div>
-            <div>
-              <dt>Blocked</dt>
-              <dd>{recommendation.sourceDataReadiness.blockedCount}</dd>
-            </div>
-          </dl>
-        </section>
+        <PlannerMetadataPanel
+          description={recommendation.sourceDataReadiness.summary}
+          density="compact"
+          items={[
+            {
+              id: "ready",
+              label: "Ready",
+              tone: "success",
+              value: recommendation.sourceDataReadiness.readyCount
+            },
+            {
+              id: "review",
+              label: "Review",
+              tone: "warning",
+              value: recommendation.sourceDataReadiness.needsReviewCount
+            },
+            {
+              id: "blocked",
+              label: "Blocked",
+              tone: "critical",
+              value: recommendation.sourceDataReadiness.blockedCount
+            }
+          ]}
+          summaryAriaLabel={`${recommendation.packageNumber} readiness facts`}
+          title="Readiness"
+          titleId={`${recommendation.packageId}-showcase-readiness`}
+        />
       </div>
 
       <Alert

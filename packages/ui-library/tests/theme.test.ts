@@ -53,9 +53,13 @@ describe("ui-library theme", () => {
     expect(themeScss).toContain("../feedback/PlannerLoadingState/PlannerLoadingState");
     expect(themeScss).toContain("../feedback/PlannerQuietNote/PlannerQuietNote");
     expect(themeScss).toContain("../feedback/PlannerStatusBadge/PlannerStatusBadge");
+    expect(themeScss).toContain("../data/PlannerMetricSummary/PlannerMetricSummary");
+    expect(themeScss).toContain("../data/PlannerSummaryList/PlannerSummaryList");
+    expect(themeScss).toContain("../radix/RadixDataList/RadixDataList");
+    expect(themeScss).toContain("../workflow/PlannerMetadataPanel/PlannerMetadataPanel");
 
     for (const tone of ["critical", "info", "neutral", "success", "warning"]) {
-      expect(compiledThemeCss).toContain(`.metric-card[data-tone=${tone}]`);
+      expect(compiledThemeCss).toContain(`.planner-metric-card[data-tone=${tone}]`);
     }
 
     for (const tone of ["critical", "info", "success", "warning"]) {

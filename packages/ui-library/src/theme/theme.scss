@@ -2,6 +2,8 @@
 @use "palette/variables-dark" as dark;
 @use "palette/variables-light" as light;
 @use "palette/variables-root";
+@use "../data/PlannerMetricSummary/PlannerMetricSummary";
+@use "../data/PlannerSummaryList/PlannerSummaryList";
 @use "../feedback/PlannerAlert/PlannerAlert";
 @use "../feedback/PlannerEmptyState/PlannerEmptyState";
 @use "../feedback/PlannerLoadingState/PlannerLoadingState";
@@ -24,6 +26,7 @@
 @use "../radix/RadixButton/RadixButton";
 @use "../radix/RadixCallout/RadixCallout";
 @use "../radix/RadixCheckbox/RadixCheckbox";
+@use "../radix/RadixDataList/RadixDataList";
 @use "../radix/RadixFormField/RadixFormField";
 @use "../radix/RadixHeading/RadixHeading";
 @use "../radix/RadixIcon/RadixIcon";
@@ -36,6 +39,7 @@
 @use "../radix/RadixText/RadixText";
 @use "../radix/RadixTextArea/RadixTextArea";
 @use "../radix/RadixTextInput/RadixTextInput";
+@use "../workflow/PlannerMetadataPanel/PlannerMetadataPanel";
 
 @import "@radix-ui/themes/styles.css";
 @import "@maintenance-planning/ui-tokens/theme.css";
@@ -163,86 +167,6 @@ p {
   white-space: nowrap;
 }
 
-.metric-summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.metric-summary-compact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: stretch;
-  padding: 0;
-}
-
-.metric-card {
-  min-height: 142px;
-  padding: 18px;
-  background: var(--mp-color-surface);
-  border: 1px solid var(--mp-color-border);
-  border-radius: var(--mp-radius-md);
-  box-shadow: var(--mp-shadow-soft);
-}
-
-.metric-summary-compact .metric-card {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 2px 8px;
-  align-items: baseline;
-  min-width: 150px;
-  min-height: 0;
-  padding: 9px 11px;
-  box-shadow: none;
-}
-
-.metric-card-label,
-.metric-card-detail {
-  color: var(--mp-color-text-muted);
-  font-size: 0.86rem;
-  line-height: 1.45;
-}
-
-.metric-card-value {
-  display: block;
-  margin: 12px 0 8px;
-  color: var(--metric-color, var(--mp-color-text));
-  font-size: var(--mp-font-size-xl);
-  font-weight: 800;
-  line-height: 1;
-}
-
-.metric-summary-compact .metric-card-value {
-  margin: 0;
-  font-size: var(--mp-font-size-md);
-}
-
-.metric-summary-compact .metric-card-detail {
-  grid-column: 1 / -1;
-  font-size: var(--mp-font-size-xs);
-}
-
-.metric-card[data-tone="critical"] {
-  --metric-color: var(--mp-tone-critical-accent);
-}
-
-.metric-card[data-tone="info"] {
-  --metric-color: var(--mp-tone-info-accent);
-}
-
-.metric-card[data-tone="neutral"] {
-  --metric-color: var(--mp-tone-neutral-accent);
-}
-
-.metric-card[data-tone="success"] {
-  --metric-color: var(--mp-tone-success-accent);
-}
-
-.metric-card[data-tone="warning"] {
-  --metric-color: var(--mp-tone-warning-accent);
-}
-
 .data-table-region {
   min-width: 0;
 }
@@ -344,9 +268,6 @@ button:focus-visible,
 }
 
 @media (max-width: 980px) {
-  .metric-summary {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 640px) {

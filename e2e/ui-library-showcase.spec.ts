@@ -24,6 +24,7 @@ test("renders the UI library evidence route with accessible landmarks and state 
   await expect(page.getByRole("heading", { name: "UI library showcase" })).toBeVisible();
 
   await expect(page.getByRole("heading", { name: "Alerts and badges" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Metadata and data lists" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Tables and row states" })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Empty, loading and error states" })

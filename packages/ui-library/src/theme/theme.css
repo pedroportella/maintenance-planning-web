@@ -1,5 +1,139 @@
 @import "@radix-ui/themes/styles.css";
 @import "@maintenance-planning/ui-tokens/theme.css";
+.planner-metric-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mp-space-md);
+}
+
+.planner-metric-summary-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mp-space-sm);
+  align-items: stretch;
+}
+
+.planner-metric-card {
+  display: grid;
+  gap: 8px;
+  min-height: 118px;
+  padding: 14px;
+  background: var(--gray-a2);
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-3);
+}
+
+.planner-metric-summary-compact .planner-metric-card {
+  grid-template-columns: auto auto;
+  gap: 2px 8px;
+  align-items: baseline;
+  min-width: 150px;
+  min-height: 0;
+  padding: 8px 10px;
+}
+
+.planner-metric-card-label,
+.planner-metric-card-detail {
+  line-height: 1.35;
+}
+
+.planner-metric-card-value {
+  display: block;
+  overflow-wrap: anywhere;
+  line-height: 1;
+}
+
+.planner-metric-summary-compact .planner-metric-card-value {
+  font-size: var(--mp-font-size-md);
+}
+
+.planner-metric-summary-compact .planner-metric-card-detail {
+  grid-column: 1/-1;
+}
+
+.planner-metric-card[data-tone=critical] {
+  border-color: var(--red-a7);
+}
+
+.planner-metric-card[data-tone=info] {
+  border-color: var(--blue-a7);
+}
+
+.planner-metric-card[data-tone=neutral] {
+  border-color: var(--gray-a7);
+}
+
+.planner-metric-card[data-tone=success] {
+  border-color: var(--green-a7);
+}
+
+.planner-metric-card[data-tone=warning] {
+  border-color: var(--amber-a7);
+}
+
+@media (max-width: 980px) {
+  .planner-metric-summary {
+    grid-template-columns: 1fr;
+  }
+}
+.planner-summary-list {
+  width: 100%;
+  margin: 0;
+}
+
+.planner-summary-list .rt-DataListItem {
+  padding-block: 8px;
+  border-bottom: 1px solid var(--gray-a6);
+}
+
+.planner-summary-list .rt-DataListItem:first-child {
+  padding-top: 0;
+}
+
+.planner-summary-list .rt-DataListItem:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.planner-summary-list-label {
+  color: var(--gray-11);
+  font-weight: 700;
+}
+
+.planner-summary-list-value {
+  color: var(--gray-12);
+}
+
+.planner-summary-list-value-content {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.planner-summary-list-value-text {
+  overflow-wrap: anywhere;
+}
+
+.planner-summary-list-detail {
+  line-height: 1.35;
+}
+
+.planner-summary-list-compact .rt-DataListItem {
+  padding-block: 5px;
+}
+
+.planner-summary-list-compact .planner-summary-list-label {
+  font-size: var(--mp-font-size-xs);
+}
+
+@media (max-width: 640px) {
+  .planner-summary-list {
+    --data-list-label-width: 100%;
+  }
+  .planner-summary-list .rt-DataListItem {
+    grid-template-columns: 1fr;
+  }
+}
 .planner-alert {
   align-items: start;
 }
@@ -711,6 +845,11 @@ body.planner-app-layout-drawer-open {
   margin-top: 2px;
 }
 
+.radix-data-list,
+.radix-data-list-value {
+  min-width: 0;
+}
+
 .radix-form-field {
   display: grid;
   gap: 6px;
@@ -845,6 +984,75 @@ body.planner-app-layout-drawer-open {
   width: 100%;
 }
 
+.planner-metadata-panel {
+  display: grid;
+  gap: var(--mp-space-md);
+  min-width: 0;
+  padding: 14px;
+  background: var(--gray-a2);
+  border: 1px solid var(--gray-a6);
+  border-radius: var(--radius-3);
+}
+
+.planner-metadata-panel[data-density=compact] {
+  gap: var(--mp-space-sm);
+  padding: 12px;
+}
+
+.planner-metadata-panel-header {
+  display: flex;
+  gap: var(--mp-space-md);
+  align-items: start;
+  justify-content: space-between;
+}
+
+.planner-metadata-panel-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.planner-metadata-panel-eyebrow {
+  margin: 0;
+  color: var(--accent-11);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 800;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.planner-metadata-panel h3,
+.planner-metadata-panel-description {
+  margin: 0;
+}
+
+.planner-metadata-panel h3 {
+  color: var(--gray-12);
+  font-size: var(--mp-font-size-md);
+  line-height: 1.25;
+}
+
+.planner-metadata-panel-description {
+  color: var(--gray-11);
+  font-size: var(--mp-font-size-sm);
+  line-height: 1.45;
+}
+
+.planner-metadata-panel-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.planner-metadata-panel-body {
+  display: grid;
+  gap: var(--mp-space-sm);
+}
+
+@media (max-width: 640px) {
+  .planner-metadata-panel-header {
+    display: grid;
+  }
+}
 :root {
   --mp-font-body: var(--mp-font-family-sans);
   --mp-radius-control: var(--mp-radius-md);
@@ -1117,86 +1325,6 @@ p {
   white-space: nowrap;
 }
 
-.metric-summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.metric-summary-compact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: stretch;
-  padding: 0;
-}
-
-.metric-card {
-  min-height: 142px;
-  padding: 18px;
-  background: var(--mp-color-surface);
-  border: 1px solid var(--mp-color-border);
-  border-radius: var(--mp-radius-md);
-  box-shadow: var(--mp-shadow-soft);
-}
-
-.metric-summary-compact .metric-card {
-  display: grid;
-  grid-template-columns: auto auto;
-  gap: 2px 8px;
-  align-items: baseline;
-  min-width: 150px;
-  min-height: 0;
-  padding: 9px 11px;
-  box-shadow: none;
-}
-
-.metric-card-label,
-.metric-card-detail {
-  color: var(--mp-color-text-muted);
-  font-size: 0.86rem;
-  line-height: 1.45;
-}
-
-.metric-card-value {
-  display: block;
-  margin: 12px 0 8px;
-  color: var(--metric-color, var(--mp-color-text));
-  font-size: var(--mp-font-size-xl);
-  font-weight: 800;
-  line-height: 1;
-}
-
-.metric-summary-compact .metric-card-value {
-  margin: 0;
-  font-size: var(--mp-font-size-md);
-}
-
-.metric-summary-compact .metric-card-detail {
-  grid-column: 1/-1;
-  font-size: var(--mp-font-size-xs);
-}
-
-.metric-card[data-tone=critical] {
-  --metric-color: var(--mp-tone-critical-accent);
-}
-
-.metric-card[data-tone=info] {
-  --metric-color: var(--mp-tone-info-accent);
-}
-
-.metric-card[data-tone=neutral] {
-  --metric-color: var(--mp-tone-neutral-accent);
-}
-
-.metric-card[data-tone=success] {
-  --metric-color: var(--mp-tone-success-accent);
-}
-
-.metric-card[data-tone=warning] {
-  --metric-color: var(--mp-tone-warning-accent);
-}
-
 .data-table-region {
   min-width: 0;
 }
@@ -1294,11 +1422,6 @@ button:focus-visible,
 @media (max-width: 640px) {
   h1 {
     font-size: 2.05rem;
-  }
-}
-@media (max-width: 980px) {
-  .metric-summary {
-    grid-template-columns: 1fr;
   }
 }
 @media (max-width: 640px) {

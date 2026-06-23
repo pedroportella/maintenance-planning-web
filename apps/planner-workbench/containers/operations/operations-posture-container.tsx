@@ -4,6 +4,7 @@ import {
   EmptyState,
   MetricSummary,
   PageHeader,
+  PlannerMetadataPanel,
   QuietNote,
   StatusBadge,
   WorkbenchPanel,
@@ -167,39 +168,57 @@ function LatestImportDetails({ latestImport }: { latestImport?: LatestImportView
   }
 
   return (
-    <dl className="detail-list detail-list-compact">
-      <div>
-        <dt>Source</dt>
-        <dd>{latestImport.sourceSystem}</dd>
-      </div>
-      <div>
-        <dt>Import kind</dt>
-        <dd>{latestImport.importKind}</dd>
-      </div>
-      <div>
-        <dt>Status</dt>
-        <dd>{latestImport.status}</dd>
-      </div>
-      <div>
-        <dt>Received</dt>
-        <dd>{latestImport.receivedCount}</dd>
-      </div>
-      <div>
-        <dt>Accepted</dt>
-        <dd>{latestImport.acceptedCount}</dd>
-      </div>
-      <div>
-        <dt>Rejected</dt>
-        <dd>{latestImport.rejectedCount}</dd>
-      </div>
-      <div>
-        <dt>Stale</dt>
-        <dd>{latestImport.ignoredStaleCount}</dd>
-      </div>
-      <div>
-        <dt>Completed</dt>
-        <dd>{formatUtc(latestImport.completedAtUtc)}</dd>
-      </div>
-    </dl>
+    <PlannerMetadataPanel
+      density="compact"
+      items={[
+        {
+          id: "source",
+          label: "Source",
+          value: latestImport.sourceSystem
+        },
+        {
+          id: "import-kind",
+          label: "Import kind",
+          value: latestImport.importKind
+        },
+        {
+          id: "status",
+          label: "Status",
+          tone: latestImport.status === "accepted" ? "success" : "warning",
+          value: latestImport.status
+        },
+        {
+          id: "received",
+          label: "Received",
+          value: latestImport.receivedCount
+        },
+        {
+          id: "accepted",
+          label: "Accepted",
+          tone: "success",
+          value: latestImport.acceptedCount
+        },
+        {
+          id: "rejected",
+          label: "Rejected",
+          tone: latestImport.rejectedCount > 0 ? "critical" : "neutral",
+          value: latestImport.rejectedCount
+        },
+        {
+          id: "stale",
+          label: "Stale",
+          tone: latestImport.ignoredStaleCount > 0 ? "warning" : "neutral",
+          value: latestImport.ignoredStaleCount
+        },
+        {
+          id: "completed",
+          label: "Completed",
+          value: formatUtc(latestImport.completedAtUtc)
+        }
+      ]}
+      summaryAriaLabel="Latest import facts"
+      title="Latest import facts"
+      titleId="latest-import-facts"
+    />
   );
 }
