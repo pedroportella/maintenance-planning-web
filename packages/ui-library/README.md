@@ -14,6 +14,13 @@ Apps should import the theme stylesheet from this package before app-owned layou
 
 ## Component Boundary
 
-The package owns reusable presentation components such as `AppShell`, `PageHeader`, `StatusBadge`, `MetricSummary`, `DataTable`, `EmptyState`, `Alert`, `SegmentedNav`, `LoadingState` and `ErrorState`.
+The package owns reusable presentation components through architecture-aligned families:
+`PlannerAppLayout`, `PlannerPageHeader`, `PlannerStatusBadge`, `PlannerMetricSummary`,
+`PlannerDataTable`, `PlannerEmptyState`, `PlannerAlert`, `PlannerSegmentedNav` and
+`PlannerLoadingState`.
+
+Component family source lives under `src/components`, grouped by role as `data`,
+`feedback`, `forms`, `layout`, `radix` and `workflow`. Theme code stays under
+`src/theme`; shared non-visual helpers stay under `src/utils`.
 
 It should not own API calls, scoring rules, simulator behavior or planner decision logic.

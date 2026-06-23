@@ -37,7 +37,7 @@ import {
   RadixLink,
   RadixText,
   type PlannerDataTableColumn,
-  type Tone
+  type PlannerStatusTone
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
@@ -70,7 +70,7 @@ export const dynamic = "force-static";
 type ToneExample = {
   readonly detail: string;
   readonly label: string;
-  readonly tone: Tone;
+  readonly tone: PlannerStatusTone;
 };
 
 const toneExamples: readonly ToneExample[] = [

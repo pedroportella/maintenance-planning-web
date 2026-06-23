@@ -3,28 +3,28 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
-  Alert,
-  AppShell,
-  DataTable,
-  ErrorState,
-  LoadingState,
-  PageHeader,
-  QuietNote,
-  SegmentedNav,
-  StatusBadge,
-  type AppShellNavItem,
-  type DataTableColumn
+  PlannerAlert,
+  PlannerAppLayout,
+  PlannerDataTable,
+  PlannerEmptyState,
+  PlannerLoadingState,
+  PlannerPageHeader,
+  PlannerQuietNote,
+  PlannerSegmentedNav,
+  PlannerStatusBadge,
+  type PlannerAppLayoutNavItem,
+  type PlannerDataTableColumn
 } from "../src";
 
 const themeScss = readFileSync(new URL("../src/theme/theme.scss", import.meta.url), "utf8");
 const sideNavScss = readFileSync(
-  new URL("../src/layout/PlannerSideNav/PlannerSideNav.scss", import.meta.url),
+  new URL("../src/components/layout/PlannerSideNav/PlannerSideNav.scss", import.meta.url),
   "utf8"
 );
 
 describe("ui-library components", () => {
-  it("renders an accessible app shell with active navigation", () => {
-    const navItems: AppShellNavItem[] = [
+  it("renders an accessible planner app layout with active navigation", () => {
+    const navItems: PlannerAppLayoutNavItem[] = [
       {
         description: "Items needing review",
         group: "Review",
@@ -40,7 +40,7 @@ describe("ui-library components", () => {
     ];
 
     const markup = renderToStaticMarkup(
-      createElement(AppShell, {
+      createElement(PlannerAppLayout, {
         activeHref: "/recommendations",
         brand: {
           ariaLabel: "Planner workbench home",
@@ -69,13 +69,20 @@ describe("ui-library components", () => {
       createElement(
         "div",
         null,
-        createElement(PageHeader, {
-          badge: createElement(StatusBadge, { children: "Static mock shell", tone: "info" }),
+        createElement(PlannerPageHeader, {
+          badge: createElement(PlannerStatusBadge, { children: "Static mock shell", tone: "info" }),
           description: "Synthetic route review.",
           title: "Planner Workbench"
         }),
-        createElement(Alert, { children: "Missing detail", title: "Needs review", tone: "warning" }),
-        createElement(QuietNote, { children: "Synthetic local review only.", title: "Scope" })
+        createElement(PlannerAlert, {
+          children: "Missing detail",
+          title: "Needs review",
+          tone: "warning"
+        }),
+        createElement(PlannerQuietNote, {
+          children: "Synthetic local review only.",
+          title: "Scope"
+        })
       )
     );
 
@@ -91,7 +98,7 @@ describe("ui-library components", () => {
       workOrder: string;
     };
 
-    const columns: Array<DataTableColumn<Row>> = [
+    const columns: Array<PlannerDataTableColumn<Row>> = [
       {
         header: "Work order",
         key: "work-order",
@@ -100,12 +107,12 @@ describe("ui-library components", () => {
       {
         header: "Status",
         key: "status",
-        render: (row) => createElement(StatusBadge, { children: row.status, tone: "success" })
+        render: (row) => createElement(PlannerStatusBadge, { children: row.status, tone: "success" })
       }
     ];
 
     const populated = renderToStaticMarkup(
-      createElement(DataTable<Row>, {
+      createElement(PlannerDataTable<Row>, {
         caption: "Package recommendation queue",
         columns,
         getRowKey: (row) => row.workOrder,
@@ -118,7 +125,7 @@ describe("ui-library components", () => {
       })
     );
     const empty = renderToStaticMarkup(
-      createElement(DataTable<Row>, {
+      createElement(PlannerDataTable<Row>, {
         caption: "Empty queue",
         columns,
         getRowKey: (row) => row.workOrder,
@@ -132,9 +139,9 @@ describe("ui-library components", () => {
     expect(empty).toContain("No rows to show");
   });
 
-  it("uses keyboard-reachable links and focus-visible styles", () => {
+  it("uses keyboard-reachable segmented links and focus-visible styles", () => {
     const markup = renderToStaticMarkup(
-      createElement(SegmentedNav, {
+      createElement(PlannerSegmentedNav, {
         ariaLabel: "Workbench page sections",
         options: [
           {
@@ -152,9 +159,11 @@ describe("ui-library components", () => {
 
     expect(markup).toContain('href="#queue"');
     expect(markup).toContain('aria-current="page"');
-    expect(themeScss).toContain("../layout/PlannerSideNav/PlannerSideNav");
+    expect(themeScss).toContain("../components/layout/PlannerSideNav/PlannerSideNav");
+    expect(themeScss).toContain("../components/data/PlannerSegmentedNav/PlannerSegmentedNav");
+    expect(themeScss).not.toContain("../layout/");
+    expect(themeScss).not.toContain("../data/");
     expect(sideNavScss).toContain(".planner-side-nav-link:focus-visible");
-    expect(themeScss).toContain("../components/segmented-nav/segmented-nav");
   });
 
   it("publishes loading and error states with live-region roles", () => {
@@ -162,10 +171,12 @@ describe("ui-library components", () => {
       createElement(
         "div",
         null,
-        createElement(LoadingState, { label: "Loading queue" }),
-        createElement(ErrorState, {
+        createElement(PlannerLoadingState, { label: "Loading queue" }),
+        createElement(PlannerEmptyState, {
           description: "The local shell could not render.",
-          title: "Queue unavailable"
+          role: "alert",
+          title: "Queue unavailable",
+          tone: "critical"
         })
       )
     );

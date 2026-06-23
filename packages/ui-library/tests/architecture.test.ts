@@ -13,6 +13,7 @@ import {
   PlannerRadioGroup,
   PlannerPage,
   PlannerPageHeader,
+  PlannerSegmentedNav,
   PlannerSelect,
   PlannerSideNav,
   PlannerTextArea,
@@ -27,42 +28,66 @@ import {
   RadixLink,
   RadixTable,
   RadixText,
-  type AppShellNavItem,
+  type PlannerAppLayoutNavItem,
   type PlannerDataTableColumn
 } from "../src";
 import { PlannerThemeProvider } from "../src/theme";
 
 const requiredComponentFolders = [
   "src/theme/PlannerThemeProvider",
-  "src/layout/PlannerAppLayout",
-  "src/layout/PlannerContentSection",
-  "src/layout/PlannerPage",
-  "src/layout/PlannerPageHeader",
-  "src/layout/PlannerWorkflowLayout",
-  "src/layout/PlannerSideNav",
-  "src/radix/RadixBadge",
-  "src/radix/RadixButton",
-  "src/radix/RadixCallout",
-  "src/radix/RadixCheckbox",
-  "src/radix/RadixFormField",
-  "src/radix/RadixHeading",
-  "src/radix/RadixIcon",
-  "src/radix/RadixLink",
-  "src/radix/RadixRadioCards",
-  "src/radix/RadixRadioGroup",
-  "src/radix/RadixSelect",
-  "src/radix/RadixTable",
-  "src/radix/RadixText",
-  "src/radix/RadixTextArea",
-  "src/radix/RadixTextInput",
-  "src/data/PlannerDataTable",
-  "src/forms/PlannerCheckbox",
-  "src/forms/PlannerFormField",
-  "src/forms/PlannerRadioCards",
-  "src/forms/PlannerRadioGroup",
-  "src/forms/PlannerSelect",
-  "src/forms/PlannerTextArea",
-  "src/forms/PlannerTextInput"
+  "src/components/layout/PlannerAppLayout",
+  "src/components/layout/PlannerContentSection",
+  "src/components/layout/PlannerPage",
+  "src/components/layout/PlannerPageHeader",
+  "src/components/layout/PlannerWorkflowLayout",
+  "src/components/layout/PlannerSideNav",
+  "src/components/radix/RadixBadge",
+  "src/components/radix/RadixButton",
+  "src/components/radix/RadixCallout",
+  "src/components/radix/RadixCheckbox",
+  "src/components/radix/RadixFormField",
+  "src/components/radix/RadixHeading",
+  "src/components/radix/RadixIcon",
+  "src/components/radix/RadixLink",
+  "src/components/radix/RadixRadioCards",
+  "src/components/radix/RadixRadioGroup",
+  "src/components/radix/RadixSelect",
+  "src/components/radix/RadixTable",
+  "src/components/radix/RadixText",
+  "src/components/radix/RadixTextArea",
+  "src/components/radix/RadixTextInput",
+  "src/components/data/PlannerDataTable",
+  "src/components/data/PlannerSegmentedNav",
+  "src/components/forms/PlannerCheckbox",
+  "src/components/forms/PlannerFormField",
+  "src/components/forms/PlannerRadioCards",
+  "src/components/forms/PlannerRadioGroup",
+  "src/components/forms/PlannerSelect",
+  "src/components/forms/PlannerTextArea",
+  "src/components/forms/PlannerTextInput"
+] as const;
+
+const componentFamilyFolders = [
+  "data",
+  "feedback",
+  "forms",
+  "layout",
+  "radix",
+  "workflow"
+] as const;
+
+const legacyAdapterFolders = [
+  "alert",
+  "app-shell",
+  "data-table",
+  "empty-state",
+  "loading-state",
+  "metric-summary",
+  "page-header",
+  "panel",
+  "quiet-note",
+  "segmented-nav",
+  "status-badge"
 ] as const;
 
 const requiredComponentFiles = (componentName: string) => [
@@ -79,7 +104,7 @@ describe("ui-library Radix adapter architecture", () => {
       workOrder: string;
     };
 
-    const navItems: AppShellNavItem[] = [
+    const navItems: PlannerAppLayoutNavItem[] = [
       {
         href: "/recommendations",
         label: "Recommendations"
@@ -131,6 +156,20 @@ describe("ui-library Radix adapter architecture", () => {
             activeHref: "/recommendations",
             ariaLabel: "Planner sections",
             items: navItems
+          }),
+          createElement(PlannerSegmentedNav, {
+            ariaLabel: "Planner tabs",
+            options: [
+              {
+                href: "#queue",
+                label: "Queue",
+                selected: true
+              },
+              {
+                href: "#history",
+                label: "History"
+              }
+            ]
           }),
           createElement(PlannerAppLayout, {
             activeHref: "/recommendations",
@@ -249,6 +288,7 @@ describe("ui-library Radix adapter architecture", () => {
     expect(markup).toContain("planner-page");
     expect(markup).toContain("planner-workflow-layout");
     expect(markup).toContain("planner-side-nav");
+    expect(markup).toContain("planner-segmented-nav");
     expect(markup).toContain("planner-app-layout");
     expect(markup).toContain("planner-page-header");
     expect(markup).toContain("planner-content-section");
@@ -278,6 +318,29 @@ describe("ui-library Radix adapter architecture", () => {
     }
   });
 
+  it("keeps component families under src/components", () => {
+    const packageRoot = fileURLToPath(new URL("../", import.meta.url));
+    const sourceRoot = join(packageRoot, "src");
+    const allowedRootEntries = new Set(["components", "index.tsx", "theme", "utils"]);
+
+    expect(existsSync(join(sourceRoot, "components"))).toBe(true);
+
+    for (const familyFolder of componentFamilyFolders) {
+      expect(existsSync(join(sourceRoot, "components", familyFolder))).toBe(true);
+      expect(existsSync(join(sourceRoot, familyFolder))).toBe(false);
+    }
+
+    const rootOffenders = readdirSync(sourceRoot).filter(
+      (entry) => !allowedRootEntries.has(entry)
+    );
+    const legacyOffenders = legacyAdapterFolders.filter((folder) =>
+      existsSync(join(sourceRoot, "components", folder))
+    );
+
+    expect(rootOffenders).toEqual([]);
+    expect(legacyOffenders).toEqual([]);
+  });
+
   it("keeps planner route containers out of direct Radix imports", () => {
     const appRoots = [
       fileURLToPath(new URL("../../../apps/planner-workbench/app/", import.meta.url)),
@@ -298,7 +361,7 @@ describe("ui-library Radix adapter architecture", () => {
     const directRadixImportPattern =
       /(?:from\s+["']@radix-ui\/|import\s+["']@radix-ui\/|@import\s+["']@radix-ui\/|require\(["']@radix-ui\/)/;
     const allowedRadixImportPattern =
-      /src\/(?:radix\/|theme\/(?:PlannerThemeProvider\/PlannerThemeProvider\.tsx|theme-config\.ts|theme\.scss))/;
+      /src\/(?:components\/radix\/|theme\/(?:PlannerThemeProvider\/PlannerThemeProvider\.tsx|theme-config\.ts|theme\.scss))/;
     const offenders = collectSourceFiles(join(packageRoot, "src"))
       .filter((filePath) => directRadixImportPattern.test(readFileSync(filePath, "utf8")))
       .map((filePath) => relative(packageRoot, filePath))

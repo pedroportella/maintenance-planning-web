@@ -14,9 +14,14 @@ import type {
   WorkOrderBacklogView,
   WorkOrderBacklogItem
 } from "@maintenance-planning/services";
-import type { MetricSummaryItem, Tone } from "@maintenance-planning/ui-library";
+import type {
+  PlannerMetricSummaryItem,
+  PlannerStatusTone
+} from "@maintenance-planning/ui-library";
 
-export function buildBacklogMetrics(backlog: WorkOrderBacklogView): readonly MetricSummaryItem[] {
+export function buildBacklogMetrics(
+  backlog: WorkOrderBacklogView
+): readonly PlannerMetricSummaryItem[] {
   return [
     {
       detail: "Imported synthetic work orders without a blocker.",
@@ -41,7 +46,7 @@ export function buildBacklogMetrics(backlog: WorkOrderBacklogView): readonly Met
 
 export function buildRecommendationMetrics(
   recommendationSet: PlannerRecommendationSet
-): readonly MetricSummaryItem[] {
+): readonly PlannerMetricSummaryItem[] {
   const readyCount = recommendationSet.recommendations.filter(isReadyRecommendation).length;
   const blockedCount = recommendationSet.recommendations.filter(isBlockedRecommendation).length;
   const decidedCount = recommendationSet.recommendations.filter(
@@ -72,7 +77,7 @@ export function buildRecommendationMetrics(
 
 export function buildPlanningRunMetrics(
   recommendationSet: PlannerRecommendationSet
-): readonly MetricSummaryItem[] {
+): readonly PlannerMetricSummaryItem[] {
   const recommendations = recommendationSet.recommendations;
 
   return [
@@ -101,7 +106,7 @@ export function buildOperationsMetrics(
   posture: OperationsPostureView,
   sourceReadiness: SourceDataReadinessView,
   latestOutcome: ScenarioOutcomeView
-): readonly MetricSummaryItem[] {
+): readonly PlannerMetricSummaryItem[] {
   return [
     {
       detail: posture.summary,
@@ -126,7 +131,7 @@ export function buildOperationsMetrics(
 
 export function buildScenarioOutcomeMetrics(
   summary: ScenarioOutcomeSummaryView
-): readonly MetricSummaryItem[] {
+): readonly PlannerMetricSummaryItem[] {
   const healthyCount = summary.outcomes.filter((outcome) => outcome.status === "healthy").length;
   const staleCount = summary.outcomes.filter((outcome) => outcome.status === "stale").length;
   const degradedCount = summary.outcomes.filter((outcome) => outcome.status === "degraded").length;
@@ -156,7 +161,7 @@ export function buildScenarioOutcomeMetrics(
 export function buildCoordinationExceptionMetrics(
   backlog: WorkOrderBacklogView,
   exceptionCount: number
-): readonly MetricSummaryItem[] {
+): readonly PlannerMetricSummaryItem[] {
   return [
     {
       detail: "Backlog rows with blockers, deferrals or source-data review needs.",
@@ -210,19 +215,19 @@ export function workOrderIssueText(item: WorkOrderBacklogItem): string {
   return "Ready for planner review";
 }
 
-export function toneForReadiness(status: PlannerReadinessStatus): Tone {
+export function toneForReadiness(status: PlannerReadinessStatus): PlannerStatusTone {
   if (status === "ready") return "success";
   if (status === "needs-review") return "warning";
   return "critical";
 }
 
-export function toneForPlannerState(state: PlannerWorkOrderState): Tone {
+export function toneForPlannerState(state: PlannerWorkOrderState): PlannerStatusTone {
   if (state === "ready") return "success";
   if (state === "deferred") return "info";
   return "warning";
 }
 
-export function toneForPostureState(state: OperationsPostureState): Tone {
+export function toneForPostureState(state: OperationsPostureState): PlannerStatusTone {
   if (state === "healthy") return "success";
   if (state === "degraded") return "critical";
   if (state === "stale") return "warning";
@@ -230,7 +235,7 @@ export function toneForPostureState(state: OperationsPostureState): Tone {
   return "info";
 }
 
-export function toneForFreshness(freshness: OperationsFreshnessState): Tone {
+export function toneForFreshness(freshness: OperationsFreshnessState): PlannerStatusTone {
   if (freshness === "fresh") return "success";
   if (freshness === "stale") return "warning";
   if (freshness === "missing") return "info";
@@ -238,14 +243,14 @@ export function toneForFreshness(freshness: OperationsFreshnessState): Tone {
   return "critical";
 }
 
-export function toneForScenarioOutcome(status: ScenarioOutcomeState): Tone {
+export function toneForScenarioOutcome(status: ScenarioOutcomeState): PlannerStatusTone {
   if (status === "healthy") return "success";
   if (status === "stale") return "warning";
 
   return "critical";
 }
 
-export function toneForDecision(decision: string | null | undefined): Tone {
+export function toneForDecision(decision: string | null | undefined): PlannerStatusTone {
   const normalized = decision?.toLowerCase();
 
   if (normalized === "accepted") return "success";
@@ -255,7 +260,7 @@ export function toneForDecision(decision: string | null | undefined): Tone {
   return "neutral";
 }
 
-export function toneForStatus(status: string): Tone {
+export function toneForStatus(status: string): PlannerStatusTone {
   const normalized = status.replace(/[\s_-]/g, "").toLowerCase();
 
   if (normalized.includes("ready") || normalized.includes("completed")) return "success";

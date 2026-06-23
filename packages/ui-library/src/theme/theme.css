@@ -1,11 +1,6 @@
 @import "@radix-ui/themes/styles.css";
 @import "@maintenance-planning/ui-tokens/theme.css";
-.workbench-panel {
-  display: grid;
-  gap: var(--mp-space-lg);
-}
-
-.segmented-nav ul {
+.planner-segmented-nav ul {
   display: inline-flex;
   flex-wrap: wrap;
   gap: 4px;
@@ -17,7 +12,7 @@
   border-radius: var(--mp-radius-md);
 }
 
-.segmented-nav-link {
+.planner-segmented-nav-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -29,13 +24,13 @@
   font-weight: 700;
 }
 
-.segmented-nav-link-active {
+.planner-segmented-nav-link-active {
   color: var(--mp-color-text);
   background: var(--mp-color-surface);
   box-shadow: 0 1px 4px rgba(23, 33, 27, 0.08);
 }
 
-.segmented-nav-link:focus-visible {
+.planner-segmented-nav-link:focus-visible {
   outline: 0;
   box-shadow: var(--mp-shadow-focus);
 }

@@ -37,10 +37,9 @@ export const workbenchThemeClassNames = {
   loadingState: "planner-loading-state",
   metadataPanel: "planner-metadata-panel",
   metricSummary: "planner-metric-summary",
-  panel: "workbench-panel",
   pageHeader: "planner-page-header",
   pageShell: "planner-page",
-  segmentedNav: "segmented-nav",
+  segmentedNav: "planner-segmented-nav",
   sideNav: "planner-side-nav",
   summaryList: "planner-summary-list",
   statusBadge: "planner-status-badge"

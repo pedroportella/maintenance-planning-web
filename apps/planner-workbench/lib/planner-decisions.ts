@@ -1,4 +1,4 @@
-import type { Tone } from "@maintenance-planning/ui-library";
+import type { PlannerStatusTone } from "@maintenance-planning/ui-library";
 
 export type PlannerDecisionAction = {
   readonly actionCode: string;
@@ -6,7 +6,7 @@ export type PlannerDecisionAction = {
   readonly description: string;
   readonly label: string;
   readonly reasonCode: string;
-  readonly tone: Tone;
+  readonly tone: PlannerStatusTone;
 };
 
 export const plannerDecisionActions = [

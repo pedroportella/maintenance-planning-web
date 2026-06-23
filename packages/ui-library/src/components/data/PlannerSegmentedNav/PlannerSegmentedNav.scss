@@ -1,0 +1,34 @@
+.planner-segmented-nav ul {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  margin: 0;
+  list-style: none;
+  background: var(--mp-color-surface-muted);
+  border: 1px solid var(--mp-color-border);
+  border-radius: var(--mp-radius-md);
+}
+
+.planner-segmented-nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 6px 12px;
+  color: var(--mp-color-text-muted);
+  border-radius: var(--mp-radius-sm);
+  font-size: var(--mp-font-size-sm);
+  font-weight: 700;
+}
+
+.planner-segmented-nav-link-active {
+  color: var(--mp-color-text);
+  background: var(--mp-color-surface);
+  box-shadow: 0 1px 4px rgba(23, 33, 27, 0.08);
+}
+
+.planner-segmented-nav-link:focus-visible {
+  outline: 0;
+  box-shadow: var(--mp-shadow-focus);
+}

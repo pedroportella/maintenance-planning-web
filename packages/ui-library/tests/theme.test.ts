@@ -48,21 +48,28 @@ describe("ui-library theme", () => {
       expect(compiledThemeCss).toContain(`.${className}`);
     }
 
-    expect(themeScss).toContain("../feedback/PlannerAlert/PlannerAlert");
-    expect(themeScss).toContain("../feedback/PlannerEmptyState/PlannerEmptyState");
-    expect(themeScss).toContain("../feedback/PlannerLoadingState/PlannerLoadingState");
-    expect(themeScss).toContain("../feedback/PlannerQuietNote/PlannerQuietNote");
-    expect(themeScss).toContain("../feedback/PlannerStatusBadge/PlannerStatusBadge");
-    expect(themeScss).toContain("../data/PlannerDataTable/PlannerDataTable");
-    expect(themeScss).toContain("../data/PlannerFilterToolbar/PlannerFilterToolbar");
-    expect(themeScss).toContain("../data/PlannerMetricSummary/PlannerMetricSummary");
-    expect(themeScss).toContain("../data/PlannerPagination/PlannerPagination");
-    expect(themeScss).toContain("../data/PlannerSummaryList/PlannerSummaryList");
-    expect(themeScss).toContain("../radix/RadixDataList/RadixDataList");
-    expect(themeScss).toContain("../radix/RadixIconButton/RadixIconButton");
-    expect(themeScss).toContain("../radix/RadixTable/RadixTable");
-    expect(themeScss).toContain("../workflow/PlannerDecisionPanel/PlannerDecisionPanel");
-    expect(themeScss).toContain("../workflow/PlannerMetadataPanel/PlannerMetadataPanel");
+    expect(themeScss).toContain("../components/feedback/PlannerAlert/PlannerAlert");
+    expect(themeScss).toContain("../components/feedback/PlannerEmptyState/PlannerEmptyState");
+    expect(themeScss).toContain("../components/feedback/PlannerLoadingState/PlannerLoadingState");
+    expect(themeScss).toContain("../components/feedback/PlannerQuietNote/PlannerQuietNote");
+    expect(themeScss).toContain("../components/feedback/PlannerStatusBadge/PlannerStatusBadge");
+    expect(themeScss).toContain("../components/data/PlannerDataTable/PlannerDataTable");
+    expect(themeScss).toContain("../components/data/PlannerFilterToolbar/PlannerFilterToolbar");
+    expect(themeScss).toContain("../components/data/PlannerMetricSummary/PlannerMetricSummary");
+    expect(themeScss).toContain("../components/data/PlannerPagination/PlannerPagination");
+    expect(themeScss).toContain("../components/data/PlannerSegmentedNav/PlannerSegmentedNav");
+    expect(themeScss).toContain("../components/data/PlannerSummaryList/PlannerSummaryList");
+    expect(themeScss).toContain("../components/radix/RadixDataList/RadixDataList");
+    expect(themeScss).toContain("../components/radix/RadixIconButton/RadixIconButton");
+    expect(themeScss).toContain("../components/radix/RadixTable/RadixTable");
+    expect(themeScss).toContain("../components/workflow/PlannerDecisionPanel/PlannerDecisionPanel");
+    expect(themeScss).toContain("../components/workflow/PlannerMetadataPanel/PlannerMetadataPanel");
+    expect(themeScss).not.toContain("../data/");
+    expect(themeScss).not.toContain("../feedback/");
+    expect(themeScss).not.toContain("../forms/");
+    expect(themeScss).not.toContain("../layout/");
+    expect(themeScss).not.toContain("../radix/");
+    expect(themeScss).not.toContain("../workflow/");
 
     for (const tone of ["critical", "info", "neutral", "success", "warning"]) {
       expect(compiledThemeCss).toContain(`.planner-metric-card[data-tone=${tone}]`);
@@ -76,7 +83,7 @@ describe("ui-library theme", () => {
   it("defines keyboard focus styles for shell and segmented navigation", () => {
     expect(compiledThemeCss).toContain(".planner-app-layout-menu-button:focus-visible");
     expect(compiledThemeCss).toContain(".planner-side-nav-link:focus-visible");
-    expect(compiledThemeCss).toContain(".segmented-nav-link:focus-visible");
+    expect(compiledThemeCss).toContain(".planner-segmented-nav-link:focus-visible");
   });
 
   it("keeps the app root on the Sass entry before app globals", () => {

@@ -11,7 +11,7 @@ import {
   PlannerTableCellStack,
   type PlannerDataTableColumn,
   type PlannerDataTableSortDirection,
-  type SegmentedNavOption
+  type PlannerSegmentedNavOption
 } from "@maintenance-planning/ui-library";
 import type { WorkOrderBacklogItem } from "@maintenance-planning/services";
 import Link from "next/link";
@@ -28,7 +28,7 @@ import {
 
 type WorkOrderBacklogTableProps = {
   filterLabel: string;
-  filterOptions: readonly SegmentedNavOption[];
+  filterOptions: readonly PlannerSegmentedNavOption[];
   items: readonly WorkOrderBacklogItem[];
   planningRunId: string;
 };
