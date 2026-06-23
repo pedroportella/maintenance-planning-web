@@ -11,12 +11,16 @@ describe("PlannerPage", () => {
         {
           children: createElement("h1", { id: "route-title" }, "Route title"),
           className: "route-page",
-          labelledBy: "route-title"
+          labelledBy: "route-title",
+          width: "narrow"
         }
       )
     );
 
     expect(markup).toContain("<main");
+    expect(markup).toContain('id="planner-main"');
+    expect(markup).toContain('data-width="narrow"');
+    expect(markup).toContain('tabindex="-1"');
     expect(markup).toContain('aria-labelledby="route-title"');
     expect(markup).toContain("planner-page route-page");
   });

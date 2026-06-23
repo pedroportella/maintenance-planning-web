@@ -1,0 +1,64 @@
+.planner-content-section {
+  display: grid;
+  gap: var(--mp-space-lg);
+  min-width: 0;
+}
+
+.planner-content-section[data-variant="surface"] {
+  padding: var(--mp-space-xl);
+  background: var(--mp-color-surface-elevated);
+  border: 1px solid var(--mp-color-border-default);
+  border-radius: var(--mp-radius-surface);
+}
+
+.planner-content-section-header {
+  display: flex;
+  gap: var(--mp-space-lg);
+  align-items: start;
+  justify-content: space-between;
+}
+
+.planner-content-section-copy {
+  display: grid;
+  gap: var(--mp-space-xs);
+  min-width: 0;
+}
+
+.planner-content-section-eyebrow {
+  margin-bottom: 0;
+  color: var(--accent-11);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.planner-content-section-description {
+  max-width: 720px;
+  margin-bottom: 0;
+}
+
+.planner-content-section-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mp-space-sm);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.planner-content-section-body {
+  display: grid;
+  gap: var(--mp-space-lg);
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .planner-content-section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .planner-content-section-actions {
+    justify-content: flex-start;
+  }
+}

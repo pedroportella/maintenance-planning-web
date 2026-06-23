@@ -10,7 +10,17 @@ test("renders the UI library evidence route with accessible landmarks and state 
   await expect(page).toHaveTitle(/UI Library Evidence/);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
   await expect(page.getByRole("main")).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Planner sections" })).toBeVisible();
+  const plannerNavigation = page.getByRole("navigation", { name: "Planner sections" });
+
+  if (!(await plannerNavigation.isVisible())) {
+    await page
+      .locator(
+        ".planner-theme > .planner-app-layout > .planner-app-layout-header .planner-app-layout-menu-button"
+      )
+      .click();
+  }
+
+  await expect(plannerNavigation).toBeVisible();
   await expect(page.getByRole("heading", { name: "UI library showcase" })).toBeVisible();
 
   await expect(page.getByRole("heading", { name: "Alerts and badges" })).toBeVisible();

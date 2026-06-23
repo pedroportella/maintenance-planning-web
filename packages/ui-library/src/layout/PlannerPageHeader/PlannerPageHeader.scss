@@ -1,0 +1,46 @@
+.planner-page-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--mp-space-xl);
+  align-items: end;
+  padding-bottom: var(--mp-space-sm);
+  border-bottom: 1px solid var(--mp-color-border-default);
+}
+
+.planner-page-header-copy {
+  display: grid;
+  gap: var(--mp-space-sm);
+}
+
+.planner-page-header-badge,
+.planner-page-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mp-space-sm);
+  align-items: center;
+}
+
+.planner-page-header-eyebrow {
+  margin-bottom: 0;
+  color: var(--accent-11);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.planner-page-header-description {
+  max-width: 760px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .planner-page-header {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .planner-page-header-actions {
+    width: 100%;
+  }
+}

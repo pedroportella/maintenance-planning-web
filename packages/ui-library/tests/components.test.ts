@@ -17,6 +17,10 @@ import {
 } from "../src";
 
 const themeScss = readFileSync(new URL("../src/theme/theme.scss", import.meta.url), "utf8");
+const sideNavScss = readFileSync(
+  new URL("../src/layout/PlannerSideNav/PlannerSideNav.scss", import.meta.url),
+  "utf8"
+);
 
 describe("ui-library components", () => {
   it("renders an accessible app shell with active navigation", () => {
@@ -53,8 +57,10 @@ describe("ui-library components", () => {
 
     expect(markup).toContain('aria-label="Planner workbench home"');
     expect(markup).toContain('aria-label="Planner sections"');
+    expect(markup).toContain('href="#planner-main"');
+    expect(markup).toContain('aria-expanded="false"');
     expect(markup).toContain('aria-current="page"');
-    expect(markup).toContain("app-shell-nav-heading");
+    expect(markup).toContain("planner-side-nav-heading");
     expect(markup).toContain("Recommendations");
   });
 
@@ -146,7 +152,8 @@ describe("ui-library components", () => {
 
     expect(markup).toContain('href="#queue"');
     expect(markup).toContain('aria-current="page"');
-    expect(themeScss).toContain(".app-shell-nav-link:focus-visible");
+    expect(themeScss).toContain("../layout/PlannerSideNav/PlannerSideNav");
+    expect(sideNavScss).toContain(".planner-side-nav-link:focus-visible");
     expect(themeScss).toContain(".segmented-nav-link:focus-visible");
   });
 

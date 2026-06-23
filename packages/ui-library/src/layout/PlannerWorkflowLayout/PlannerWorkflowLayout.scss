@@ -1,1 +1,53 @@
-/* RU-1 placeholder: workflow spacing and focus-mode behaviour are introduced later. */
+.planner-workflow-layout {
+  display: grid;
+  gap: var(--mp-space-xl);
+  max-width: 860px;
+}
+
+.planner-workflow-layout-progress,
+.planner-workflow-layout-back {
+  color: var(--mp-color-text-subtle);
+  font-size: var(--mp-font-size-sm);
+}
+
+.planner-workflow-layout-header {
+  display: grid;
+  gap: var(--mp-space-sm);
+  padding-bottom: var(--mp-space-md);
+  border-bottom: 1px solid var(--mp-color-border-default);
+}
+
+.planner-workflow-layout-context {
+  margin-bottom: 0;
+  color: var(--accent-11);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.planner-workflow-layout-lead {
+  max-width: 680px;
+  margin-bottom: 0;
+}
+
+.planner-workflow-layout-body {
+  display: grid;
+  gap: var(--mp-space-lg);
+  min-width: 0;
+}
+
+.planner-workflow-layout-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mp-space-sm);
+  justify-content: flex-end;
+  padding-top: var(--mp-space-md);
+  border-top: 1px solid var(--mp-color-border-default);
+}
+
+@media (max-width: 640px) {
+  .planner-workflow-layout-actions {
+    justify-content: flex-start;
+  }
+}

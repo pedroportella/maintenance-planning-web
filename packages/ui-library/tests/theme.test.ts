@@ -56,7 +56,8 @@ describe("ui-library theme", () => {
   });
 
   it("defines keyboard focus styles for shell and segmented navigation", () => {
-    expect(compiledThemeCss).toContain(".app-shell-nav-link:focus-visible");
+    expect(compiledThemeCss).toContain(".planner-app-layout-menu-button:focus-visible");
+    expect(compiledThemeCss).toContain(".planner-side-nav-link:focus-visible");
     expect(compiledThemeCss).toContain(".segmented-nav-link:focus-visible");
   });
 

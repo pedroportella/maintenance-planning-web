@@ -29,13 +29,16 @@ export const workbenchTheme = {
 
 export const workbenchThemeClassNames = {
   alert: "workbench-alert",
-  appShell: "app-shell",
+  appShell: "planner-app-layout",
+  contentSection: "planner-content-section",
   dataTable: "data-table",
   emptyState: "empty-state",
   loadingState: "loading-state",
   metricSummary: "metric-summary",
   panel: "workbench-panel",
-  pageHeader: "page-header",
+  pageHeader: "planner-page-header",
+  pageShell: "planner-page",
   segmentedNav: "segmented-nav",
+  sideNav: "planner-side-nav",
   statusBadge: "status-badge"
 } as const;

@@ -1,1 +1,22 @@
-/* RU-1 placeholder: page rhythm is introduced in the Radix layout rollout. */
+.planner-page {
+  display: grid;
+  gap: var(--mp-space-3xl);
+  width: 100%;
+  min-width: 0;
+}
+
+.planner-page[data-width="narrow"] {
+  max-width: 920px;
+}
+
+.planner-page[data-width="default"] {
+  max-width: 1040px;
+}
+
+.planner-page[data-width="wide"] {
+  max-width: 1160px;
+}
+
+.planner-page:focus {
+  outline: 0;
+}

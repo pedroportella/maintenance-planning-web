@@ -8,11 +8,17 @@ import {
   MetricSummary,
   PageHeader,
   PlannerCheckbox,
+  PlannerAppLayout,
+  PlannerContentSection,
+  PlannerPage,
+  PlannerPageHeader,
   PlannerRadioCards,
   PlannerRadioGroup,
   PlannerSelect,
+  PlannerSideNav,
   PlannerTextArea,
   PlannerTextInput,
+  PlannerWorkflowLayout,
   RadixBadge,
   RadixButton,
   RadixCallout,
@@ -85,6 +91,27 @@ const toneExamples: readonly ToneExample[] = [
     tone: "warning"
   }
 ];
+
+const layoutFixtureNavItems = [
+  {
+    description: "Package decisions",
+    group: "Review",
+    href: "/recommendations",
+    label: "Recommendations"
+  },
+  {
+    description: "Work-order triage",
+    group: "Review",
+    href: "/work-order-backlog",
+    label: "Work-order backlog"
+  },
+  {
+    description: "Run context",
+    group: "Evidence",
+    href: "/planning-runs",
+    label: "Planning runs"
+  }
+] as const;
 
 const signalColumns: readonly DataTableColumn<OperationsSignalView>[] = [
   {
@@ -168,7 +195,7 @@ export default async function UiLibraryPage() {
     ]);
 
   return (
-    <main className="page-stack ui-library-page">
+    <PlannerPage className="ui-library-page" id="ui-library-main" labelledBy="ui-library-title">
       <PageHeader
         badge={
           <span className="badge-stack">
@@ -179,6 +206,7 @@ export default async function UiLibraryPage() {
         description="Focused visual and accessibility evidence for reusable synthetic planner workbench states."
         eyebrow="Developer route"
         title="UI library showcase"
+        titleId="ui-library-title"
       />
 
       <Alert title="Route scope" tone="info">
@@ -315,6 +343,71 @@ export default async function UiLibraryPage() {
         />
       </WorkbenchPanel>
 
+      <PlannerContentSection
+        badge={<RadixBadge tone="success">RU2</RadixBadge>}
+        description="Shell, page and workflow templates render through the Planner layout boundary."
+        eyebrow="Layout family"
+        title="App shell layout templates"
+        titleId="showcase-layout-templates"
+        variant="surface"
+      >
+        <PlannerAppLayout
+          activeHref="/recommendations"
+          brand={{
+            ariaLabel: "Planner workbench home",
+            href: "/",
+            name: "Planner Workbench",
+            tagline: "Synthetic planning review"
+          }}
+          className="planner-app-layout-fixture"
+          contentId="showcase-shell-content"
+          navAriaLabel="Planner shell fixture sections"
+          navItems={layoutFixtureNavItems}
+          sidebarNote="Layout fixtures use synthetic data and local navigation only."
+        >
+          <PlannerPageHeader
+            actions={<RadixButton variant="soft">Review queue</RadixButton>}
+            badge={<RadixBadge tone="info">Desktop shell</RadixBadge>}
+            description="The route body sits behind a shell-owned header, grouped navigation and skip target."
+            eyebrow="Shell fixture"
+            title="Recommendation review"
+            titleId="showcase-shell-title"
+          />
+          <PlannerContentSection
+            badge={<RadixBadge tone="neutral">Template</RadixBadge>}
+            description="Content sections carry recurring section headings without route-local shell CSS."
+            title="Ready for planner review"
+            titleId="showcase-shell-section"
+          >
+            <RadixCallout title="Boundary evidence" tone="info">
+              The fixture keeps links and route state outside ui-library while layout behaviour stays
+              inside the Planner templates.
+            </RadixCallout>
+          </PlannerContentSection>
+        </PlannerAppLayout>
+
+        <div className="showcase-tone-grid">
+          <PlannerSideNav
+            activeHref="/work-order-backlog"
+            ariaLabel="Standalone side navigation fixture"
+            items={layoutFixtureNavItems}
+          />
+          <PlannerWorkflowLayout
+            actions={<RadixButton>Save decision</RadixButton>}
+            backLink={<RadixLink href="/recommendations">Back to queue</RadixLink>}
+            contextLabel="Decision workflow"
+            lead="Workflow pages can reduce shell chrome while preserving heading, lead and action rhythm."
+            progress={<RadixBadge tone="warning">Step 2 of 3</RadixBadge>}
+            title="Package decision"
+            titleId="showcase-workflow-title"
+          >
+            <RadixText as="p" tone="muted">
+              The workflow template keeps task copy compact and leaves decision controls for RU6.
+            </RadixText>
+          </PlannerWorkflowLayout>
+        </div>
+      </PlannerContentSection>
+
       <WorkbenchPanel className="console-panel" labelledBy="showcase-alerts">
         <div className="section-heading">
           <div>
@@ -436,7 +529,7 @@ export default async function UiLibraryPage() {
           rows={posture.signals}
         />
       </WorkbenchPanel>
-    </main>
+    </PlannerPage>
   );
 }
 

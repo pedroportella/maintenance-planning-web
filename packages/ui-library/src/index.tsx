@@ -34,7 +34,12 @@ export {
   PlannerTextInput
 } from "./forms";
 export type {
+  PlannerContentSectionProps,
+  PlannerAppLayoutBrand,
+  PlannerAppLayoutLinkProps,
+  PlannerAppLayoutNavItem,
   PlannerAppLayoutProps,
+  PlannerPageHeaderProps,
   PlannerPageProps,
   PlannerSideNavItem,
   PlannerSideNavLinkProps,
@@ -42,7 +47,9 @@ export type {
   PlannerWorkflowLayoutProps
 } from "./layout";
 export {
+  PlannerContentSection,
   PlannerAppLayout,
+  PlannerPageHeader,
   PlannerPage,
   PlannerSideNav,
   PlannerWorkflowLayout

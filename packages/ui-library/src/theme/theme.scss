@@ -9,6 +9,12 @@
 @use "../forms/PlannerSelect/PlannerSelect";
 @use "../forms/PlannerTextArea/PlannerTextArea";
 @use "../forms/PlannerTextInput/PlannerTextInput";
+@use "../layout/PlannerAppLayout/PlannerAppLayout";
+@use "../layout/PlannerContentSection/PlannerContentSection";
+@use "../layout/PlannerPage/PlannerPage";
+@use "../layout/PlannerPageHeader/PlannerPageHeader";
+@use "../layout/PlannerSideNav/PlannerSideNav";
+@use "../layout/PlannerWorkflowLayout/PlannerWorkflowLayout";
 @use "../radix/RadixBadge/RadixBadge";
 @use "../radix/RadixButton/RadixButton";
 @use "../radix/RadixCallout/RadixCallout";
@@ -134,147 +140,6 @@ p {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-.app-shell {
-  display: grid;
-  grid-template-columns: 288px minmax(0, 1fr);
-  min-height: 100vh;
-}
-
-.app-shell-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: var(--mp-space-3xl);
-  padding: var(--mp-space-3xl) var(--mp-space-xl);
-  background: var(--mp-color-surface-raised);
-  border-right: 1px solid var(--mp-color-border);
-}
-
-.app-shell-brand {
-  display: flex;
-  gap: var(--mp-space-md);
-  align-items: center;
-  border-radius: var(--mp-radius-md);
-}
-
-.app-shell-brand-mark {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  color: #ffffff;
-  background: var(--mp-color-accent-teal);
-  border-radius: var(--mp-radius-md);
-  box-shadow: 0 10px 20px rgba(15, 118, 110, 0.24);
-}
-
-.app-shell-brand-copy,
-.app-shell-nav-copy {
-  display: grid;
-  gap: 2px;
-}
-
-.app-shell-brand-copy strong,
-.app-shell-nav-copy strong {
-  display: block;
-  color: var(--mp-color-text);
-}
-
-.app-shell-brand-copy span,
-.app-shell-nav-copy span {
-  color: var(--mp-color-text-muted);
-  font-size: 0.82rem;
-  line-height: 1.35;
-}
-
-.app-shell-nav {
-  display: grid;
-  gap: var(--mp-space-xl);
-}
-
-.app-shell-nav-group {
-  display: grid;
-  gap: 6px;
-}
-
-.app-shell-nav-heading {
-  margin: 0 0 2px;
-  color: var(--mp-color-text-muted);
-  font-size: var(--mp-font-size-xs);
-  font-weight: 800;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.app-shell-nav-link {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-  min-height: 54px;
-  padding: 8px 10px;
-  border: 1px solid transparent;
-  border-radius: var(--mp-radius-md);
-}
-
-.app-shell-nav-icon {
-  display: inline-grid;
-  place-items: center;
-  color: var(--mp-color-text-muted);
-}
-
-.app-shell-nav-link-active {
-  background: var(--mp-color-surface);
-  border-color: var(--mp-color-border);
-  box-shadow: var(--mp-shadow-soft);
-}
-
-.app-shell-nav-link-active .app-shell-nav-icon {
-  color: var(--mp-color-accent-teal);
-}
-
-.app-shell-note {
-  margin-top: auto;
-  padding: var(--mp-space-md);
-  color: var(--mp-color-text-muted);
-  background: var(--mp-color-surface-muted);
-  border-radius: var(--mp-radius-md);
-  font-size: var(--mp-font-size-sm);
-  line-height: 1.45;
-}
-
-.app-shell-main {
-  min-width: 0;
-  padding: var(--mp-space-4xl);
-}
-
-.page-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--mp-space-xl);
-  align-items: end;
-  padding-bottom: var(--mp-space-sm);
-  border-bottom: 1px solid var(--mp-color-border);
-}
-
-.page-header-copy {
-  display: grid;
-  gap: var(--mp-space-sm);
-}
-
-.page-header-badge,
-.page-header-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--mp-space-sm);
-  align-items: center;
-}
-
-.page-header p {
-  max-width: 760px;
-  margin-bottom: 0;
 }
 
 .status-badge,
@@ -620,8 +485,6 @@ p {
 
 a:focus-visible,
 button:focus-visible,
-.app-shell-brand:focus-visible,
-.app-shell-nav-link:focus-visible,
 .primary-link:focus-visible,
 .segmented-nav-link:focus-visible {
   outline: 0;
@@ -635,52 +498,12 @@ button:focus-visible,
 }
 
 @media (max-width: 980px) {
-  .app-shell {
-    grid-template-columns: 1fr;
-  }
-
-  .app-shell-sidebar {
-    position: static;
-    border-right: 0;
-    border-bottom: 1px solid var(--mp-color-border);
-  }
-
-  .app-shell-nav {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .app-shell-nav-group {
-    align-content: start;
-  }
-
-  .app-shell-note {
-    margin-top: 0;
-  }
-
   .metric-summary {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 640px) {
-  .app-shell-main {
-    padding: 22px 16px;
-  }
-
-  .app-shell-sidebar {
-    padding: 22px 16px;
-  }
-
-  .app-shell-nav {
-    grid-template-columns: 1fr;
-  }
-
-  .page-header {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-
-  .page-header-actions,
   .primary-link {
     width: 100%;
   }

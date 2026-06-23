@@ -7,10 +7,12 @@ import { describe, expect, it } from "vitest";
 import {
   PlannerAppLayout,
   PlannerCheckbox,
+  PlannerContentSection,
   PlannerDataTable,
   PlannerRadioCards,
   PlannerRadioGroup,
   PlannerPage,
+  PlannerPageHeader,
   PlannerSelect,
   PlannerSideNav,
   PlannerTextArea,
@@ -33,7 +35,9 @@ import { PlannerThemeProvider } from "../src/theme";
 const requiredComponentFolders = [
   "src/theme/PlannerThemeProvider",
   "src/layout/PlannerAppLayout",
+  "src/layout/PlannerContentSection",
   "src/layout/PlannerPage",
+  "src/layout/PlannerPageHeader",
   "src/layout/PlannerWorkflowLayout",
   "src/layout/PlannerSideNav",
   "src/radix/RadixBadge",
@@ -69,7 +73,7 @@ const requiredComponentFiles = (componentName: string) => [
 ];
 
 describe("ui-library Radix adapter architecture", () => {
-  it("renders RU-1 public exports from the package root", () => {
+  it("renders RU2 public exports from the package root", () => {
     type Row = {
       status: string;
       workOrder: string;
@@ -101,6 +105,19 @@ describe("ui-library Radix adapter architecture", () => {
             {
               children: createElement("h1", { id: "page-title" }, "Page"),
               labelledBy: "page-title"
+            }
+          ),
+          createElement(PlannerPageHeader, {
+            description: "Route overview",
+            title: "Planner page header",
+            titleId: "planner-page-header-title"
+          }),
+          createElement(
+            PlannerContentSection,
+            {
+              children: createElement("p", null, "Section body"),
+              title: "Planner content section",
+              titleId: "planner-content-section-title"
             }
           ),
           createElement(
@@ -232,7 +249,9 @@ describe("ui-library Radix adapter architecture", () => {
     expect(markup).toContain("planner-page");
     expect(markup).toContain("planner-workflow-layout");
     expect(markup).toContain("planner-side-nav");
-    expect(markup).toContain("app-shell");
+    expect(markup).toContain("planner-app-layout");
+    expect(markup).toContain("planner-page-header");
+    expect(markup).toContain("planner-content-section");
     expect(markup).toContain("radix-form-field");
     expect(markup).toContain("radix-button");
     expect(markup).toContain("radix-link");
