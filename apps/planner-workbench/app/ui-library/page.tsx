@@ -7,6 +7,19 @@ import {
   LoadingState,
   MetricSummary,
   PageHeader,
+  PlannerCheckbox,
+  PlannerRadioCards,
+  PlannerRadioGroup,
+  PlannerSelect,
+  PlannerTextArea,
+  PlannerTextInput,
+  RadixBadge,
+  RadixButton,
+  RadixCallout,
+  RadixHeading,
+  RadixIcon,
+  RadixLink,
+  RadixText,
   StatusBadge,
   StatusPill,
   WorkbenchPanel,
@@ -194,6 +207,112 @@ export default async function UiLibraryPage() {
             <p>Inherits the active document mode from the root theme provider.</p>
           </Alert>
         </div>
+      </WorkbenchPanel>
+
+      <WorkbenchPanel className="console-panel" labelledBy="showcase-radix-adapters">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">Adapter family</p>
+            <h2 id="showcase-radix-adapters">Radix fidelity adapters</h2>
+          </div>
+          <RadixBadge tone="success">RU1</RadixBadge>
+        </div>
+        <div className="showcase-tone-grid">
+          <section aria-label="Radix typography and actions">
+            <RadixHeading as="h3">Adapter primitives</RadixHeading>
+            <RadixText as="p" tone="muted">
+              Foundational controls render through the local ui-library boundary.
+            </RadixText>
+            <div className="showcase-badge-row">
+              <RadixButton>
+                <RadixIcon name="check" />
+                Apply
+              </RadixButton>
+              <RadixButton disabled tone="neutral" variant="soft">
+                Disabled
+              </RadixButton>
+              <RadixLink href="#showcase-radix-adapters">Anchor link</RadixLink>
+            </div>
+          </section>
+          <RadixCallout title="Form semantics" tone="info">
+            Labels, hints, errors and described-by wiring are centralised in the adapter layer.
+          </RadixCallout>
+        </div>
+        <div className="showcase-tone-grid">
+          <PlannerTextInput
+            hint="Search by package or work-order text."
+            label="Search"
+            name="showcaseSearch"
+            placeholder="Search review queue"
+          />
+          <PlannerSelect
+            hint="Closed Radix selects keep the trigger and form value in the server markup."
+            label="Reason"
+            name="showcaseReason"
+            options={[
+              {
+                label: "Parts readiness",
+                value: "parts-readiness"
+              },
+              {
+                label: "Crew capacity",
+                value: "crew-capacity"
+              }
+            ]}
+            placeholder="Choose reason"
+          />
+          <PlannerTextArea
+            error="Add a short note before submitting this example."
+            label="Decision notes"
+            name="showcaseDecisionNotes"
+            required
+          />
+          <PlannerCheckbox
+            hint="Disabled example for form-state evidence."
+            disabled
+            label="I reviewed the recommendation"
+            name="showcaseReviewed"
+          />
+        </div>
+        <PlannerRadioCards
+          defaultValue="approve"
+          hint="Card-style radio options use Radix radio-card semantics."
+          label="Decision"
+          name="showcaseDecision"
+          options={[
+            {
+              hint: "Record the package as ready.",
+              label: "Approve",
+              value: "approve"
+            },
+            {
+              hint: "Return the package for more review.",
+              label: "Reject",
+              value: "reject"
+            },
+            {
+              hint: "Pause until blockers are resolved.",
+              label: "Defer",
+              value: "defer"
+            }
+          ]}
+        />
+        <PlannerRadioGroup
+          hint="Linear radio groups keep individual option labels and hints."
+          label="Follow-up"
+          name="showcaseFollowUp"
+          options={[
+            {
+              label: "No follow-up",
+              value: "none"
+            },
+            {
+              hint: "Use when another planner review is needed.",
+              label: "Review needed",
+              value: "review-needed"
+            }
+          ]}
+        />
       </WorkbenchPanel>
 
       <WorkbenchPanel className="console-panel" labelledBy="showcase-alerts">

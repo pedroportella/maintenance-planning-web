@@ -1,1 +1,45 @@
-/* RU-1 placeholder: form field visuals move to Radix Theme tokens in RU1. */
+.radix-form-field {
+  display: grid;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.radix-form-field-label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: baseline;
+  min-width: 0;
+  padding: 0;
+  color: var(--mp-color-text);
+  font-size: var(--mp-font-size-sm);
+  font-weight: 800;
+}
+
+.radix-form-field-requirement {
+  color: var(--mp-color-text-muted);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 700;
+}
+
+.radix-form-field-hint,
+.radix-form-field-error {
+  margin: 0;
+  font-size: var(--mp-font-size-sm);
+  line-height: 1.4;
+}
+
+.radix-form-field-hint {
+  color: var(--mp-color-text-muted);
+}
+
+.radix-form-field-error {
+  color: var(--mp-tone-critical-text);
+  font-weight: 700;
+}
+
+.radix-form-field-control {
+  min-width: 0;
+}

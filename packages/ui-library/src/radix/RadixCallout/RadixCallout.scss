@@ -1,0 +1,8 @@
+.radix-callout-title,
+.radix-callout-body {
+  display: block;
+}
+
+.radix-callout-title + .radix-callout-body {
+  margin-top: 2px;
+}

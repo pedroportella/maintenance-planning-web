@@ -6,15 +6,29 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
   PlannerAppLayout,
+  PlannerCheckbox,
   PlannerDataTable,
+  PlannerRadioCards,
+  PlannerRadioGroup,
   PlannerPage,
+  PlannerSelect,
   PlannerSideNav,
+  PlannerTextArea,
+  PlannerTextInput,
   PlannerWorkflowLayout,
+  RadixBadge,
+  RadixButton,
+  RadixCallout,
   RadixFormField,
+  RadixHeading,
+  RadixIcon,
+  RadixLink,
   RadixTable,
+  RadixText,
   type AppShellNavItem,
   type PlannerDataTableColumn
 } from "../src";
+import { PlannerThemeProvider } from "../src/theme";
 
 const requiredComponentFolders = [
   "src/theme/PlannerThemeProvider",
@@ -22,9 +36,29 @@ const requiredComponentFolders = [
   "src/layout/PlannerPage",
   "src/layout/PlannerWorkflowLayout",
   "src/layout/PlannerSideNav",
+  "src/radix/RadixBadge",
+  "src/radix/RadixButton",
+  "src/radix/RadixCallout",
+  "src/radix/RadixCheckbox",
   "src/radix/RadixFormField",
+  "src/radix/RadixHeading",
+  "src/radix/RadixIcon",
+  "src/radix/RadixLink",
+  "src/radix/RadixRadioCards",
+  "src/radix/RadixRadioGroup",
+  "src/radix/RadixSelect",
   "src/radix/RadixTable",
-  "src/data/PlannerDataTable"
+  "src/radix/RadixText",
+  "src/radix/RadixTextArea",
+  "src/radix/RadixTextInput",
+  "src/data/PlannerDataTable",
+  "src/forms/PlannerCheckbox",
+  "src/forms/PlannerFormField",
+  "src/forms/PlannerRadioCards",
+  "src/forms/PlannerRadioGroup",
+  "src/forms/PlannerSelect",
+  "src/forms/PlannerTextArea",
+  "src/forms/PlannerTextInput"
 ] as const;
 
 const requiredComponentFiles = (componentName: string) => [
@@ -57,68 +91,141 @@ describe("ui-library Radix adapter architecture", () => {
 
     const markup = renderToStaticMarkup(
       createElement(
-        "div",
-        null,
-        createElement(
-          PlannerPage,
-          {
-            children: createElement("h1", { id: "page-title" }, "Page"),
-            labelledBy: "page-title"
-          }
-        ),
-        createElement(
-          PlannerWorkflowLayout,
-          {
-            children: createElement("p", null, "Body"),
-            title: "Workflow"
-          }
-        ),
-        createElement(PlannerSideNav, {
-          activeHref: "/recommendations",
-          ariaLabel: "Planner sections",
-          items: navItems
-        }),
-        createElement(PlannerAppLayout, {
-          activeHref: "/recommendations",
-          brand: {
-            ariaLabel: "Planner home",
-            href: "/",
-            name: "Planner Workbench"
-          },
-          children: createElement("main", null, "App body"),
-          navAriaLabel: "Planner sections",
-          navItems
-        }),
-        createElement(RadixFormField, {
-          children: (controlProps) => createElement("input", controlProps),
-          fieldId: "review-note",
-          hint: "Synthetic notes only.",
-          label: "Review note"
-        }),
-        createElement(
-          RadixTable.Root,
-          null,
+        PlannerThemeProvider,
+        {
+          children: createElement(
+            "div",
+            null,
           createElement(
-            RadixTable.Body,
+            PlannerPage,
+            {
+              children: createElement("h1", { id: "page-title" }, "Page"),
+              labelledBy: "page-title"
+            }
+          ),
+          createElement(
+            PlannerWorkflowLayout,
+            {
+              children: createElement("p", null, "Body"),
+              title: "Workflow"
+            }
+          ),
+          createElement(PlannerSideNav, {
+            activeHref: "/recommendations",
+            ariaLabel: "Planner sections",
+            items: navItems
+          }),
+          createElement(PlannerAppLayout, {
+            activeHref: "/recommendations",
+            brand: {
+              ariaLabel: "Planner home",
+              href: "/",
+              name: "Planner Workbench"
+            },
+            children: createElement("main", null, "App body"),
+            navAriaLabel: "Planner sections",
+            navItems
+          }),
+          createElement(RadixFormField, {
+            children: (controlProps) => createElement("input", controlProps),
+            fieldId: "review-note",
+            hint: "Synthetic notes only.",
+            label: "Review note"
+          }),
+          createElement(RadixButton, {
+            children: "Submit"
+          }),
+          createElement(RadixLink, {
+            children: "Queue",
+            href: "/recommendations"
+          }),
+          createElement(RadixText, {
+            as: "p",
+            children: "Adapter copy"
+          }),
+          createElement(RadixHeading, {
+            as: "h2",
+            children: "Adapters"
+          }),
+          createElement(RadixBadge, {
+            children: "Ready"
+          }),
+          createElement(RadixIcon, {
+            name: "checkCircled"
+          }),
+          createElement(RadixCallout, {
+            children: "Adapter notice",
+            title: "Notice"
+          }),
+          createElement(PlannerTextInput, {
+            label: "Search",
+            name: "search"
+          }),
+          createElement(PlannerTextArea, {
+            label: "Notes",
+            name: "notes"
+          }),
+          createElement(PlannerSelect, {
+            label: "Reason",
+            name: "reason",
+            options: [
+              {
+                label: "Parts readiness",
+                value: "parts-readiness"
+              }
+            ]
+          }),
+          createElement(PlannerRadioGroup, {
+            label: "Action",
+            name: "action",
+            options: [
+              {
+                label: "Approve",
+                value: "approve"
+              }
+            ]
+          }),
+          createElement(PlannerRadioCards, {
+            label: "Decision",
+            name: "decision",
+            options: [
+              {
+                label: "Approve",
+                value: "approve"
+              }
+            ]
+          }),
+          createElement(PlannerCheckbox, {
+            label: "Reviewed",
+            name: "reviewed"
+          }),
+          createElement(
+            RadixTable.Root,
             null,
             createElement(
-              RadixTable.Row,
+              RadixTable.Body,
               null,
-              createElement(RadixTable.Cell, null, "Cell")
+              createElement(
+                RadixTable.Row,
+                null,
+                createElement(RadixTable.Cell, null, "Cell")
+              )
             )
-          )
-        ),
-        createElement(PlannerDataTable<Row>, {
-          caption: "Queue",
-          columns,
-          getRowKey: (row) => row.workOrder,
-          rows: [
-            {
-              status: "Ready",
-              workOrder: "WO-1000"
-            }
-          ]
-        })
+          ),
+          createElement(PlannerDataTable<Row>, {
+            caption: "Queue",
+            columns,
+            getRowKey: (row) => row.workOrder,
+            rows: [
+              {
+                status: "Ready",
+                workOrder: "WO-1000"
+              }
+            ]
+          })
+          ),
+          forcedAppearance: "light"
+        }
       )
     );
 
@@ -127,6 +234,12 @@ describe("ui-library Radix adapter architecture", () => {
     expect(markup).toContain("planner-side-nav");
     expect(markup).toContain("app-shell");
     expect(markup).toContain("radix-form-field");
+    expect(markup).toContain("radix-button");
+    expect(markup).toContain("radix-link");
+    expect(markup).toContain("radix-callout");
+    expect(markup).toContain("radix-select-trigger");
+    expect(markup).toContain("radix-radio-group");
+    expect(markup).toContain("radix-radio-cards");
     expect(markup).toContain("radix-table");
     expect(markup).toContain("WO-1000");
   });
@@ -160,6 +273,20 @@ describe("ui-library Radix adapter architecture", () => {
 
     expect(offenders).toEqual([]);
   });
+
+  it("keeps Radix imports inside the fidelity adapter and theme boundary", () => {
+    const packageRoot = fileURLToPath(new URL("../", import.meta.url));
+    const directRadixImportPattern =
+      /(?:from\s+["']@radix-ui\/|import\s+["']@radix-ui\/|@import\s+["']@radix-ui\/|require\(["']@radix-ui\/)/;
+    const allowedRadixImportPattern =
+      /src\/(?:radix\/|theme\/(?:PlannerThemeProvider\/PlannerThemeProvider\.tsx|theme-config\.ts|theme\.scss))/;
+    const offenders = collectSourceFiles(join(packageRoot, "src"))
+      .filter((filePath) => directRadixImportPattern.test(readFileSync(filePath, "utf8")))
+      .map((filePath) => relative(packageRoot, filePath))
+      .filter((filePath) => !allowedRadixImportPattern.test(filePath));
+
+    expect(offenders).toEqual([]);
+  });
 });
 
 function collectSourceFiles(root: string): string[] {
@@ -171,7 +298,7 @@ function collectSourceFiles(root: string): string[] {
       return collectSourceFiles(entryPath);
     }
 
-    return [".ts", ".tsx"].includes(extname(entryPath)) && !entryPath.endsWith(".d.ts")
+    return [".scss", ".ts", ".tsx"].includes(extname(entryPath)) && !entryPath.endsWith(".d.ts")
       ? [entryPath]
       : [];
   });
