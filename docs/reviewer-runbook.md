@@ -38,7 +38,7 @@ The local mock checks do not require Docker, the API, the simulator or cloud cre
 
 The mock end-to-end smoke starts the workbench locally, verifies the planner shell, reviews coordination exceptions, operations posture and scenario outcomes, opens the recommendation workbench, records a mock planner decision, then checks planning-run detail and backlog state.
 
-The showcase visual smoke starts the workbench in deterministic mock mode and verifies `/ui-library` in desktop and mobile viewports. It checks accessible landmarks, route metadata, component family headings, table captions, live-region state names, tone contrast and focused screenshot baselines.
+The showcase visual smoke starts the workbench in deterministic mock mode and verifies `/ui-library` plus routed workbench evidence in desktop, tablet and mobile light/dark viewports. It checks accessible landmarks, route metadata, component family headings, table captions, live-region state names, tone contrast and focused screenshot baselines.
 
 Generate a compact screenshot pack when review notes need current app images:
 

@@ -1,13 +1,18 @@
 import {
-  Alert,
-  DataTable,
-  EmptyState,
-  MetricSummary,
-  PageHeader,
-  QuietNote,
-  StatusBadge,
-  WorkbenchPanel,
-  type DataTableColumn
+  PlannerActionGroup,
+  PlannerActionLink,
+  PlannerAlert,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerDataTable,
+  PlannerEmptyState,
+  PlannerMetricSummary,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerQuietNote,
+  PlannerStatusBadge,
+  PlannerTableCellStack,
+  type PlannerDataTableColumn
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
@@ -24,24 +29,21 @@ import {
   toneForScenarioOutcome
 } from "@/lib/planner-format";
 
-const outcomeColumns: readonly DataTableColumn<ScenarioOutcomeView>[] = [
+const outcomeColumns: readonly PlannerDataTableColumn<ScenarioOutcomeView>[] = [
   {
     header: "Scenario",
     key: "scenario",
     render: (outcome) => (
-      <span className="table-stack">
-        <strong>{outcome.label}</strong>
-        <span>{outcome.scenarioId}</span>
-      </span>
+      <PlannerTableCellStack detail={outcome.scenarioId} title={outcome.label} />
     )
   },
   {
     header: "Outcome",
     key: "outcome",
     render: (outcome) => (
-      <StatusBadge tone={toneForScenarioOutcome(outcome.status)}>
+      <PlannerStatusBadge tone={toneForScenarioOutcome(outcome.status)}>
         {outcome.statusText}
-      </StatusBadge>
+      </PlannerStatusBadge>
     )
   },
   {
@@ -75,22 +77,21 @@ const outcomeColumns: readonly DataTableColumn<ScenarioOutcomeView>[] = [
   }
 ];
 
-const latestSignalColumns: readonly DataTableColumn<OperationsSignalView>[] = [
+const latestSignalColumns: readonly PlannerDataTableColumn<OperationsSignalView>[] = [
   {
     header: "Signal",
     key: "signal",
     render: (signal) => (
-      <span className="table-stack">
-        <strong>{signal.label}</strong>
-        <span>{signal.summary}</span>
-      </span>
+      <PlannerTableCellStack detail={signal.summary} title={signal.label} />
     )
   },
   {
     header: "State",
     key: "state",
     render: (signal) => (
-      <StatusBadge tone={toneForPostureState(signal.status)}>{signal.status}</StatusBadge>
+      <PlannerStatusBadge tone={toneForPostureState(signal.status)}>
+        {signal.status}
+      </PlannerStatusBadge>
     )
   },
   {
@@ -113,67 +114,68 @@ export default async function ScenarioOutcomesPage() {
     ).length;
 
     return (
-      <main className="page-stack">
-        <PageHeader
+      <PlannerPage>
+        <PlannerPageHeader
           actions={
-            <span className="action-row">
-              <Link className="primary-link" href="/operations-posture">
-                Open operations posture
-              </Link>
-              <Link className="secondary-link" href="/recommendations">
-                Open recommendations
-              </Link>
-            </span>
+            <PlannerActionGroup>
+              <PlannerActionLink asChild>
+                <Link href="/operations-posture">Open operations posture</Link>
+              </PlannerActionLink>
+              <PlannerActionLink asChild priority="secondary">
+                <Link href="/recommendations">Open recommendations</Link>
+              </PlannerActionLink>
+            </PlannerActionGroup>
           }
           badge={
-            <span className="badge-stack">
-              <StatusBadge tone={toneForScenarioOutcome(latest.status)}>
+            <PlannerBadgeGroup align="end">
+              <PlannerStatusBadge tone={toneForScenarioOutcome(latest.status)}>
                 {latest.statusText}
-              </StatusBadge>
-              <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-            </span>
+              </PlannerStatusBadge>
+              <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+            </PlannerBadgeGroup>
           }
           description="Review deterministic synthetic scenario outcomes, import freshness and planner-facing result signals."
           title={section.label}
         />
 
-        <MetricSummary
+        <PlannerMetricSummary
           ariaLabel="Scenario outcome summary"
           items={buildScenarioOutcomeMetrics(scenarioSummary)}
           variant="compact"
         />
 
         {attentionCount > 0 ? (
-          <Alert title="Scenario review scope" tone="warning">
+          <PlannerAlert title="Scenario review scope" tone="warning">
             <p>
               {attentionCount} synthetic scenario outcome
               {attentionCount === 1 ? " has" : "s have"} stale or degraded evidence visible for
               review.
             </p>
-          </Alert>
+          </PlannerAlert>
         ) : (
-          <QuietNote title="Scenario review scope">
+          <PlannerQuietNote title="Scenario review scope">
             All synthetic scenario outcomes are in their expected healthy state.
-          </QuietNote>
+          </PlannerQuietNote>
         )}
 
-        <WorkbenchPanel className="console-panel" labelledBy="latest-scenario-outcome">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Latest configured scenario</p>
-              <h2 id="latest-scenario-outcome">{latest.label}</h2>
-              <p>{latest.summary}</p>
-            </div>
-            <StatusBadge tone={toneForScenarioOutcome(latest.status)}>
+        <PlannerContentSection
+          badge={
+            <PlannerStatusBadge tone={toneForScenarioOutcome(latest.status)}>
               {latest.statusText}
-            </StatusBadge>
-          </div>
-          <DataTable
+            </PlannerStatusBadge>
+          }
+          description={latest.summary}
+          eyebrow="Latest configured scenario"
+          title={latest.label}
+          titleId="latest-scenario-outcome"
+          variant="surface"
+        >
+          <PlannerDataTable
             caption="Latest scenario outcome signals"
             columns={latestSignalColumns}
             density="compact"
             emptyState={
-              <EmptyState
+              <PlannerEmptyState
                 description="No scenario signals were returned for this synthetic review state."
                 title="No scenario signals"
               />
@@ -181,22 +183,25 @@ export default async function ScenarioOutcomesPage() {
             getRowKey={(signal) => signal.label}
             rows={latest.signals}
           />
-        </WorkbenchPanel>
+        </PlannerContentSection>
 
-        <WorkbenchPanel className="console-panel" labelledBy="scenario-outcome-list">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Synthetic scenario evidence</p>
-              <h2 id="scenario-outcome-list">Outcome list</h2>
-            </div>
-            <StatusBadge tone="neutral">Generated {formatUtc(scenarioSummary.generatedAtUtc)}</StatusBadge>
-          </div>
-          <DataTable
+        <PlannerContentSection
+          badge={
+            <PlannerStatusBadge tone="neutral">
+              Generated {formatUtc(scenarioSummary.generatedAtUtc)}
+            </PlannerStatusBadge>
+          }
+          eyebrow="Synthetic scenario evidence"
+          title="Outcome list"
+          titleId="scenario-outcome-list"
+          variant="surface"
+        >
+          <PlannerDataTable
             caption="Synthetic scenario outcomes"
             columns={outcomeColumns}
             density="compact"
             emptyState={
-              <EmptyState
+              <PlannerEmptyState
                 description="The service returned no synthetic scenario outcomes for this review state."
                 title="No scenario outcomes"
               />
@@ -204,8 +209,8 @@ export default async function ScenarioOutcomesPage() {
             getRowKey={(outcome) => outcome.scenarioId}
             rows={scenarioSummary.outcomes}
           />
-        </WorkbenchPanel>
-      </main>
+        </PlannerContentSection>
+      </PlannerPage>
     );
   } catch (error) {
     return (

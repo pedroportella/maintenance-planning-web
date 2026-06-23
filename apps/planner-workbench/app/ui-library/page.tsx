@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import {
-  Alert,
-  EmptyState,
-  ErrorState,
-  PageHeader,
   PlannerAlert,
+  PlannerBadgeGroup,
   PlannerCheckbox,
   PlannerAppLayout,
   PlannerContentSection,
@@ -18,14 +15,17 @@ import {
   PlannerPage,
   PlannerPageHeader,
   PlannerPagination,
+  PlannerPlainList,
   PlannerQuietNote,
   PlannerRadioCards,
   PlannerRadioGroup,
+  PlannerResponsiveGrid,
   PlannerSelect,
   PlannerSideNav,
   PlannerStatusBadge,
   PlannerStatusPill,
   PlannerSummaryList,
+  PlannerTableCellStack,
   PlannerTextArea,
   PlannerTextInput,
   PlannerWorkflowLayout,
@@ -36,8 +36,6 @@ import {
   RadixIcon,
   RadixLink,
   RadixText,
-  StatusBadge,
-  WorkbenchPanel,
   type PlannerDataTableColumn,
   type Tone
 } from "@maintenance-planning/ui-library";
@@ -129,17 +127,16 @@ const signalColumns: readonly PlannerDataTableColumn<OperationsSignalView>[] = [
     header: "Signal",
     key: "signal",
     render: (signal) => (
-      <span className="table-stack">
-        <strong>{signal.label}</strong>
-        <span>{signal.summary}</span>
-      </span>
+      <PlannerTableCellStack detail={signal.summary} title={signal.label} />
     )
   },
   {
     header: "State",
     key: "state",
     render: (signal) => (
-      <StatusBadge tone={toneForPostureState(signal.status)}>{signal.status}</StatusBadge>
+      <PlannerStatusBadge tone={toneForPostureState(signal.status)}>
+        {signal.status}
+      </PlannerStatusBadge>
     )
   },
   {
@@ -160,10 +157,7 @@ const workOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] 
     header: "Work order",
     key: "work-order",
     render: (item) => (
-      <span className="table-stack">
-        <strong>{item.workOrderNumber}</strong>
-        <span>{item.title}</span>
-      </span>
+      <PlannerTableCellStack detail={item.title} title={item.workOrderNumber} />
     ),
     rowHeader: true
   },
@@ -171,9 +165,9 @@ const workOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] 
     header: "Readiness",
     key: "readiness",
     render: (item) => (
-      <StatusBadge tone={toneForReadiness(item.readinessStatus)}>
+      <PlannerStatusBadge tone={toneForReadiness(item.readinessStatus)}>
         {item.readinessStatus}
-      </StatusBadge>
+      </PlannerStatusBadge>
     )
   },
   {
@@ -218,10 +212,7 @@ const overflowingWorkOrderColumns: readonly PlannerDataTableColumn<WorkOrderBack
     header: "Package",
     key: "package",
     render: (item) => (
-      <span className="table-stack">
-        <strong>{item.packageNumber}</strong>
-        <span>{item.packageTitle}</span>
-      </span>
+      <PlannerTableCellStack detail={item.packageTitle} title={item.packageNumber} />
     )
   },
   {
@@ -266,13 +257,13 @@ export default async function UiLibraryPage() {
     readyDecisionRecommendation;
 
   return (
-    <PlannerPage className="ui-library-page" id="ui-library-main" labelledBy="ui-library-title">
-      <PageHeader
+    <PlannerPage id="ui-library-main" labelledBy="ui-library-title">
+      <PlannerPageHeader
         badge={
-          <span className="badge-stack">
-            <StatusBadge tone="info">Reviewer evidence</StatusBadge>
-            <StatusBadge tone="neutral">Static mock data</StatusBadge>
-          </span>
+          <PlannerBadgeGroup>
+            <PlannerStatusBadge tone="info">Reviewer evidence</PlannerStatusBadge>
+            <PlannerStatusBadge tone="neutral">Static mock data</PlannerStatusBadge>
+          </PlannerBadgeGroup>
         }
         description="Focused visual and accessibility evidence for reusable synthetic planner workbench states."
         eyebrow="Developer route"
@@ -280,49 +271,47 @@ export default async function UiLibraryPage() {
         titleId="ui-library-title"
       />
 
-      <Alert title="Route scope" tone="info">
+      <PlannerAlert title="Route scope" tone="info">
         <p>
           This page is an internal reviewer and developer aid. It uses checked synthetic fixtures
           and does not call a backend service.
         </p>
-      </Alert>
+      </PlannerAlert>
 
-      <WorkbenchPanel className="console-panel" labelledBy="showcase-theme-foundation">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Theme foundation</p>
-            <h2 id="showcase-theme-foundation">Light, dark and system modes</h2>
-          </div>
-          <StatusBadge tone="success">Radix theme provider</StatusBadge>
-        </div>
-        <div className="showcase-tone-grid" aria-label="Theme mode evidence">
-          <Alert className="light" title="Light mode" tone="neutral">
+      <PlannerContentSection
+        badge={<PlannerStatusBadge tone="success">Radix theme provider</PlannerStatusBadge>}
+        eyebrow="Theme foundation"
+        title="Light, dark and system modes"
+        titleId="showcase-theme-foundation"
+        variant="surface"
+      >
+        <PlannerResponsiveGrid ariaLabel="Theme mode evidence">
+          <PlannerAlert className="light" title="Light mode" tone="neutral">
             <p>Uses the planner light palette from shared tokens.</p>
-          </Alert>
-          <Alert className="dark" title="Dark mode" tone="neutral">
+          </PlannerAlert>
+          <PlannerAlert className="dark" title="Dark mode" tone="neutral">
             <p>Uses the planner dark palette from shared tokens.</p>
-          </Alert>
-          <Alert title="System mode" tone="neutral">
+          </PlannerAlert>
+          <PlannerAlert title="System mode" tone="neutral">
             <p>Inherits the active document mode from the root theme provider.</p>
-          </Alert>
-        </div>
-      </WorkbenchPanel>
+          </PlannerAlert>
+        </PlannerResponsiveGrid>
+      </PlannerContentSection>
 
-      <WorkbenchPanel className="console-panel" labelledBy="showcase-radix-adapters">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Adapter family</p>
-            <h2 id="showcase-radix-adapters">Radix fidelity adapters</h2>
-          </div>
-          <RadixBadge tone="success">RU1</RadixBadge>
-        </div>
-        <div className="showcase-tone-grid">
+      <PlannerContentSection
+        badge={<RadixBadge tone="success">RU1</RadixBadge>}
+        eyebrow="Adapter family"
+        title="Radix fidelity adapters"
+        titleId="showcase-radix-adapters"
+        variant="surface"
+      >
+        <PlannerResponsiveGrid>
           <section aria-label="Radix typography and actions">
             <RadixHeading as="h3">Adapter primitives</RadixHeading>
             <RadixText as="p" tone="muted">
               Foundational controls render through the local ui-library boundary.
             </RadixText>
-            <div className="showcase-badge-row">
+            <PlannerBadgeGroup as="div">
               <RadixButton>
                 <RadixIcon name="check" />
                 Apply
@@ -331,13 +320,13 @@ export default async function UiLibraryPage() {
                 Disabled
               </RadixButton>
               <RadixLink href="#showcase-radix-adapters">Anchor link</RadixLink>
-            </div>
+            </PlannerBadgeGroup>
           </section>
           <RadixCallout title="Form semantics" tone="info">
             Labels, hints, errors and described-by wiring are centralised in the adapter layer.
           </RadixCallout>
-        </div>
-        <div className="showcase-tone-grid">
+        </PlannerResponsiveGrid>
+        <PlannerResponsiveGrid>
           <PlannerTextInput
             hint="Search by package or work-order text."
             label="Search"
@@ -372,7 +361,7 @@ export default async function UiLibraryPage() {
             label="I reviewed the recommendation"
             name="showcaseReviewed"
           />
-        </div>
+        </PlannerResponsiveGrid>
         <PlannerRadioCards
           defaultValue="approve"
           hint="Card-style radio options use Radix radio-card semantics."
@@ -412,7 +401,7 @@ export default async function UiLibraryPage() {
             }
           ]}
         />
-      </WorkbenchPanel>
+      </PlannerContentSection>
 
       <PlannerContentSection
         badge={<RadixBadge tone="success">RU2</RadixBadge>}
@@ -457,7 +446,7 @@ export default async function UiLibraryPage() {
           </PlannerContentSection>
         </PlannerAppLayout>
 
-        <div className="showcase-tone-grid">
+        <PlannerResponsiveGrid>
           <PlannerSideNav
             activeHref="/work-order-backlog"
             ariaLabel="Standalone side navigation fixture"
@@ -476,18 +465,17 @@ export default async function UiLibraryPage() {
               The workflow template keeps task copy compact and leaves decision controls for RU6.
             </RadixText>
           </PlannerWorkflowLayout>
-        </div>
+        </PlannerResponsiveGrid>
       </PlannerContentSection>
 
-      <WorkbenchPanel className="console-panel" labelledBy="showcase-alerts">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Component family</p>
-            <h2 id="showcase-alerts">Alerts and badges</h2>
-          </div>
-          <StatusBadge tone="neutral">All tones</StatusBadge>
-        </div>
-        <div className="showcase-tone-grid">
+      <PlannerContentSection
+        badge={<PlannerStatusBadge tone="neutral">All tones</PlannerStatusBadge>}
+        eyebrow="Component family"
+        title="Alerts and badges"
+        titleId="showcase-alerts"
+        variant="surface"
+      >
+        <PlannerResponsiveGrid>
           {toneExamples.map((example) => (
             <PlannerAlert key={example.tone} title={`${example.label} alert`} tone={example.tone}>
               <p>{example.detail}</p>
@@ -496,8 +484,8 @@ export default async function UiLibraryPage() {
           <PlannerQuietNote title="Quiet note">
             Secondary review context stays visible without announcing as an alert.
           </PlannerQuietNote>
-        </div>
-        <section aria-label="Status badge tone examples" className="showcase-badge-row">
+        </PlannerResponsiveGrid>
+        <PlannerBadgeGroup ariaLabel="Status badge tone examples" as="section">
           {toneExamples.map((example) => (
             <PlannerStatusBadge key={example.tone} tone={example.tone}>
               {example.label}
@@ -508,17 +496,16 @@ export default async function UiLibraryPage() {
               {example.label} pill
             </PlannerStatusPill>
           ))}
-        </section>
-      </WorkbenchPanel>
+        </PlannerBadgeGroup>
+      </PlannerContentSection>
 
-      <WorkbenchPanel className="console-panel" labelledBy="showcase-metadata">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Component family</p>
-            <h2 id="showcase-metadata">Metadata and data lists</h2>
-          </div>
-          <StatusBadge tone="success">RU4</StatusBadge>
-        </div>
+      <PlannerContentSection
+        badge={<PlannerStatusBadge tone="success">RU4</PlannerStatusBadge>}
+        eyebrow="Component family"
+        title="Metadata and data lists"
+        titleId="showcase-metadata"
+        variant="surface"
+      >
         <PlannerMetricSummary
           ariaLabel="Showcase metadata metric summary"
           items={[
@@ -543,9 +530,9 @@ export default async function UiLibraryPage() {
           ]}
           variant="compact"
         />
-        <div className="showcase-tone-grid">
+        <PlannerResponsiveGrid>
           <PlannerMetadataPanel
-            badge={<StatusBadge tone="info">Desktop</StatusBadge>}
+            badge={<PlannerStatusBadge tone="info">Desktop</PlannerStatusBadge>}
             description="Standard metadata panels use Radix DataList semantics for package facts."
             eyebrow="Metadata panel"
             items={[
@@ -571,7 +558,7 @@ export default async function UiLibraryPage() {
             titleId="showcase-desktop-metadata"
           />
           <PlannerMetadataPanel
-            badge={<StatusBadge tone="neutral">Tablet</StatusBadge>}
+            badge={<PlannerStatusBadge tone="neutral">Tablet</PlannerStatusBadge>}
             density="compact"
             description="Compact metadata keeps repeated facts scannable inside constrained panels."
             eyebrow="Metadata panel"
@@ -626,19 +613,18 @@ export default async function UiLibraryPage() {
               variant="compact"
             />
           </section>
-        </div>
-      </WorkbenchPanel>
+        </PlannerResponsiveGrid>
+      </PlannerContentSection>
 
       {readyDecisionRecommendation && blockedDecisionRecommendation ? (
-        <WorkbenchPanel className="console-panel" labelledBy="showcase-decision-actions">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Component family</p>
-              <h2 id="showcase-decision-actions">Decision action surfaces</h2>
-            </div>
-            <StatusBadge tone="success">RU6</StatusBadge>
-          </div>
-          <div className="showcase-tone-grid">
+        <PlannerContentSection
+          badge={<PlannerStatusBadge tone="success">RU6</PlannerStatusBadge>}
+          eyebrow="Component family"
+          title="Decision action surfaces"
+          titleId="showcase-decision-actions"
+          variant="surface"
+        >
+          <PlannerResponsiveGrid>
             <PlannerDecisionPanel
               actions={buildShowcaseDecisionActions(readyDecisionRecommendation)}
               blockers={buildShowcaseDecisionBlockers(readyDecisionRecommendation)}
@@ -665,18 +651,17 @@ export default async function UiLibraryPage() {
               titleId="showcase-blocked-decision"
               workOrderIds={blockedDecisionRecommendation.workOrders.map((workOrder) => workOrder.id)}
             />
-          </div>
-        </WorkbenchPanel>
+          </PlannerResponsiveGrid>
+        </PlannerContentSection>
       ) : null}
 
-      <WorkbenchPanel className="console-panel" labelledBy="showcase-tables">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Component family</p>
-            <h2 id="showcase-tables">Tables and row states</h2>
-          </div>
-          <StatusBadge tone="warning">Scrollable on small screens</StatusBadge>
-        </div>
+      <PlannerContentSection
+        badge={<PlannerStatusBadge tone="warning">Scrollable on small screens</PlannerStatusBadge>}
+        eyebrow="Component family"
+        title="Tables and row states"
+        titleId="showcase-tables"
+        variant="surface"
+      >
         <PlannerDataTable
           caption="UI showcase work-order rows"
           columns={workOrderColumns}
@@ -740,7 +725,7 @@ export default async function UiLibraryPage() {
           caption="UI showcase empty table"
           columns={workOrderColumns}
           emptyState={
-            <EmptyState
+            <PlannerEmptyState
               description="The table shell stays stable when a filtered synthetic review state has no rows."
               title="No matching rows"
             />
@@ -761,61 +746,66 @@ export default async function UiLibraryPage() {
           getRowKey={(item) => item.id}
           rows={backlog.items}
         />
-      </WorkbenchPanel>
+      </PlannerContentSection>
 
-      <WorkbenchPanel className="console-panel" labelledBy="showcase-states">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Component family</p>
-            <h2 id="showcase-states">Empty, loading and error states</h2>
-          </div>
-          <StatusBadge tone="info">Live-region checks</StatusBadge>
-        </div>
-        <div className="showcase-state-grid">
+      <PlannerContentSection
+        badge={<PlannerStatusBadge tone="info">Live-region checks</PlannerStatusBadge>}
+        eyebrow="Component family"
+        title="Empty, loading and error states"
+        titleId="showcase-states"
+        variant="surface"
+      >
+        <PlannerResponsiveGrid>
           <PlannerEmptyState
             description="No synthetic package matches this reviewer filter."
             title="No package selected"
           />
-          <div className="showcase-loading-state">
+          <PlannerContentSection variant="surface">
             <PlannerLoadingState label="Loading planner review data" skeletonRows={3} />
-          </div>
-          <ErrorState
+          </PlannerContentSection>
+          <PlannerEmptyState
             description="The service boundary returned a configuration issue for this local review."
+            role="alert"
             title="Review state unavailable"
+            tone="critical"
           />
-        </div>
-      </WorkbenchPanel>
+        </PlannerResponsiveGrid>
+      </PlannerContentSection>
 
       {recommendationSet.recommendations.length > 0 ? (
-        <WorkbenchPanel className="console-panel" labelledBy="showcase-recommendations">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Component family</p>
-              <h2 id="showcase-recommendations">Recommendation cards</h2>
-            </div>
-            <StatusBadge tone={toneForStatus(recommendationSet.status)}>
+        <PlannerContentSection
+          badge={
+            <PlannerStatusBadge tone={toneForStatus(recommendationSet.status)}>
               {recommendationSet.status}
-            </StatusBadge>
-          </div>
-          <section className="recommendation-list" aria-label="Showcase recommendation cards">
+            </PlannerStatusBadge>
+          }
+          eyebrow="Component family"
+          title="Recommendation cards"
+          titleId="showcase-recommendations"
+          variant="surface"
+        >
+          <PlannerResponsiveGrid ariaLabel="Showcase recommendation cards">
             {recommendationSet.recommendations.map((recommendation) => (
               <ShowcaseRecommendationCard
                 key={recommendation.packageId}
                 recommendation={recommendation}
               />
             ))}
-          </section>
-        </WorkbenchPanel>
+          </PlannerResponsiveGrid>
+        </PlannerContentSection>
       ) : null}
 
-      <WorkbenchPanel className="console-panel" labelledBy="showcase-posture">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Component family</p>
-            <h2 id="showcase-posture">Operations posture summaries</h2>
-          </div>
-          <StatusBadge tone={toneForPostureState(posture.state)}>{posture.state}</StatusBadge>
-        </div>
+      <PlannerContentSection
+        badge={
+          <PlannerStatusBadge tone={toneForPostureState(posture.state)}>
+            {posture.state}
+          </PlannerStatusBadge>
+        }
+        eyebrow="Component family"
+        title="Operations posture summaries"
+        titleId="showcase-posture"
+        variant="surface"
+      >
         <PlannerMetricSummary
           ariaLabel="Showcase operations posture summary"
           items={buildOperationsMetrics(posture, sourceReadiness, scenarioSummary.latest)}
@@ -826,7 +816,7 @@ export default async function UiLibraryPage() {
           getRowKey={(signal) => signal.label}
           rows={posture.signals}
         />
-      </WorkbenchPanel>
+      </PlannerContentSection>
     </PlannerPage>
   );
 }
@@ -884,27 +874,33 @@ function ShowcaseRecommendationCard({
 }: {
   readonly recommendation: PlannerRecommendation;
 }) {
-  return (
-    <article aria-label={recommendation.packageNumber} className="recommendation-card">
-      <div className="recommendation-card-header">
-        <div>
-          <p className="eyebrow">Synthetic package recommendation</p>
-          <h3>{recommendation.packageNumber}</h3>
-          <p>{recommendation.title}</p>
-        </div>
-        <span className="badge-stack">
-          <StatusBadge tone={toneForStatus(recommendation.status)}>
-            {recommendation.status}
-          </StatusBadge>
-          <StatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
-            {recommendation.sourceDataReadiness.status}
-          </StatusBadge>
-        </span>
-      </div>
+  const titleId = `${recommendation.packageId}-showcase-card`;
 
-      <div className="recommendation-grid">
-        <section aria-label={`${recommendation.packageNumber} explanation`}>
-          <h3>Explanation</h3>
+  return (
+    <PlannerContentSection
+      as="article"
+      badge={
+        <PlannerBadgeGroup align="end">
+          <PlannerStatusBadge tone={toneForStatus(recommendation.status)}>
+            {recommendation.status}
+          </PlannerStatusBadge>
+          <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
+            {recommendation.sourceDataReadiness.status}
+          </PlannerStatusBadge>
+        </PlannerBadgeGroup>
+      }
+      description={recommendation.title}
+      eyebrow="Synthetic package recommendation"
+      title={recommendation.packageNumber}
+      titleId={titleId}
+      variant="surface"
+    >
+
+      <PlannerResponsiveGrid balance="secondary">
+        <PlannerContentSection
+          title="Explanation"
+          titleId={`${titleId}-explanation`}
+        >
           <p>{recommendation.explanation.text}</p>
           <PlannerSummaryList
             ariaLabel={`${recommendation.packageNumber} explanation facts`}
@@ -927,7 +923,7 @@ function ShowcaseRecommendationCard({
               }
             ]}
           />
-        </section>
+        </PlannerContentSection>
 
         <PlannerMetadataPanel
           description={recommendation.sourceDataReadiness.summary}
@@ -956,24 +952,24 @@ function ShowcaseRecommendationCard({
           title="Readiness"
           titleId={`${recommendation.packageId}-showcase-readiness`}
         />
-      </div>
+      </PlannerResponsiveGrid>
 
-      <Alert
+      <PlannerAlert
         title={recommendation.blockers.length > 0 ? "Package blockers" : "No package blockers"}
         tone={recommendation.blockers.length > 0 ? "warning" : "success"}
       >
         {recommendation.blockers.length > 0 ? (
-          <ul className="plain-list">
+          <PlannerPlainList>
             {recommendation.blockers.map((blocker) => (
               <li key={`${blocker.code}-${blocker.workOrderNumbers.join("-")}`}>
                 <strong>{blocker.code}</strong>: {blocker.summary}
               </li>
             ))}
-          </ul>
+          </PlannerPlainList>
         ) : (
           <p>Service-owned constraints do not show a blocker for this package group.</p>
         )}
-      </Alert>
-    </article>
+      </PlannerAlert>
+    </PlannerContentSection>
   );
 }

@@ -1,3 +1,9 @@
+export type {
+  PlannerActionGroupProps,
+  PlannerActionLinkPriority,
+  PlannerActionLinkProps
+} from "./PlannerActionGroup";
+export { PlannerActionGroup, PlannerActionLink } from "./PlannerActionGroup";
 export type { PlannerContentSectionProps } from "./PlannerContentSection";
 export { PlannerContentSection } from "./PlannerContentSection";
 export type {
@@ -11,6 +17,8 @@ export type { PlannerPageHeaderProps } from "./PlannerPageHeader";
 export { PlannerPageHeader } from "./PlannerPageHeader";
 export type { PlannerPageProps } from "./PlannerPage";
 export { PlannerPage } from "./PlannerPage";
+export type { PlannerResponsiveGridProps } from "./PlannerResponsiveGrid";
+export { PlannerResponsiveGrid } from "./PlannerResponsiveGrid";
 export type {
   PlannerSideNavItem,
   PlannerSideNavLinkProps,

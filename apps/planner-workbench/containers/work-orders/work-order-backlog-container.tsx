@@ -1,10 +1,12 @@
 import {
-  Alert,
-  MetricSummary,
-  PageHeader,
-  QuietNote,
-  StatusBadge,
-  WorkbenchPanel
+  PlannerAlert,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerMetricSummary,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerQuietNote,
+  PlannerStatusBadge
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
@@ -44,56 +46,59 @@ export default async function WorkOrderBacklogPage({
     const filterOptions = buildFilterOptions(selectedFilter, backlog.items, exceptionItems);
 
     return (
-      <main className="page-stack">
-        <PageHeader
+      <PlannerPage>
+        <PlannerPageHeader
           badge={
-            <span className="badge-stack">
-              <StatusBadge tone={exceptionItems.length > 0 ? "warning" : "success"}>
+            <PlannerBadgeGroup>
+              <PlannerStatusBadge tone={exceptionItems.length > 0 ? "warning" : "success"}>
                 {exceptionItems.length} exceptions
-              </StatusBadge>
-              <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-            </span>
+              </PlannerStatusBadge>
+              <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+            </PlannerBadgeGroup>
           }
           description="Filter imported synthetic work orders by readiness, exception state and planner decision before opening the related package."
           title={section.label}
         />
 
-        <MetricSummary
+        <PlannerMetricSummary
           ariaLabel="Work-order triage summary"
           items={buildBacklogMetrics(backlog)}
           variant="compact"
         />
 
         {exceptionItems.length > 0 ? (
-          <Alert title="Exceptions need review" tone="warning">
+          <PlannerAlert title="Exceptions need review" tone="warning">
             <p>
               {exceptionItems.length} synthetic work order
               {exceptionItems.length === 1 ? "" : "s"} need coordination before planning can move
               cleanly.
             </p>
-          </Alert>
+          </PlannerAlert>
         ) : (
-          <QuietNote title="Planner inbox scope">
+          <PlannerQuietNote title="Planner inbox scope">
             No coordination exceptions are present in this synthetic backlog response.
-          </QuietNote>
+          </PlannerQuietNote>
         )}
 
-        <WorkbenchPanel className="console-panel" labelledBy="backlog-table">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Imported work orders</p>
-              <h2 id="backlog-table">Planner triage</h2>
-            </div>
-            <StatusBadge tone="neutral">Generated {formatUtc(backlog.generatedAtUtc)}</StatusBadge>
-          </div>
+        <PlannerContentSection
+          badge={
+            <PlannerStatusBadge tone="neutral">
+              Generated {formatUtc(backlog.generatedAtUtc)}
+            </PlannerStatusBadge>
+          }
+          eyebrow="Imported work orders"
+          title="Planner triage"
+          titleId="backlog-table"
+          variant="surface"
+        >
           <WorkOrderBacklogTable
             filterLabel={filterLabel(selectedFilter)}
             filterOptions={filterOptions}
             items={filteredItems}
             planningRunId={backlog.planningRunId}
           />
-        </WorkbenchPanel>
-      </main>
+        </PlannerContentSection>
+      </PlannerPage>
     );
   } catch (error) {
     return (

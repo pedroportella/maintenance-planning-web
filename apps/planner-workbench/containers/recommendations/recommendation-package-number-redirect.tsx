@@ -1,8 +1,11 @@
 import {
-  ErrorState,
-  PageHeader,
-  StatusBadge,
-  WorkbenchPanel
+  PlannerActionLink,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerEmptyState,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerStatusBadge
 } from "@maintenance-planning/ui-library";
 import { createPlannerServices } from "@maintenance-planning/services";
 import Link from "next/link";
@@ -36,29 +39,30 @@ export default async function RecommendationPackageNumberRedirect({
       });
     } else {
       return (
-        <main className="page-stack">
-          <PageHeader
+        <PlannerPage>
+          <PlannerPageHeader
             actions={
-              <Link className="primary-link" href="/recommendations">
-                Back to recommendations
-              </Link>
+              <PlannerActionLink asChild>
+                <Link href="/recommendations">Back to recommendations</Link>
+              </PlannerActionLink>
             }
             badge={
-              <span className="badge-stack">
-                <StatusBadge tone="warning">Not found</StatusBadge>
-                <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-              </span>
+              <PlannerBadgeGroup align="end">
+                <PlannerStatusBadge tone="warning">Not found</PlannerStatusBadge>
+                <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+              </PlannerBadgeGroup>
             }
             description={`No package recommendation matched ${packageNumber} in ${recommendationSet.runNumber}.`}
             title="Package recommendation not found"
           />
-          <WorkbenchPanel>
-            <ErrorState
+          <PlannerContentSection variant="surface">
+            <PlannerEmptyState
               description="Open recommendations and choose a package from the current synthetic planning run."
               title="Package could not be found"
+              tone="critical"
             />
-          </WorkbenchPanel>
-        </main>
+          </PlannerContentSection>
+        </PlannerPage>
       );
     }
   } catch (error) {

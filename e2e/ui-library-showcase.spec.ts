@@ -67,7 +67,9 @@ test("keeps contrast-sensitive showcase tones readable", async ({ page }) => {
     expect(badgeRatio, `${tone} status badge contrast`).toBeGreaterThanOrEqual(4.5);
 
     const alertTitleRatio = await contrastRatio(
-      page.locator(`.planner-alert-${tone} .radix-callout-title`).first()
+      page
+        .locator(`.planner-alert-${tone}:not(.light):not(.dark) .radix-callout-title`)
+        .first()
     );
     expect(alertTitleRatio, `${tone} alert title contrast`).toBeGreaterThanOrEqual(4.5);
   }

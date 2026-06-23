@@ -1,5 +1,7 @@
 export type { PlannerAlertProps } from "./PlannerAlert";
 export { PlannerAlert } from "./PlannerAlert";
+export type { PlannerBadgeGroupProps } from "./PlannerBadgeGroup";
+export { PlannerBadgeGroup } from "./PlannerBadgeGroup";
 export type { PlannerEmptyStateProps } from "./PlannerEmptyState";
 export { PlannerEmptyState } from "./PlannerEmptyState";
 export type { PlannerLoadingStateProps } from "./PlannerLoadingState";

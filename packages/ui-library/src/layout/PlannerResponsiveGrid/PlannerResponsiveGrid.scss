@@ -1,0 +1,28 @@
+.planner-responsive-grid {
+  display: grid;
+  gap: var(--mp-space-lg);
+  align-items: start;
+  min-width: 0;
+}
+
+.planner-responsive-grid[data-columns="two"][data-balance="equal"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.planner-responsive-grid[data-columns="two"][data-balance="primary"] {
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+}
+
+.planner-responsive-grid[data-columns="two"][data-balance="secondary"] {
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+}
+
+.planner-responsive-grid[data-columns="three"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 980px) {
+  .planner-responsive-grid[data-columns] {
+    grid-template-columns: 1fr;
+  }
+}

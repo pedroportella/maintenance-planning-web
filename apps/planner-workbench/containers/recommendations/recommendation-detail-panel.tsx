@@ -1,12 +1,16 @@
 import {
-  Alert,
-  DataTable,
+  PlannerAlert,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerDataTable,
   PlannerMetadataPanel,
+  PlannerPlainList,
+  PlannerResponsiveGrid,
   PlannerSummaryList,
-  QuietNote,
-  StatusBadge,
-  WorkbenchPanel,
-  type DataTableColumn
+  PlannerQuietNote,
+  PlannerStatusBadge,
+  PlannerTableCellStack,
+  type PlannerDataTableColumn
 } from "@maintenance-planning/ui-library";
 import type {
   PlannerDecisionRecord,
@@ -28,22 +32,21 @@ type RecommendationDetailPanelProps = {
   planningRunId: string;
 };
 
-const workOrderColumns: readonly DataTableColumn<WorkOrderBacklogItem>[] = [
+const workOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] = [
   {
     header: "Work order",
     key: "work-order",
     render: (item) => (
-      <span className="table-stack">
-        <strong>{item.workOrderNumber}</strong>
-        <span>{item.title}</span>
-      </span>
+      <PlannerTableCellStack detail={item.title} title={item.workOrderNumber} />
     )
   },
   {
     header: "Readiness",
     key: "readiness",
     render: (item) => (
-      <StatusBadge tone={toneForReadiness(item.readinessStatus)}>{item.readinessStatus}</StatusBadge>
+      <PlannerStatusBadge tone={toneForReadiness(item.readinessStatus)}>
+        {item.readinessStatus}
+      </PlannerStatusBadge>
     )
   },
   {
@@ -72,26 +75,27 @@ export function RecommendationDetailPanel({
   const headingId = `recommendation-detail-${recommendation.packageId}`;
 
   return (
-    <WorkbenchPanel as="article" className="recommendation-card" labelledBy={headingId}>
-      <div className="recommendation-card-header">
-        <div>
-          <p className="eyebrow">Package recommendation</p>
-          <h2 id={headingId}>Why this package</h2>
-          <p>{recommendation.title}</p>
-        </div>
-        <span className="badge-stack">
-          <StatusBadge tone={toneForStatus(recommendation.status)}>
+    <PlannerContentSection
+      as="article"
+      badge={
+        <PlannerBadgeGroup align="end">
+          <PlannerStatusBadge tone={toneForStatus(recommendation.status)}>
             {recommendation.status}
-          </StatusBadge>
-          <StatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
+          </PlannerStatusBadge>
+          <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
             {recommendation.sourceDataReadiness.status}
-          </StatusBadge>
-        </span>
-      </div>
+          </PlannerStatusBadge>
+        </PlannerBadgeGroup>
+      }
+      description={recommendation.title}
+      eyebrow="Package recommendation"
+      title="Why this package"
+      titleId={headingId}
+      variant="surface"
+    >
 
       <PlannerSummaryList
         ariaLabel={`${recommendation.packageNumber} summary`}
-        className="recommendation-package-summary"
         items={[
           {
             id: "score",
@@ -125,11 +129,13 @@ export function RecommendationDetailPanel({
         variant="compact"
       />
 
-      <div className="recommendation-grid">
-        <section aria-label={`${recommendation.packageNumber} explanation`}>
-          <h3>Recommendation explanation</h3>
+      <PlannerResponsiveGrid balance="secondary">
+        <PlannerContentSection
+          title="Recommendation explanation"
+          titleId={`${headingId}-explanation`}
+        >
           <p>{recommendation.explanation.text}</p>
-        </section>
+        </PlannerContentSection>
 
         <PlannerMetadataPanel
           description={recommendation.sourceDataReadiness.summary}
@@ -158,11 +164,11 @@ export function RecommendationDetailPanel({
           title="Source-data readiness"
           titleId={`${headingId}-source-readiness`}
         />
-      </div>
+      </PlannerResponsiveGrid>
 
       <RecommendationBlockers blockers={recommendation.blockers} />
 
-      <DataTable
+      <PlannerDataTable
         caption={`${recommendation.packageNumber} work orders`}
         columns={workOrderColumns}
         density="compact"
@@ -176,29 +182,29 @@ export function RecommendationDetailPanel({
         planningRunId={planningRunId}
         recommendation={recommendation}
       />
-    </WorkbenchPanel>
+    </PlannerContentSection>
   );
 }
 
 function RecommendationBlockers({ blockers }: { blockers: readonly RecommendationBlockerView[] }) {
   if (blockers.length === 0) {
     return (
-      <QuietNote title="No package blockers">
+      <PlannerQuietNote title="No package blockers">
         Service-owned constraints do not show a blocker for this package group.
-      </QuietNote>
+      </PlannerQuietNote>
     );
   }
 
   return (
-    <Alert title="Package blockers" tone="warning">
-      <ul className="plain-list">
+    <PlannerAlert title="Package blockers" tone="warning">
+      <PlannerPlainList>
         {blockers.map((blocker, index) => (
           <li key={`${blocker.code}-${blocker.workOrderNumbers.join("-")}-${index}`}>
             <strong>{blocker.code}</strong>: {blocker.summary}
           </li>
         ))}
-      </ul>
-    </Alert>
+      </PlannerPlainList>
+    </PlannerAlert>
   );
 }
 
@@ -209,24 +215,28 @@ function RecommendationDecisions({
 }) {
   if (decisions.length === 0) {
     return (
-      <QuietNote title="No decision recorded">
+      <PlannerQuietNote title="No decision recorded">
         Record a planner decision when this recommendation has been reviewed.
-      </QuietNote>
+      </PlannerQuietNote>
     );
   }
 
   return (
-    <section className="decision-history" aria-label="Planner decision history">
-      <h3>Decision history</h3>
-      <ul className="plain-list">
+    <PlannerContentSection
+      title="Decision history"
+      titleId="planner-decision-history"
+    >
+      <PlannerPlainList>
         {decisions.map((decision) => (
           <li key={decision.id}>
-            <StatusBadge tone={toneForDecision(decision.decision)}>{decision.decision}</StatusBadge>
+            <PlannerStatusBadge tone={toneForDecision(decision.decision)}>
+              {decision.decision}
+            </PlannerStatusBadge>
             <span>{decision.reasonCode}</span>
             <small>{formatUtc(decision.decidedAtUtc)}</small>
           </li>
         ))}
-      </ul>
-    </section>
+      </PlannerPlainList>
+    </PlannerContentSection>
   );
 }

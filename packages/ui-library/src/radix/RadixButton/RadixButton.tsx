@@ -20,11 +20,13 @@ export function RadixButton({
   variant = "solid",
   ...buttonProps
 }: RadixButtonProps) {
+  const resolvedType = buttonProps.asChild ? undefined : type;
+
   return (
     <Button
       className={joinClasses("radix-button", className)}
       color={radixAdapterColorByTone[tone]}
-      type={type}
+      type={resolvedType}
       variant={variant}
       {...buttonProps}
     >

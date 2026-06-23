@@ -1,14 +1,20 @@
 import {
-  Alert,
-  DataTable,
-  EmptyState,
-  MetricSummary,
-  PageHeader,
+  PlannerActionGroup,
+  PlannerActionLink,
+  PlannerAlert,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerDataTable,
+  PlannerEmptyState,
   PlannerMetadataPanel,
-  QuietNote,
-  StatusBadge,
-  WorkbenchPanel,
-  type DataTableColumn
+  PlannerMetricSummary,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerQuietNote,
+  PlannerResponsiveGrid,
+  PlannerStatusBadge,
+  PlannerTableCellStack,
+  type PlannerDataTableColumn
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
@@ -25,22 +31,21 @@ import {
   toneForPostureState
 } from "@/lib/planner-format";
 
-const signalColumns: readonly DataTableColumn<OperationsSignalView>[] = [
+const signalColumns: readonly PlannerDataTableColumn<OperationsSignalView>[] = [
   {
     header: "Signal",
     key: "signal",
     render: (signal) => (
-      <span className="table-stack">
-        <strong>{signal.label}</strong>
-        <span>{signal.summary}</span>
-      </span>
+      <PlannerTableCellStack detail={signal.summary} title={signal.label} />
     )
   },
   {
     header: "State",
     key: "state",
     render: (signal) => (
-      <StatusBadge tone={toneForPostureState(signal.status)}>{signal.status}</StatusBadge>
+      <PlannerStatusBadge tone={toneForPostureState(signal.status)}>
+        {signal.status}
+      </PlannerStatusBadge>
     )
   },
   {
@@ -70,81 +75,95 @@ export default async function OperationsPosturePage() {
     const latestOutcome = scenarioSummary.latest;
 
     return (
-      <main className="page-stack">
-        <PageHeader
+      <PlannerPage>
+        <PlannerPageHeader
           actions={
-            <span className="action-row">
-              <Link className="primary-link" href="/scenario-outcomes">
-                Open scenario outcomes
-              </Link>
-              <Link className="secondary-link" href={`/planning-runs/${latestOutcome.planningRunId}`}>
-                Open latest run
-              </Link>
-            </span>
+            <PlannerActionGroup>
+              <PlannerActionLink asChild>
+                <Link href="/scenario-outcomes">Open scenario outcomes</Link>
+              </PlannerActionLink>
+              <PlannerActionLink asChild priority="secondary">
+                <Link href={`/planning-runs/${latestOutcome.planningRunId}`}>
+                  Open latest run
+                </Link>
+              </PlannerActionLink>
+            </PlannerActionGroup>
           }
           badge={
-            <span className="badge-stack">
-              <StatusBadge tone={toneForPostureState(posture.state)}>{posture.state}</StatusBadge>
-              <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-            </span>
+            <PlannerBadgeGroup align="end">
+              <PlannerStatusBadge tone={toneForPostureState(posture.state)}>
+                {posture.state}
+              </PlannerStatusBadge>
+              <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+            </PlannerBadgeGroup>
           }
           description="Scan import freshness, source-data readiness and latest scenario evidence for the synthetic planner review state."
           title={section.label}
         />
 
-        <MetricSummary
+        <PlannerMetricSummary
           ariaLabel="Operations posture summary"
           items={buildOperationsMetrics(posture, sourceReadiness, latestOutcome)}
           variant="compact"
         />
 
         {posture.state === "healthy" ? (
-          <QuietNote title="Operations review scope">{posture.summary}</QuietNote>
+          <PlannerQuietNote title="Operations review scope">{posture.summary}</PlannerQuietNote>
         ) : (
-          <Alert title="Operations review scope" tone={toneForPostureState(posture.state)}>
+          <PlannerAlert title="Operations review scope" tone={toneForPostureState(posture.state)}>
             <p>{posture.summary}</p>
-          </Alert>
+          </PlannerAlert>
         )}
 
-        <section className="posture-grid" aria-label="Operations posture details">
-          <WorkbenchPanel className="console-panel" labelledBy="posture-signals">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Planner-visible signals</p>
-                <h2 id="posture-signals">Posture signals</h2>
-              </div>
-              <StatusBadge tone={toneForFreshness(posture.freshness)}>{posture.freshness}</StatusBadge>
-            </div>
-            <DataTable
+        <PlannerResponsiveGrid
+          ariaLabel="Operations posture details"
+          as="section"
+          balance="primary"
+        >
+          <PlannerContentSection
+            badge={
+              <PlannerStatusBadge tone={toneForFreshness(posture.freshness)}>
+                {posture.freshness}
+              </PlannerStatusBadge>
+            }
+            eyebrow="Planner-visible signals"
+            title="Posture signals"
+            titleId="posture-signals"
+            variant="surface"
+          >
+            <PlannerDataTable
               caption="Operations posture signals"
               columns={signalColumns}
               density="compact"
               getRowKey={(signal) => signal.label}
               rows={posture.signals}
             />
-          </WorkbenchPanel>
+          </PlannerContentSection>
 
-          <WorkbenchPanel className="console-panel" labelledBy="latest-import">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Latest synthetic import</p>
-                <h2 id="latest-import">Import freshness</h2>
-              </div>
-              <StatusBadge tone={toneForFreshness(posture.freshness)}>{posture.freshness}</StatusBadge>
-            </div>
+          <PlannerContentSection
+            badge={
+              <PlannerStatusBadge tone={toneForFreshness(posture.freshness)}>
+                {posture.freshness}
+              </PlannerStatusBadge>
+            }
+            eyebrow="Latest synthetic import"
+            title="Import freshness"
+            titleId="latest-import"
+            variant="surface"
+          >
             <LatestImportDetails latestImport={posture.latestImport} />
-          </WorkbenchPanel>
-        </section>
+          </PlannerContentSection>
+        </PlannerResponsiveGrid>
 
-        <QuietNote title={`Latest scenario: ${latestOutcome.label}`}>
+        <PlannerQuietNote title={`Latest scenario: ${latestOutcome.label}`}>
           <p>{latestOutcome.summary}</p>
           <p>
             {latestOutcome.runNumber}: {latestOutcome.readyPackageCount} ready,{" "}
             {latestOutcome.blockedPackageCount} blocked, checked{" "}
             {formatUtc(latestOutcome.checkedAtUtc)}.
           </p>
-        </QuietNote>
-      </main>
+        </PlannerQuietNote>
+      </PlannerPage>
     );
   } catch (error) {
     return (
@@ -160,7 +179,7 @@ export default async function OperationsPosturePage() {
 function LatestImportDetails({ latestImport }: { latestImport?: LatestImportView | null }) {
   if (!latestImport) {
     return (
-      <EmptyState
+      <PlannerEmptyState
         description="The service did not return a latest synthetic import summary for this review state."
         title="No latest import"
       />

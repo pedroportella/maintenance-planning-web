@@ -28,11 +28,11 @@ The `/ui-library` route is separate from planner task navigation. It is a no-ind
 
 ## Visual System
 
-The app imports the shared theme from `@maintenance-planning/ui-library/theme.scss`. That Sass entry imports Radix Themes CSS, maps token custom properties from `@maintenance-planning/ui-tokens`, then defines base element, app shell, navigation, page header, status, metrics, table, alert and empty/loading/error state styling.
+The app imports the shared theme from `@maintenance-planning/ui-library/theme.scss`. That Sass entry imports Radix Themes CSS, maps token custom properties from `@maintenance-planning/ui-tokens`, then loads shared adapter and component-local styles for shell, navigation, page, status, metrics, table, alert and empty/loading/error state styling.
 
-App-local CSS remains responsible for route-specific composition. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
+Reusable route composition belongs to `packages/ui-library` adapters and component-local Sass. App-local CSS stays limited to app shell concerns. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
 
-Focused Playwright visual baselines cover `/ui-library` across desktop and mobile viewports. They complement route-level smoke tests and do not replace service-boundary tests.
+Focused Playwright visual baselines cover `/ui-library` plus routed workbench evidence across desktop, tablet and mobile light/dark viewports. They complement route-level smoke tests and do not replace service-boundary tests.
 
 ## Runtime Boundary
 

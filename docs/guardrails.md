@@ -28,4 +28,4 @@ Reviewer evidence checks required repo files, workspace boundaries, root scripts
 
 Token tests cover required theme variables and contrast-sensitive foreground/background pairs. Asset tests cover neutral wordmark metadata, icon-map coverage and local provenance notes. Theme tests confirm that the UI-library stylesheet imports token custom properties before shared component styles.
 
-The `/ui-library` route is an internal reviewer/developer evidence page. `pnpm test:visual:showcase` verifies the route across desktop and mobile viewports and checks accessible names plus tone contrast for reusable states.
+The `/ui-library` route is an internal reviewer/developer evidence page. `pnpm test:visual:showcase` verifies the route plus routed workbench evidence across desktop, tablet and mobile light/dark viewports and checks accessible names plus tone contrast for reusable states.

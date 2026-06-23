@@ -1,12 +1,16 @@
 import {
-  DataTable,
-  EmptyState,
-  MetricSummary,
-  PageHeader,
-  QuietNote,
-  StatusBadge,
-  WorkbenchPanel,
-  type DataTableColumn
+  PlannerActionLink,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerDataTable,
+  PlannerEmptyState,
+  PlannerMetricSummary,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerQuietNote,
+  PlannerStatusBadge,
+  PlannerTableCellStack,
+  type PlannerDataTableColumn
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
@@ -31,21 +35,20 @@ type PlanningRunRow = {
   readonly status: string;
 };
 
-const planningRunColumns: readonly DataTableColumn<PlanningRunRow>[] = [
+const planningRunColumns: readonly PlannerDataTableColumn<PlanningRunRow>[] = [
   {
     header: "Run",
     key: "run",
     render: (run) => (
-      <span className="table-stack">
-        <strong>{run.runNumber}</strong>
-        <span>{run.id}</span>
-      </span>
+      <PlannerTableCellStack detail={run.id} title={run.runNumber} />
     )
   },
   {
     header: "Status",
     key: "status",
-    render: (run) => <StatusBadge tone={toneForStatus(run.status)}>{run.status}</StatusBadge>
+    render: (run) => (
+      <PlannerStatusBadge tone={toneForStatus(run.status)}>{run.status}</PlannerStatusBadge>
+    )
   },
   {
     align: "end",
@@ -69,7 +72,7 @@ const planningRunColumns: readonly DataTableColumn<PlanningRunRow>[] = [
     header: "Detail",
     key: "detail",
     render: (run) => (
-      <Link className="table-link" href={`/planning-runs/${run.id}`}>
+      <Link href={`/planning-runs/${run.id}`}>
         Open run
       </Link>
     )
@@ -86,45 +89,46 @@ export default async function PlanningRunsPage() {
     const rows = [toPlanningRunRow(recommendationSet)];
 
     return (
-      <main className="page-stack">
-        <PageHeader
+      <PlannerPage>
+        <PlannerPageHeader
           badge={
-            <span className="badge-stack">
-              <StatusBadge tone="success">Run review</StatusBadge>
-              <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-            </span>
+            <PlannerBadgeGroup>
+              <PlannerStatusBadge tone="success">Run review</PlannerStatusBadge>
+              <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+            </PlannerBadgeGroup>
           }
           description="Inspect the current service-supplied planning run before opening the recommendation detail."
           title={section.label}
         />
 
-        <MetricSummary
+        <PlannerMetricSummary
           ariaLabel="Planning run summary"
           items={buildPlanningRunMetrics(recommendationSet)}
           variant="compact"
         />
 
-        <QuietNote title="Run list scope">
+        <PlannerQuietNote title="Run list scope">
           This view lists the current synthetic planning run exposed by the service contract.
           Historical run browsing is left to a later API-backed stage.
-        </QuietNote>
+        </PlannerQuietNote>
 
-        <WorkbenchPanel className="console-panel" labelledBy="planning-run-list">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Planning runs</p>
-              <h2 id="planning-run-list">Current run list</h2>
-            </div>
-            <Link className="primary-link" href="/recommendations">
-              Review recommendations
-            </Link>
-          </div>
-          <DataTable
+        <PlannerContentSection
+          actions={
+            <PlannerActionLink asChild>
+              <Link href="/recommendations">Review recommendations</Link>
+            </PlannerActionLink>
+          }
+          eyebrow="Planning runs"
+          title="Current run list"
+          titleId="planning-run-list"
+          variant="surface"
+        >
+          <PlannerDataTable
             caption="Planning run list"
             columns={planningRunColumns}
             density="compact"
             emptyState={
-              <EmptyState
+              <PlannerEmptyState
                 description="The service returned no planning runs for this synthetic review state."
                 title="No planning runs"
               />
@@ -132,8 +136,8 @@ export default async function PlanningRunsPage() {
             getRowKey={(run) => run.id}
             rows={rows}
           />
-        </WorkbenchPanel>
-      </main>
+        </PlannerContentSection>
+      </PlannerPage>
     );
   } catch (error) {
     return (

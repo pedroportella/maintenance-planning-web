@@ -1,0 +1,17 @@
+.planner-badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mp-space-xs);
+  align-items: center;
+  min-width: 0;
+}
+
+.planner-badge-group[data-align="end"] {
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .planner-badge-group[data-align="end"] {
+    justify-content: flex-start;
+  }
+}

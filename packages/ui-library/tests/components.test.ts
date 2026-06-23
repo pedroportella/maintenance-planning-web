@@ -154,7 +154,7 @@ describe("ui-library components", () => {
     expect(markup).toContain('aria-current="page"');
     expect(themeScss).toContain("../layout/PlannerSideNav/PlannerSideNav");
     expect(sideNavScss).toContain(".planner-side-nav-link:focus-visible");
-    expect(themeScss).toContain(".segmented-nav-link:focus-visible");
+    expect(themeScss).toContain("../components/segmented-nav/segmented-nav");
   });
 
   it("publishes loading and error states with live-region roles", () => {

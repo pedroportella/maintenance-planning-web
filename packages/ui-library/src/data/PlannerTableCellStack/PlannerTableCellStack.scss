@@ -1,0 +1,25 @@
+.planner-table-cell-stack {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.planner-table-cell-stack-title,
+.planner-table-cell-stack-detail {
+  min-width: 0;
+}
+
+.planner-table-cell-stack-title a,
+.planner-table-cell-stack-detail a {
+  color: var(--accent-11);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+.planner-table-cell-stack-title a:focus-visible,
+.planner-table-cell-stack-detail a:focus-visible {
+  outline: 2px solid var(--mp-color-focus);
+  outline-offset: 2px;
+}

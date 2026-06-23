@@ -2,12 +2,14 @@
 
 import { useMemo, useState } from "react";
 import {
-  DataTable,
-  EmptyState,
+  PlannerBadgeGroup,
+  PlannerDataTable,
+  PlannerEmptyState,
   PlannerFilterToolbar,
   PlannerPagination,
-  StatusBadge,
-  type DataTableColumn,
+  PlannerStatusBadge,
+  PlannerTableCellStack,
+  type PlannerDataTableColumn,
   type PlannerDataTableSortDirection,
   type SegmentedNavOption
 } from "@maintenance-planning/ui-library";
@@ -88,7 +90,7 @@ export function WorkOrderBacklogTable({
   };
 
   return (
-    <div className="work-order-backlog-table">
+    <div>
       <PlannerFilterToolbar
         ariaLabel="Work-order table controls"
         clearAction={{
@@ -114,12 +116,12 @@ export function WorkOrderBacklogTable({
           value: searchQuery
         }}
       />
-      <DataTable
+      <PlannerDataTable
         caption="Planner work-order triage"
         columns={backlogColumns}
         density="compact"
         emptyState={
-          <EmptyState
+          <PlannerEmptyState
             description={
               searchQuery
                 ? `No work orders match "${searchQuery}" within the ${filterLabel.toLowerCase()} filter.`
@@ -146,7 +148,7 @@ function buildBacklogColumns(
   planningRunId: string,
   sortState: WorkOrderBacklogSortState,
   setSortState: (state: WorkOrderBacklogSortState) => void
-): readonly DataTableColumn<WorkOrderBacklogItem>[] {
+): readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] {
   const sortColumn = (columnKey: WorkOrderBacklogSortKey) => {
     setSortState(nextSortState(sortState, columnKey));
   };
@@ -157,10 +159,7 @@ function buildBacklogColumns(
       key: "work-order",
       onSort: () => sortColumn("work-order"),
       render: (item) => (
-        <span className="table-stack">
-          <strong>{item.workOrderNumber}</strong>
-          <span>{item.title}</span>
-        </span>
+        <PlannerTableCellStack detail={item.title} title={item.workOrderNumber} />
       ),
       sortLabel: "Sort by work order",
       sortable: true
@@ -170,14 +169,14 @@ function buildBacklogColumns(
       key: "readiness",
       onSort: () => sortColumn("readiness"),
       render: (item) => (
-        <span className="badge-stack">
-          <StatusBadge tone={toneForReadiness(item.readinessStatus)}>
+        <PlannerBadgeGroup>
+          <PlannerStatusBadge tone={toneForReadiness(item.readinessStatus)}>
             {item.readinessStatus}
-          </StatusBadge>
-          <StatusBadge tone={toneForPlannerState(item.plannerState)}>
+          </PlannerStatusBadge>
+          <PlannerStatusBadge tone={toneForPlannerState(item.plannerState)}>
             {item.plannerState}
-          </StatusBadge>
-        </span>
+          </PlannerStatusBadge>
+        </PlannerBadgeGroup>
       ),
       sortLabel: "Sort by readiness",
       sortable: true
@@ -191,16 +190,15 @@ function buildBacklogColumns(
       header: "Package",
       key: "package",
       render: (item) => (
-        <span className="table-stack">
-          <strong>{item.packageNumber}</strong>
-          <Link
-            className="table-link"
-            href={packageRecommendationHref(item.packageId, { planningRunId })}
-          >
-            Open package
-            <span className="sr-only"> {item.packageNumber}</span>
-          </Link>
-        </span>
+        <PlannerTableCellStack
+          detail={
+            <Link href={packageRecommendationHref(item.packageId, { planningRunId })}>
+              Open package
+              <span className="sr-only"> {item.packageNumber}</span>
+            </Link>
+          }
+          title={item.packageNumber}
+        />
       )
     },
     {
@@ -225,9 +223,9 @@ function buildBacklogColumns(
       header: "Latest decision",
       key: "decision",
       render: (item) => (
-        <StatusBadge tone={toneForDecision(item.latestDecision?.decision)}>
+        <PlannerStatusBadge tone={toneForDecision(item.latestDecision?.decision)}>
           {latestDecisionText(item.latestDecision)}
-        </StatusBadge>
+        </PlannerStatusBadge>
       )
     }
   ];

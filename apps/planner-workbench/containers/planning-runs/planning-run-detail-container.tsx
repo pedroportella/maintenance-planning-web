@@ -1,12 +1,17 @@
 import {
-  Alert,
-  DataTable,
-  EmptyState,
-  MetricSummary,
-  PageHeader,
-  StatusBadge,
-  WorkbenchPanel,
-  type DataTableColumn
+  PlannerActionGroup,
+  PlannerActionLink,
+  PlannerAlert,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerDataTable,
+  PlannerEmptyState,
+  PlannerMetricSummary,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerStatusBadge,
+  PlannerTableCellStack,
+  type PlannerDataTableColumn
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
@@ -34,32 +39,33 @@ type PlanningRunDetailPageProps = {
 
 function buildRecommendationColumns(
   planningRunId: string
-): readonly DataTableColumn<PlannerRecommendation>[] {
+): readonly PlannerDataTableColumn<PlannerRecommendation>[] {
   return [
   {
     header: "Package",
     key: "package",
     render: (recommendation) => (
-      <span className="table-stack">
-        <Link
-          className="table-link"
-          href={packageRecommendationHref(recommendation.packageId, {
-            planningRunId
-          })}
-        >
-          {recommendation.packageNumber}
-        </Link>
-        <span>{recommendation.title}</span>
-      </span>
+      <PlannerTableCellStack
+        detail={recommendation.title}
+        title={
+          <Link
+            href={packageRecommendationHref(recommendation.packageId, {
+              planningRunId
+            })}
+          >
+            {recommendation.packageNumber}
+          </Link>
+        }
+      />
     )
   },
   {
     header: "Readiness",
     key: "readiness",
     render: (recommendation) => (
-      <StatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
+      <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
         {recommendation.sourceDataReadiness.status}
-      </StatusBadge>
+      </PlannerStatusBadge>
     )
   },
   {
@@ -89,9 +95,9 @@ function buildRecommendationColumns(
       const decision = recommendation.decisions.at(-1);
 
       return (
-        <StatusBadge tone={toneForDecision(decision?.decision)}>
+        <PlannerStatusBadge tone={toneForDecision(decision?.decision)}>
           {latestDecisionText(decision)}
-        </StatusBadge>
+        </PlannerStatusBadge>
       );
     }
   }
@@ -112,59 +118,58 @@ export default async function PlanningRunDetailPage({ params }: PlanningRunDetai
     const recommendationColumns = buildRecommendationColumns(recommendationSet.planningRunId);
 
     return (
-      <main className="page-stack">
-        <PageHeader
+      <PlannerPage>
+        <PlannerPageHeader
           actions={
-            <span className="action-row">
-              <Link className="primary-link" href="/recommendations">
-                Open decision workbench
-              </Link>
-              <Link className="secondary-link" href="/operations-posture">
-                Open operations posture
-              </Link>
-            </span>
+            <PlannerActionGroup>
+              <PlannerActionLink asChild>
+                <Link href="/recommendations">Open decision workbench</Link>
+              </PlannerActionLink>
+              <PlannerActionLink asChild priority="secondary">
+                <Link href="/operations-posture">Open operations posture</Link>
+              </PlannerActionLink>
+            </PlannerActionGroup>
           }
           badge={
-            <span className="badge-stack">
-              <StatusBadge tone={toneForStatus(recommendationSet.status)}>
+            <PlannerBadgeGroup align="end">
+              <PlannerStatusBadge tone={toneForStatus(recommendationSet.status)}>
                 {recommendationSet.status}
-              </StatusBadge>
-              <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-            </span>
+              </PlannerStatusBadge>
+              <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+            </PlannerBadgeGroup>
           }
           description={`Review package groups, source-data readiness and decision history for ${recommendationSet.runNumber}.`}
           title="Planning run detail"
         />
 
-        <MetricSummary
+        <PlannerMetricSummary
           ariaLabel="Planning run detail summary"
           items={buildPlanningRunMetrics(recommendationSet)}
           variant="compact"
         />
 
-        <Alert title="Run review posture" tone={blockedCount > 0 ? "warning" : "success"}>
+        <PlannerAlert title="Run review posture" tone={blockedCount > 0 ? "warning" : "success"}>
           <p>
             {blockedCount > 0
               ? `${blockedCount} package group cannot be packaged yet because service-owned constraints remain visible.`
               : "No blockers are present in this synthetic planning-run response."}
           </p>
-        </Alert>
+        </PlannerAlert>
 
-        <WorkbenchPanel className="console-panel" labelledBy="planning-run-recommendations">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Recommendation detail</p>
-              <h2 id="planning-run-recommendations">{recommendationSet.runNumber}</h2>
-              <p>Generated window starts {formatUtc(recommendationSet.recommendations[0]?.plannedStartUtc)}.</p>
-            </div>
-            <StatusBadge tone="neutral">{recommendationSet.planningRunId}</StatusBadge>
-          </div>
-          <DataTable
+        <PlannerContentSection
+          badge={<PlannerStatusBadge tone="neutral">{recommendationSet.planningRunId}</PlannerStatusBadge>}
+          description={`Generated window starts ${formatUtc(recommendationSet.recommendations[0]?.plannedStartUtc)}.`}
+          eyebrow="Recommendation detail"
+          title={recommendationSet.runNumber}
+          titleId="planning-run-recommendations"
+          variant="surface"
+        >
+          <PlannerDataTable
             caption="Planning run recommendation detail"
             columns={recommendationColumns}
             density="compact"
             emptyState={
-              <EmptyState
+              <PlannerEmptyState
                 description="The service returned no recommendations for this planning run."
                 title="No recommendations"
               />
@@ -172,8 +177,8 @@ export default async function PlanningRunDetailPage({ params }: PlanningRunDetai
             getRowKey={(recommendation) => recommendation.packageId}
             rows={recommendationSet.recommendations}
           />
-        </WorkbenchPanel>
-      </main>
+        </PlannerContentSection>
+      </PlannerPage>
     );
   } catch (error) {
     return (

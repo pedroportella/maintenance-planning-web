@@ -1,0 +1,11 @@
+.planner-plain-list {
+  display: grid;
+  gap: var(--mp-space-xs);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.planner-plain-list li {
+  min-width: 0;
+}

@@ -1,13 +1,17 @@
 import {
-  Alert,
-  DataTable,
-  EmptyState,
-  MetricSummary,
-  PageHeader,
-  QuietNote,
-  StatusBadge,
-  WorkbenchPanel,
-  type DataTableColumn
+  PlannerActionLink,
+  PlannerAlert,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerDataTable,
+  PlannerEmptyState,
+  PlannerMetricSummary,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerQuietNote,
+  PlannerStatusBadge,
+  PlannerTableCellStack,
+  type PlannerDataTableColumn
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
@@ -38,30 +42,30 @@ type RecommendationListContainerProps = {
 
 function buildPackageColumns(
   planningRunId: string
-): readonly DataTableColumn<PlannerRecommendation>[] {
+): readonly PlannerDataTableColumn<PlannerRecommendation>[] {
   return [
   {
     header: "Package",
     key: "package",
     render: (recommendation) => (
-      <span className="table-stack">
-        <strong>{recommendation.packageNumber}</strong>
-        <span>{recommendation.title}</span>
-      </span>
+      <PlannerTableCellStack
+        detail={recommendation.title}
+        title={recommendation.packageNumber}
+      />
     )
   },
   {
     header: "Status",
     key: "status",
     render: (recommendation) => (
-      <span className="badge-stack">
-        <StatusBadge tone={toneForStatus(recommendation.status)}>
+      <PlannerBadgeGroup>
+        <PlannerStatusBadge tone={toneForStatus(recommendation.status)}>
           {recommendation.status}
-        </StatusBadge>
-        <StatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
+        </PlannerStatusBadge>
+        <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
           {recommendation.sourceDataReadiness.status}
-        </StatusBadge>
-      </span>
+        </PlannerStatusBadge>
+      </PlannerBadgeGroup>
     )
   },
   {
@@ -95,9 +99,9 @@ function buildPackageColumns(
       const decision = latestDecision(recommendation);
 
       return (
-        <StatusBadge tone={toneForDecision(decision?.decision)}>
+        <PlannerStatusBadge tone={toneForDecision(decision?.decision)}>
           {latestDecisionText(decision)}
-        </StatusBadge>
+        </PlannerStatusBadge>
       );
     }
   },
@@ -106,7 +110,6 @@ function buildPackageColumns(
     key: "detail",
     render: (recommendation) => (
       <Link
-        className="table-link"
         href={packageRecommendationHref(recommendation.packageId, { planningRunId })}
       >
         Open package
@@ -131,26 +134,28 @@ export default async function RecommendationListContainer({
     const packageColumns = buildPackageColumns(recommendationSet.planningRunId);
 
     return (
-      <main className="page-stack">
-        <PageHeader
+      <PlannerPage>
+        <PlannerPageHeader
           actions={
-            <Link className="primary-link" href={`/planning-runs/${recommendationSet.planningRunId}`}>
-              Open planning run
-            </Link>
+            <PlannerActionLink asChild>
+              <Link href={`/planning-runs/${recommendationSet.planningRunId}`}>
+                Open planning run
+              </Link>
+            </PlannerActionLink>
           }
           badge={
-            <span className="badge-stack">
-              <StatusBadge tone={toneForStatus(recommendationSet.status)}>
+            <PlannerBadgeGroup>
+              <PlannerStatusBadge tone={toneForStatus(recommendationSet.status)}>
                 {recommendationSet.status}
-              </StatusBadge>
-              <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-            </span>
+              </PlannerStatusBadge>
+              <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+            </PlannerBadgeGroup>
           }
           description="Scan package recommendations before opening one package for explanation, blockers, work orders and planner decision."
           title={section.label}
         />
 
-        <MetricSummary
+        <PlannerMetricSummary
           ariaLabel="Recommendation workbench summary"
           items={buildRecommendationMetrics(recommendationSet)}
           variant="compact"
@@ -159,35 +164,36 @@ export default async function RecommendationListContainer({
         <RecommendationDecisionNotice params={params} />
 
         {blockedCount > 0 ? (
-          <Alert title="Decision review scope" tone="warning">
+          <PlannerAlert title="Decision review scope" tone="warning">
             <p>
               Some package groups cannot be packaged yet. Open a package to review blockers and
               record an accept, reject or defer decision through the service boundary.
             </p>
-          </Alert>
+          </PlannerAlert>
         ) : (
-          <QuietNote title="Decision review scope">
+          <PlannerQuietNote title="Decision review scope">
             All package groups in this synthetic response are ready for planner decision review.
-          </QuietNote>
+          </PlannerQuietNote>
         )}
 
-        <WorkbenchPanel className="console-panel" labelledBy="recommendation-queue">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Package recommendations</p>
-              <h2 id="recommendation-queue">Package queue</h2>
-              <p>{recommendationSet.runNumber} is the current service-supplied planning run.</p>
-            </div>
-            <StatusBadge tone="neutral">
+        <PlannerContentSection
+          badge={
+            <PlannerStatusBadge tone="neutral">
               {recommendationSet.recommendations.length} packages
-            </StatusBadge>
-          </div>
-          <DataTable
+            </PlannerStatusBadge>
+          }
+          description={`${recommendationSet.runNumber} is the current service-supplied planning run.`}
+          eyebrow="Package recommendations"
+          title="Package queue"
+          titleId="recommendation-queue"
+          variant="surface"
+        >
+          <PlannerDataTable
             caption="Package recommendation queue"
             columns={packageColumns}
             density="compact"
             emptyState={
-              <EmptyState
+              <PlannerEmptyState
                 description="The service returned no package recommendations for this planning run."
                 title="No recommendations"
               />
@@ -195,8 +201,8 @@ export default async function RecommendationListContainer({
             getRowKey={(recommendation) => recommendation.packageId}
             rows={recommendationSet.recommendations}
           />
-        </WorkbenchPanel>
-      </main>
+        </PlannerContentSection>
+      </PlannerPage>
     );
   } catch (error) {
     return (

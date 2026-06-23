@@ -24,8 +24,10 @@ export type {
   PlannerMetricSummaryProps,
   PlannerMetricSummarySlot,
   PlannerPaginationProps,
+  PlannerPlainListProps,
   PlannerSummaryListItem,
-  PlannerSummaryListProps
+  PlannerSummaryListProps,
+  PlannerTableCellStackProps
 } from "./data";
 export {
   PlannerDataTable,
@@ -33,7 +35,9 @@ export {
   PlannerMetricCard,
   PlannerMetricSummary,
   PlannerPagination,
-  PlannerSummaryList
+  PlannerPlainList,
+  PlannerSummaryList,
+  PlannerTableCellStack
 } from "./data";
 export type { EmptyStateProps } from "./components/empty-state/empty-state";
 export { EmptyState } from "./components/empty-state/empty-state";
@@ -41,6 +45,7 @@ export type { ErrorStateProps, LoadingStateProps } from "./components/loading-st
 export { ErrorState, LoadingState } from "./components/loading-state/loading-state";
 export type {
   PlannerAlertProps,
+  PlannerBadgeGroupProps,
   PlannerEmptyStateProps,
   PlannerLoadingStateProps,
   PlannerQuietNoteProps,
@@ -49,6 +54,7 @@ export type {
 } from "./feedback";
 export {
   PlannerAlert,
+  PlannerBadgeGroup,
   PlannerEmptyState,
   PlannerLoadingState,
   PlannerQuietNote,
@@ -75,12 +81,16 @@ export {
 } from "./forms";
 export type {
   PlannerContentSectionProps,
+  PlannerActionGroupProps,
+  PlannerActionLinkPriority,
+  PlannerActionLinkProps,
   PlannerAppLayoutBrand,
   PlannerAppLayoutLinkProps,
   PlannerAppLayoutNavItem,
   PlannerAppLayoutProps,
   PlannerPageHeaderProps,
   PlannerPageProps,
+  PlannerResponsiveGridProps,
   PlannerSideNavItem,
   PlannerSideNavLinkProps,
   PlannerSideNavProps,
@@ -88,9 +98,12 @@ export type {
 } from "./layout";
 export {
   PlannerContentSection,
+  PlannerActionGroup,
+  PlannerActionLink,
   PlannerAppLayout,
   PlannerPageHeader,
   PlannerPage,
+  PlannerResponsiveGrid,
   PlannerSideNav,
   PlannerWorkflowLayout
 } from "./layout";

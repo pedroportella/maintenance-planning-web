@@ -35,9 +35,10 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "showcase-desktop",
+      name: "showcase-desktop-light",
       use: {
         ...devices["Desktop Chrome"],
+        colorScheme: "light",
         deviceScaleFactor: 1,
         viewport: {
           height: 1400,
@@ -46,9 +47,54 @@ export default defineConfig({
       }
     },
     {
-      name: "showcase-mobile",
+      name: "showcase-tablet-light",
+      use: {
+        ...devices["Desktop Chrome"],
+        colorScheme: "light",
+        deviceScaleFactor: 1,
+        viewport: {
+          height: 1180,
+          width: 900
+        }
+      }
+    },
+    {
+      name: "showcase-mobile-light",
       use: {
         ...devices["Pixel 5"],
+        colorScheme: "light",
+        deviceScaleFactor: 1
+      }
+    },
+    {
+      name: "showcase-desktop-dark",
+      use: {
+        ...devices["Desktop Chrome"],
+        colorScheme: "dark",
+        deviceScaleFactor: 1,
+        viewport: {
+          height: 1400,
+          width: 1440
+        }
+      }
+    },
+    {
+      name: "showcase-tablet-dark",
+      use: {
+        ...devices["Desktop Chrome"],
+        colorScheme: "dark",
+        deviceScaleFactor: 1,
+        viewport: {
+          height: 1180,
+          width: 900
+        }
+      }
+    },
+    {
+      name: "showcase-mobile-dark",
+      use: {
+        ...devices["Pixel 5"],
+        colorScheme: "dark",
         deviceScaleFactor: 1
       }
     }

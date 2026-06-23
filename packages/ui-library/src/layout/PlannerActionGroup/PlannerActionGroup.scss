@@ -1,0 +1,30 @@
+.planner-action-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mp-space-sm);
+  align-items: center;
+  min-width: 0;
+}
+
+.planner-action-group[data-align="end"] {
+  justify-content: flex-end;
+}
+
+.planner-action-link {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .planner-action-group,
+  .planner-action-link {
+    width: 100%;
+  }
+
+  .planner-action-group[data-align="end"] {
+    justify-content: flex-start;
+  }
+
+  .planner-action-link {
+    white-space: normal;
+  }
+}

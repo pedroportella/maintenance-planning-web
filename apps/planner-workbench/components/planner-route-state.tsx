@@ -1,9 +1,10 @@
 import {
-  ErrorState,
-  LoadingState,
-  PageHeader,
-  StatusBadge,
-  WorkbenchPanel
+  PlannerContentSection,
+  PlannerEmptyState,
+  PlannerLoadingState,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerStatusBadge
 } from "@maintenance-planning/ui-library";
 import { toPlannerRouteIssue } from "@/lib/planner-route-state";
 
@@ -18,16 +19,21 @@ export function PlannerRouteFailure({ description, error, title }: PlannerRouteF
   const tone = issue.kind === "unauthorized" || issue.kind === "request" ? "critical" : "warning";
 
   return (
-    <main className="page-stack">
-      <PageHeader
-        badge={<StatusBadge tone={tone}>{issue.kind}</StatusBadge>}
+    <PlannerPage>
+      <PlannerPageHeader
+        badge={<PlannerStatusBadge tone={tone}>{issue.kind}</PlannerStatusBadge>}
         description={description}
         title={title}
       />
-      <WorkbenchPanel>
-        <ErrorState description={issue.description} title={issue.title} />
-      </WorkbenchPanel>
-    </main>
+      <PlannerContentSection variant="surface">
+        <PlannerEmptyState
+          description={issue.description}
+          role="alert"
+          title={issue.title}
+          tone="critical"
+        />
+      </PlannerContentSection>
+    </PlannerPage>
   );
 }
 
@@ -37,15 +43,15 @@ type PlannerRouteLoadingProps = {
 
 export function PlannerRouteLoading({ title }: PlannerRouteLoadingProps) {
   return (
-    <main className="page-stack">
-      <PageHeader
-        badge={<StatusBadge tone="info">Loading</StatusBadge>}
+    <PlannerPage>
+      <PlannerPageHeader
+        badge={<PlannerStatusBadge tone="info">Loading</PlannerStatusBadge>}
         description="Preparing the synthetic planner review state through the service boundary."
         title={title}
       />
-      <WorkbenchPanel className="route-loading-panel">
-        <LoadingState label="Loading planner review data" skeletonRows={3} />
-      </WorkbenchPanel>
-    </main>
+      <PlannerContentSection variant="surface">
+        <PlannerLoadingState label="Loading planner review data" skeletonRows={3} />
+      </PlannerContentSection>
+    </PlannerPage>
   );
 }

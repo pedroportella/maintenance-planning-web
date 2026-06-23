@@ -1,8 +1,12 @@
 import {
-  ErrorState,
-  PageHeader,
-  StatusBadge,
-  WorkbenchPanel
+  PlannerActionGroup,
+  PlannerActionLink,
+  PlannerBadgeGroup,
+  PlannerContentSection,
+  PlannerEmptyState,
+  PlannerPage,
+  PlannerPageHeader,
+  PlannerStatusBadge
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
@@ -64,28 +68,32 @@ export default async function RecommendationDetailContainer({
     }
 
     return (
-      <main className="page-stack">
-        <PageHeader
+      <PlannerPage>
+        <PlannerPageHeader
           actions={
-            <span className="action-row">
-              <Link className="primary-link" href="/recommendations">
+            <PlannerActionGroup>
+              <PlannerActionLink asChild>
+                <Link href="/recommendations">
                 Back to recommendations
-              </Link>
-              <Link className="secondary-link" href={`/planning-runs/${recommendationSet.planningRunId}`}>
+                </Link>
+              </PlannerActionLink>
+              <PlannerActionLink asChild priority="secondary">
+                <Link href={`/planning-runs/${recommendationSet.planningRunId}`}>
                 Open planning run
-              </Link>
-            </span>
+                </Link>
+              </PlannerActionLink>
+            </PlannerActionGroup>
           }
           badge={
-            <span className="badge-stack">
-              <StatusBadge tone={toneForStatus(recommendation.status)}>
+            <PlannerBadgeGroup align="end">
+              <PlannerStatusBadge tone={toneForStatus(recommendation.status)}>
                 {recommendation.status}
-              </StatusBadge>
-              <StatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
+              </PlannerStatusBadge>
+              <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
                 {recommendation.sourceDataReadiness.status}
-              </StatusBadge>
-              <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-            </span>
+              </PlannerStatusBadge>
+              <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+            </PlannerBadgeGroup>
           }
           description={`Review ${recommendation.title} from ${recommendationSet.runNumber}.`}
           title={recommendation.packageNumber}
@@ -97,7 +105,7 @@ export default async function RecommendationDetailContainer({
           planningRunId={recommendationSet.planningRunId}
           recommendation={recommendation}
         />
-      </main>
+      </PlannerPage>
     );
   } catch (error) {
     return (
@@ -122,33 +130,38 @@ function RecommendationNotFound({
   const section = getWorkbenchSection("recommendations");
 
   return (
-    <main className="page-stack">
-      <PageHeader
+    <PlannerPage>
+      <PlannerPageHeader
         actions={
-          <span className="action-row">
-            <Link className="primary-link" href="/recommendations">
+          <PlannerActionGroup>
+            <PlannerActionLink asChild>
+              <Link href="/recommendations">
               Back to recommendations
-            </Link>
-            <Link className="secondary-link" href={`/planning-runs/${recommendationSet.planningRunId}`}>
+              </Link>
+            </PlannerActionLink>
+            <PlannerActionLink asChild priority="secondary">
+              <Link href={`/planning-runs/${recommendationSet.planningRunId}`}>
               Open planning run
-            </Link>
-          </span>
+              </Link>
+            </PlannerActionLink>
+          </PlannerActionGroup>
         }
         badge={
-          <span className="badge-stack">
-            <StatusBadge tone="warning">Not found</StatusBadge>
-            <StatusBadge tone="neutral">{runtime.mode} mode</StatusBadge>
-          </span>
+          <PlannerBadgeGroup align="end">
+            <PlannerStatusBadge tone="warning">Not found</PlannerStatusBadge>
+            <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
+          </PlannerBadgeGroup>
         }
         description={`No package recommendation matched ${packageId} in ${recommendationSet.runNumber}.`}
         title="Package recommendation not found"
       />
-      <WorkbenchPanel>
-        <ErrorState
+      <PlannerContentSection variant="surface">
+        <PlannerEmptyState
           description={`Open ${section.label.toLowerCase()} and choose a package from the current synthetic planning run. Visible package numbers are labels; package detail links use stable package ids.`}
           title="Package could not be found"
+          tone="critical"
         />
-      </WorkbenchPanel>
-    </main>
+      </PlannerContentSection>
+    </PlannerPage>
   );
 }
