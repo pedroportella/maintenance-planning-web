@@ -22,6 +22,8 @@
     "test:links": "node scripts/markdown-link-check.mjs",
     "test:reviewer-pack": "node scripts/run-playwright.mjs test --config playwright.reviewer.config.mjs",
     "test:reviewer-evidence": "node scripts/reviewer-evidence-smoke.mjs",
+    "test:visual:library": "node scripts/run-playwright.mjs test --config playwright.library.config.mjs",
+    "test:visual:library:update": "node scripts/run-playwright.mjs test --config playwright.library.config.mjs --update-snapshots",
     "test:visual:showcase": "node scripts/run-playwright.mjs test --config playwright.showcase.config.mjs",
     "test:visual:showcase:update": "node scripts/run-playwright.mjs test --config playwright.showcase.config.mjs --update-snapshots",
     "typecheck": "node scripts/workspace-runner.mjs typecheck",

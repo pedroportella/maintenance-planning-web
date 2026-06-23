@@ -70,6 +70,7 @@ For fast UI iteration, use the mock checks:
 ```sh
 pnpm test:e2e:mock
 pnpm test:reviewer-pack
+pnpm test:visual:library
 pnpm test:visual:showcase
 ```
 
@@ -99,7 +100,7 @@ Full non-Docker gate:
 pnpm verify
 ```
 
-The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` plus routed workbench evidence across desktop, tablet and mobile light/dark viewports. The post-build browser-bundle guard checks generated app assets for private backend origins.
+The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The library visual smoke checks only `/ui-library` across desktop, tablet and mobile light/dark viewports. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` plus routed workbench evidence across the same viewports. The post-build browser-bundle guard checks generated app assets for private backend origins.
 
 ## Optional Docker And Backend Checks
 

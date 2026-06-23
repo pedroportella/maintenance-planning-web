@@ -23,9 +23,10 @@ Useful local checks:
 pnpm --filter @maintenance-planning/planner-workbench check
 pnpm test:e2e:mock
 pnpm test:reviewer-pack
+pnpm test:visual:library
 pnpm test:visual:showcase
 ```
 
-The reviewer-pack screenshot workflow captures current planner and evidence surfaces under ignored test output. Container smoke and backend mode are optional repo-level checks for packaging and API-backed review. Backend mode is server-only and is exercised after the local API has been seeded with deterministic simulator data. Copy the repo root `.env.local.example` to `.env.local` only when the backend smoke needs local API settings.
+The library visual smoke checks only the `/ui-library` baselines. The reviewer-pack screenshot workflow captures current planner and evidence surfaces under ignored test output. Container smoke and backend mode are optional repo-level checks for packaging and API-backed review. Backend mode is server-only and is exercised after the local API has been seeded with deterministic simulator data. Copy the repo root `.env.local.example` to `.env.local` only when the backend smoke needs local API settings.
 
 See the repo [architecture](../../docs/architecture.md), [API integration](../../docs/api-integration.md) and [containerisation](../../docs/containerisation.md) notes.

@@ -30,6 +30,7 @@ pnpm check
 pnpm test:links
 pnpm test:e2e:mock
 pnpm test:reviewer-pack
+pnpm test:visual:library
 pnpm test:visual:showcase
 pnpm test:reviewer-evidence
 ```
@@ -38,7 +39,7 @@ The local mock checks do not require Docker, the API, the simulator or cloud cre
 
 The mock end-to-end smoke starts the workbench locally, verifies the planner shell, reviews coordination exceptions, operations posture and scenario outcomes, opens the recommendation workbench, records a mock planner decision, then checks planning-run detail and backlog state.
 
-The showcase visual smoke starts the workbench in deterministic mock mode and verifies `/ui-library` plus routed workbench evidence in desktop, tablet and mobile light/dark viewports. It checks accessible landmarks, route metadata, component family headings, table captions, live-region state names, tone contrast and focused screenshot baselines.
+The library visual smoke starts the workbench in deterministic mock mode and verifies only the `/ui-library` screenshot baselines in desktop, tablet and mobile light/dark viewports. The showcase visual smoke verifies `/ui-library` plus routed workbench evidence in those same viewports. It checks accessible landmarks, route metadata, component family headings, table captions, live-region state names, tone contrast and focused screenshot baselines.
 
 Generate a compact screenshot pack when review notes need current app images:
 
@@ -83,6 +84,8 @@ The post-build browser-bundle leakage guard expects `pnpm build` to have produce
 Refresh the showcase baselines only after intentionally reviewing the UI change:
 
 ```sh
+pnpm test:visual:library:update
+pnpm test:visual:library
 pnpm test:visual:showcase:update
 pnpm test:visual:showcase
 ```

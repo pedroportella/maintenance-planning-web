@@ -9,6 +9,7 @@ pnpm install
 pnpm guard
 pnpm check
 pnpm test:e2e:mock
+pnpm test:visual:library
 pnpm test:visual:showcase
 pnpm test:reviewer-pack
 ```
@@ -39,6 +40,7 @@ The default local review verification path includes:
 - source guardrails for generated artefacts, public docs, secrets and browser-visible backend origins;
 - workspace lint, type checks and package tests;
 - mock-mode browser checks for the planner journey and UI-library showcase;
+- focused `/ui-library` screenshot baselines for fast visual review;
 - reviewer evidence smoke for required docs, scripts, configs and local Markdown links.
 
 Run the post-build guard directly after `pnpm build` when checking deployment packaging:
