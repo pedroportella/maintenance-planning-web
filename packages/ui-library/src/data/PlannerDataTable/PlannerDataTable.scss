@@ -1,1 +1,41 @@
-/* RU-1 compatibility wrapper: current table styling remains unchanged until RU5. */
+.planner-data-table-region,
+.data-table-region {
+  min-width: 0;
+}
+
+.planner-data-table {
+  width: 100%;
+}
+
+.planner-data-table .rt-TableRootTable {
+  width: 100%;
+}
+
+.planner-data-table :where(.rt-TableColumnHeaderCell) {
+  color: var(--gray-11);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.planner-data-table :where(.rt-TableCell) {
+  overflow-wrap: anywhere;
+}
+
+.planner-data-table :where([data-align="end"]) {
+  text-align: right;
+}
+
+.planner-data-table-empty-cell {
+  padding: 0;
+}
+
+.planner-data-table-empty,
+.data-table-empty {
+  padding: var(--space-4);
+}
+
+.planner-data-table-caption {
+  width: auto;
+}

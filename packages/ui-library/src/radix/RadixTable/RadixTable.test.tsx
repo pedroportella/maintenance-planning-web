@@ -4,12 +4,13 @@ import { describe, expect, it } from "vitest";
 import { RadixTable } from "./RadixTable";
 
 describe("RadixTable", () => {
-  it("renders semantic table parts without a Radix runtime dependency", () => {
+  it("renders Radix table parts with native table semantics", () => {
     const markup = renderToStaticMarkup(
       createElement(
         RadixTable.Root,
         {
-          density: "compact"
+          density: "compact",
+          layout: "fixed"
         },
         createElement(RadixTable.Caption, null, "Queue"),
         createElement(
@@ -18,7 +19,8 @@ describe("RadixTable", () => {
           createElement(
             RadixTable.Row,
             null,
-            createElement(RadixTable.ColumnHeaderCell, null, "Work order")
+            createElement(RadixTable.ColumnHeaderCell, null, "Work order"),
+            createElement(RadixTable.ColumnHeaderCell, { justify: "end" }, "Hours")
           )
         ),
         createElement(
@@ -27,15 +29,20 @@ describe("RadixTable", () => {
           createElement(
             RadixTable.Row,
             null,
-            createElement(RadixTable.Cell, null, "WO-1000")
+            createElement(RadixTable.RowHeaderCell, null, "WO-1000"),
+            createElement(RadixTable.Cell, { justify: "end" }, "4")
           )
         )
       )
     );
 
     expect(markup).toContain("<table");
+    expect(markup).toContain("rt-TableRoot");
+    expect(markup).toContain("rt-TableRootTable");
+    expect(markup).toContain("rt-r-size-1");
     expect(markup).toContain("radix-table-compact");
     expect(markup).toContain('scope="col"');
+    expect(markup).toContain('scope="row"');
     expect(markup).toContain("WO-1000");
   });
 });

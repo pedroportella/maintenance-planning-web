@@ -1,5 +1,47 @@
 @import "@radix-ui/themes/styles.css";
 @import "@maintenance-planning/ui-tokens/theme.css";
+.planner-data-table-region,
+.data-table-region {
+  min-width: 0;
+}
+
+.planner-data-table {
+  width: 100%;
+}
+
+.planner-data-table .rt-TableRootTable {
+  width: 100%;
+}
+
+.planner-data-table :where(.rt-TableColumnHeaderCell) {
+  color: var(--gray-11);
+  font-size: var(--mp-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.planner-data-table :where(.rt-TableCell) {
+  overflow-wrap: anywhere;
+}
+
+.planner-data-table :where([data-align=end]) {
+  text-align: right;
+}
+
+.planner-data-table-empty-cell {
+  padding: 0;
+}
+
+.planner-data-table-empty,
+.data-table-empty {
+  padding: var(--space-4);
+}
+
+.planner-data-table-caption {
+  width: auto;
+}
+
 .planner-metric-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -971,6 +1013,23 @@ body.planner-app-layout-drawer-open {
 
 /* Skeleton shape and animation are owned by Radix Themes. */
 /* Spinner rendering and motion are owned by Radix Themes. */
+.radix-table {
+  min-width: 0;
+}
+
+.radix-table .rt-TableRootTable {
+  min-width: 720px;
+}
+
+.radix-table-caption {
+  color: var(--gray-11);
+  text-align: left;
+}
+
+.radix-table .rt-TableCell {
+  vertical-align: top;
+}
+
 .radix-text {
   min-width: 0;
 }
@@ -1323,62 +1382,6 @@ p {
   border-radius: var(--mp-radius-md);
   font-weight: 700;
   white-space: nowrap;
-}
-
-.data-table-region {
-  min-width: 0;
-}
-
-.data-table-scroll {
-  width: 100%;
-  overflow-x: auto;
-  border: 1px solid var(--mp-color-border);
-  border-radius: var(--mp-radius-md);
-  box-shadow: var(--mp-shadow-soft);
-}
-
-.data-table {
-  width: 100%;
-  min-width: 720px;
-  border-collapse: collapse;
-  background: var(--mp-color-surface);
-}
-
-.data-table th,
-.data-table td {
-  padding: 14px 16px;
-  text-align: left;
-  vertical-align: top;
-  border-bottom: 1px solid var(--mp-color-border);
-}
-
-.data-table-compact th,
-.data-table-compact td {
-  padding: 10px 12px;
-}
-
-.data-table th {
-  color: var(--mp-color-text-muted);
-  background: var(--mp-color-surface-raised);
-  font-size: var(--mp-font-size-xs);
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.data-table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.data-table tbody tr:hover td {
-  background: var(--mp-color-surface-muted);
-}
-
-.data-table [data-align=end] {
-  text-align: right;
-}
-
-.data-table-empty {
-  padding: var(--mp-space-lg);
 }
 
 .segmented-nav ul {

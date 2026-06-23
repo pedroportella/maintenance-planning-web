@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import {
   Alert,
-  DataTable,
   EmptyState,
   ErrorState,
   PageHeader,
@@ -9,6 +8,7 @@ import {
   PlannerCheckbox,
   PlannerAppLayout,
   PlannerContentSection,
+  PlannerDataTable,
   PlannerEmptyState,
   PlannerLoadingState,
   PlannerMetadataPanel,
@@ -35,7 +35,7 @@ import {
   RadixText,
   StatusBadge,
   WorkbenchPanel,
-  type DataTableColumn,
+  type PlannerDataTableColumn,
   type Tone
 } from "@maintenance-planning/ui-library";
 import {
@@ -119,7 +119,7 @@ const layoutFixtureNavItems = [
   }
 ] as const;
 
-const signalColumns: readonly DataTableColumn<OperationsSignalView>[] = [
+const signalColumns: readonly PlannerDataTableColumn<OperationsSignalView>[] = [
   {
     header: "Signal",
     key: "signal",
@@ -150,7 +150,7 @@ const signalColumns: readonly DataTableColumn<OperationsSignalView>[] = [
   }
 ];
 
-const workOrderColumns: readonly DataTableColumn<WorkOrderBacklogItem>[] = [
+const workOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] = [
   {
     header: "Work order",
     key: "work-order",
@@ -159,7 +159,8 @@ const workOrderColumns: readonly DataTableColumn<WorkOrderBacklogItem>[] = [
         <strong>{item.workOrderNumber}</strong>
         <span>{item.title}</span>
       </span>
-    )
+    ),
+    rowHeader: true
   },
   {
     header: "Readiness",
@@ -180,6 +181,36 @@ const workOrderColumns: readonly DataTableColumn<WorkOrderBacklogItem>[] = [
     header: "Hours",
     key: "hours",
     render: (item) => formatHours(item.estimatedHours)
+  }
+];
+
+const overflowingWorkOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] = [
+  ...workOrderColumns,
+  {
+    header: "Package",
+    key: "package",
+    render: (item) => (
+      <span className="table-stack">
+        <strong>{item.packageNumber}</strong>
+        <span>{item.packageTitle}</span>
+      </span>
+    )
+  },
+  {
+    header: "Priority",
+    key: "priority",
+    render: (item) => item.priority
+  },
+  {
+    header: "Lifecycle",
+    key: "lifecycle",
+    render: (item) => item.lifecycleStatus
+  },
+  {
+    align: "end",
+    header: "Due",
+    key: "due",
+    render: (item) => formatUtc(item.dueAtUtc)
   }
 ];
 
@@ -572,13 +603,13 @@ export default async function UiLibraryPage() {
           </div>
           <StatusBadge tone="warning">Scrollable on small screens</StatusBadge>
         </div>
-        <DataTable
+        <PlannerDataTable
           caption="UI showcase work-order rows"
           columns={workOrderColumns}
           getRowKey={(item) => item.id}
           rows={backlog.items}
         />
-        <DataTable
+        <PlannerDataTable
           caption="UI showcase empty table"
           columns={workOrderColumns}
           emptyState={
@@ -589,6 +620,19 @@ export default async function UiLibraryPage() {
           }
           getRowKey={(item) => item.id}
           rows={[]}
+        />
+        <PlannerDataTable
+          caption="UI showcase compact operations signals"
+          columns={signalColumns}
+          density="compact"
+          getRowKey={(signal) => signal.label}
+          rows={posture.signals}
+        />
+        <PlannerDataTable
+          caption="UI showcase horizontally overflowing work-order rows"
+          columns={overflowingWorkOrderColumns}
+          getRowKey={(item) => item.id}
+          rows={backlog.items}
         />
       </WorkbenchPanel>
 
@@ -649,7 +693,7 @@ export default async function UiLibraryPage() {
           ariaLabel="Showcase operations posture summary"
           items={buildOperationsMetrics(posture, sourceReadiness, scenarioSummary.latest)}
         />
-        <DataTable
+        <PlannerDataTable
           caption="UI showcase operations posture signals"
           columns={signalColumns}
           getRowKey={(signal) => signal.label}

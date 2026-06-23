@@ -2,6 +2,7 @@
 @use "palette/variables-dark" as dark;
 @use "palette/variables-light" as light;
 @use "palette/variables-root";
+@use "../data/PlannerDataTable/PlannerDataTable";
 @use "../data/PlannerMetricSummary/PlannerMetricSummary";
 @use "../data/PlannerSummaryList/PlannerSummaryList";
 @use "../feedback/PlannerAlert/PlannerAlert";
@@ -36,6 +37,7 @@
 @use "../radix/RadixSelect/RadixSelect";
 @use "../radix/RadixSkeleton/RadixSkeleton";
 @use "../radix/RadixSpinner/RadixSpinner";
+@use "../radix/RadixTable/RadixTable";
 @use "../radix/RadixText/RadixText";
 @use "../radix/RadixTextArea/RadixTextArea";
 @use "../radix/RadixTextInput/RadixTextInput";
@@ -165,62 +167,6 @@ p {
   border-radius: var(--mp-radius-md);
   font-weight: 700;
   white-space: nowrap;
-}
-
-.data-table-region {
-  min-width: 0;
-}
-
-.data-table-scroll {
-  width: 100%;
-  overflow-x: auto;
-  border: 1px solid var(--mp-color-border);
-  border-radius: var(--mp-radius-md);
-  box-shadow: var(--mp-shadow-soft);
-}
-
-.data-table {
-  width: 100%;
-  min-width: 720px;
-  border-collapse: collapse;
-  background: var(--mp-color-surface);
-}
-
-.data-table th,
-.data-table td {
-  padding: 14px 16px;
-  text-align: left;
-  vertical-align: top;
-  border-bottom: 1px solid var(--mp-color-border);
-}
-
-.data-table-compact th,
-.data-table-compact td {
-  padding: 10px 12px;
-}
-
-.data-table th {
-  color: var(--mp-color-text-muted);
-  background: var(--mp-color-surface-raised);
-  font-size: var(--mp-font-size-xs);
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.data-table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.data-table tbody tr:hover td {
-  background: var(--mp-color-surface-muted);
-}
-
-.data-table [data-align="end"] {
-  text-align: right;
-}
-
-.data-table-empty {
-  padding: var(--mp-space-lg);
 }
 
 .segmented-nav ul {
