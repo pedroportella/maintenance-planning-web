@@ -11,11 +11,13 @@ import {
   PlannerDataTable,
   PlannerDecisionPanel,
   PlannerEmptyState,
+  PlannerFilterToolbar,
   PlannerLoadingState,
   PlannerMetadataPanel,
   PlannerMetricSummary,
   PlannerPage,
   PlannerPageHeader,
+  PlannerPagination,
   PlannerQuietNote,
   PlannerRadioCards,
   PlannerRadioGroup,
@@ -184,6 +186,29 @@ const workOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] 
     header: "Hours",
     key: "hours",
     render: (item) => formatHours(item.estimatedHours)
+  }
+];
+
+const controlledWorkOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] = [
+  {
+    ...workOrderColumns[0],
+    sortable: true,
+    sortLabel: "Sort by work order"
+  },
+  workOrderColumns[1],
+  workOrderColumns[2],
+  {
+    ...workOrderColumns[3],
+    sortable: true,
+    sortLabel: "Sort by estimated hours"
+  },
+  {
+    align: "end",
+    header: "Due",
+    key: "due",
+    render: (item) => formatUtc(item.dueAtUtc),
+    sortable: true,
+    sortLabel: "Sort by due date"
   }
 ];
 
@@ -657,6 +682,59 @@ export default async function UiLibraryPage() {
           columns={workOrderColumns}
           getRowKey={(item) => item.id}
           rows={backlog.items}
+        />
+        <PlannerFilterToolbar
+          ariaLabel="Showcase table controls"
+          clearAction={{
+            disabled: true,
+            label: "Reset controls"
+          }}
+          filters={[
+            {
+              ariaLabel: "Showcase work-order filters",
+              kind: "links",
+              options: [
+                {
+                  href: "/ui-library",
+                  label: `All (${backlog.items.length})`,
+                  selected: true
+                },
+                {
+                  href: "/ui-library?filter=ready",
+                  label: "Ready"
+                },
+                {
+                  href: "/ui-library?filter=exceptions",
+                  label: "Exceptions"
+                }
+              ]
+            }
+          ]}
+          resultSummary={`Showing ${Math.min(4, backlog.items.length)} of ${backlog.items.length} rows`}
+          search={{
+            id: "showcase-table-search",
+            label: "Search work orders",
+            placeholder: "Search work order, package or issue",
+            readOnly: true,
+            value: "pump"
+          }}
+        />
+        <PlannerDataTable
+          caption="UI showcase controlled work-order table"
+          columns={controlledWorkOrderColumns}
+          density="compact"
+          getRowKey={(item) => item.id}
+          rows={backlog.items.slice(0, 4)}
+          sortState={{
+            columnKey: "due",
+            direction: "ascending"
+          }}
+        />
+        <PlannerPagination
+          currentPage={1}
+          hrefForPage={(page) => `/ui-library?page=${page}`}
+          pageSize={4}
+          totalItems={backlog.items.length}
         />
         <PlannerDataTable
           caption="UI showcase empty table"

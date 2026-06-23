@@ -27,6 +27,39 @@
   text-align: right;
 }
 
+.planner-data-table-sort-label,
+.planner-data-table-sort-button {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 28px;
+}
+
+.planner-data-table :where([data-align="end"]) .planner-data-table-sort-label,
+.planner-data-table :where([data-align="end"]) .planner-data-table-sort-button {
+  justify-content: flex-end;
+}
+
+.planner-data-table-sort-button {
+  height: auto;
+  min-width: 0;
+  padding-inline: var(--space-1);
+  margin-inline: calc(var(--space-1) * -1);
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0;
+  text-transform: inherit;
+}
+
+.planner-data-table-sort-icon {
+  color: var(--gray-10);
+}
+
+.planner-data-table :where([data-sort-state="none"]) .planner-data-table-sort-icon {
+  opacity: 0.45;
+}
+
 .planner-data-table-empty-cell {
   padding: 0;
 }

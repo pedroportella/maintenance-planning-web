@@ -1,0 +1,190 @@
+import type { ChangeEvent, ComponentType, ReactNode } from "react";
+import {
+  SegmentedNav,
+  type SegmentedNavLinkProps,
+  type SegmentedNavOption
+} from "../../components/segmented-nav/segmented-nav";
+import { joinClasses } from "../../components/shared";
+import {
+  RadixButton,
+  RadixIcon,
+  RadixSelect,
+  type RadixSelectOption,
+  RadixText,
+  RadixTextInput
+} from "../../radix";
+
+export type PlannerFilterToolbarSearch = {
+  clearLabel?: string;
+  disabled?: boolean;
+  id: string;
+  label: string;
+  name?: string;
+  onChange?: (value: string) => void;
+  onClear?: () => void;
+  placeholder?: string;
+  readOnly?: boolean;
+  value: string;
+};
+
+export type PlannerFilterToolbarLinkFilter = {
+  ariaLabel: string;
+  kind: "links";
+  linkComponent?: ComponentType<SegmentedNavLinkProps>;
+  options: readonly SegmentedNavOption[];
+};
+
+export type PlannerFilterToolbarSelectFilter = {
+  id: string;
+  kind: "select";
+  label: string;
+  onValueChange?: (value: string) => void;
+  options: readonly RadixSelectOption[];
+  placeholder?: string;
+  value?: string;
+};
+
+export type PlannerFilterToolbarFilter =
+  | PlannerFilterToolbarLinkFilter
+  | PlannerFilterToolbarSelectFilter;
+
+export type PlannerFilterToolbarProps = {
+  actions?: ReactNode;
+  ariaLabel: string;
+  className?: string;
+  clearAction?: {
+    disabled?: boolean;
+    label: string;
+    onClear?: () => void;
+  };
+  filters?: readonly PlannerFilterToolbarFilter[];
+  resultSummary?: ReactNode;
+  search?: PlannerFilterToolbarSearch;
+};
+
+export function PlannerFilterToolbar({
+  actions,
+  ariaLabel,
+  className,
+  clearAction,
+  filters = [],
+  resultSummary,
+  search
+}: PlannerFilterToolbarProps) {
+  return (
+    <section
+      aria-label={ariaLabel}
+      className={joinClasses("planner-filter-toolbar", className)}
+    >
+      {search ? <PlannerFilterToolbarSearchControl search={search} /> : null}
+
+      {filters.length > 0 ? (
+        <div className="planner-filter-toolbar-filters">
+          {filters.map((filter) => (
+            <PlannerFilterToolbarFilterControl filter={filter} key={filterKey(filter)} />
+          ))}
+        </div>
+      ) : null}
+
+      <div className="planner-filter-toolbar-summary">
+        {resultSummary ? (
+          <RadixText as="p" className="planner-filter-toolbar-result" tone="muted">
+            {resultSummary}
+          </RadixText>
+        ) : null}
+        {clearAction ? (
+          <RadixButton
+            className="planner-filter-toolbar-clear"
+            disabled={clearAction.disabled}
+            onClick={clearAction.onClear}
+            tone="neutral"
+            variant="soft"
+          >
+            <RadixIcon decorative name="crossCircled" />
+            {clearAction.label}
+          </RadixButton>
+        ) : null}
+        {actions}
+      </div>
+    </section>
+  );
+}
+
+function PlannerFilterToolbarSearchControl({
+  search
+}: {
+  readonly search: PlannerFilterToolbarSearch;
+}) {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    search.onChange?.(event.currentTarget.value);
+  };
+
+  return (
+    <div className="planner-filter-toolbar-search">
+      <label className="planner-filter-toolbar-label" htmlFor={search.id}>
+        {search.label}
+      </label>
+      <div className="planner-filter-toolbar-search-field">
+        <RadixIcon className="planner-filter-toolbar-search-icon" decorative name="magnifyingGlass" />
+        <RadixTextInput
+          aria-label={search.label}
+          disabled={search.disabled}
+          id={search.id}
+          name={search.name}
+          onChange={search.onChange ? handleChange : undefined}
+          placeholder={search.placeholder}
+          readOnly={search.readOnly ?? !search.onChange}
+          value={search.value}
+        />
+        {search.onClear ? (
+          <RadixButton
+            className="planner-filter-toolbar-search-clear"
+            disabled={search.disabled || search.value.length === 0}
+            onClick={search.onClear}
+            tone="neutral"
+            variant="ghost"
+          >
+            <RadixIcon decorative name="crossCircled" />
+            {search.clearLabel ?? "Clear"}
+          </RadixButton>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function PlannerFilterToolbarFilterControl({
+  filter
+}: {
+  readonly filter: PlannerFilterToolbarFilter;
+}) {
+  if (filter.kind === "links") {
+    return (
+      <SegmentedNav
+        ariaLabel={filter.ariaLabel}
+        className="planner-filter-toolbar-links"
+        linkComponent={filter.linkComponent}
+        options={filter.options}
+      />
+    );
+  }
+
+  return (
+    <div className="planner-filter-toolbar-select">
+      <label className="planner-filter-toolbar-label" htmlFor={filter.id}>
+        {filter.label}
+      </label>
+      <RadixSelect
+        id={filter.id}
+        onValueChange={filter.onValueChange}
+        options={filter.options}
+        placeholder={filter.placeholder}
+        value={filter.value}
+      />
+    </div>
+  );
+}
+
+function filterKey(filter: PlannerFilterToolbarFilter): string {
+  return filter.kind === "links" ? `${filter.kind}:${filter.ariaLabel}` : `${filter.kind}:${filter.id}`;
+}

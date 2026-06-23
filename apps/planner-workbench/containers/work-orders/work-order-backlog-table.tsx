@@ -1,0 +1,324 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import {
+  DataTable,
+  EmptyState,
+  PlannerFilterToolbar,
+  PlannerPagination,
+  StatusBadge,
+  type DataTableColumn,
+  type PlannerDataTableSortDirection,
+  type SegmentedNavOption
+} from "@maintenance-planning/ui-library";
+import type { WorkOrderBacklogItem } from "@maintenance-planning/services";
+import Link from "next/link";
+import { packageRecommendationHref } from "@/containers/recommendations/recommendation-links";
+import {
+  formatHours,
+  formatUtc,
+  latestDecisionText,
+  toneForDecision,
+  toneForPlannerState,
+  toneForReadiness,
+  workOrderIssueText
+} from "@/lib/planner-format";
+
+type WorkOrderBacklogTableProps = {
+  filterLabel: string;
+  filterOptions: readonly SegmentedNavOption[];
+  items: readonly WorkOrderBacklogItem[];
+  planningRunId: string;
+};
+
+type WorkOrderBacklogSortKey = "due" | "hours" | "readiness" | "work-order";
+
+type WorkOrderBacklogSortState = {
+  columnKey: WorkOrderBacklogSortKey;
+  direction: PlannerDataTableSortDirection;
+};
+
+const pageSize = 4;
+const defaultSortState: WorkOrderBacklogSortState = {
+  columnKey: "due",
+  direction: "ascending"
+};
+
+export function WorkOrderBacklogTable({
+  filterLabel,
+  filterOptions,
+  items,
+  planningRunId
+}: WorkOrderBacklogTableProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortState, setSortState] =
+    useState<WorkOrderBacklogSortState>(defaultSortState);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const searchedItems = useMemo(
+    () => filterBySearch(items, searchQuery),
+    [items, searchQuery]
+  );
+  const sortedItems = useMemo(
+    () => sortWorkOrders(searchedItems, sortState),
+    [searchedItems, sortState]
+  );
+  const pageCount = Math.max(1, Math.ceil(sortedItems.length / pageSize));
+  const safePage = Math.min(currentPage, pageCount);
+  const pageRows = sortedItems.slice((safePage - 1) * pageSize, safePage * pageSize);
+  const backlogColumns = useMemo(
+    () => buildBacklogColumns(planningRunId, sortState, setSortState),
+    [planningRunId, sortState]
+  );
+  const hasActiveLocalControls =
+    searchQuery.length > 0 ||
+    sortState.columnKey !== defaultSortState.columnKey ||
+    sortState.direction !== defaultSortState.direction ||
+    safePage !== 1;
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+  };
+
+  const resetLocalControls = () => {
+    setSearchQuery("");
+    setSortState(defaultSortState);
+    setCurrentPage(1);
+  };
+
+  return (
+    <div className="work-order-backlog-table">
+      <PlannerFilterToolbar
+        ariaLabel="Work-order table controls"
+        clearAction={{
+          disabled: !hasActiveLocalControls,
+          label: "Reset controls",
+          onClear: resetLocalControls
+        }}
+        filters={[
+          {
+            ariaLabel: "Work-order triage filters",
+            kind: "links",
+            options: filterOptions
+          }
+        ]}
+        resultSummary={`${pageRows.length} shown from ${searchedItems.length} ${filterLabel.toLowerCase()} rows`}
+        search={{
+          clearLabel: "Clear search",
+          id: "work-order-table-search",
+          label: "Search work orders",
+          onChange: handleSearchChange,
+          onClear: () => handleSearchChange(""),
+          placeholder: "Search work order, package or issue",
+          value: searchQuery
+        }}
+      />
+      <DataTable
+        caption="Planner work-order triage"
+        columns={backlogColumns}
+        density="compact"
+        emptyState={
+          <EmptyState
+            description={
+              searchQuery
+                ? `No work orders match "${searchQuery}" within the ${filterLabel.toLowerCase()} filter.`
+                : `The service returned no work orders for the ${filterLabel.toLowerCase()} filter.`
+            }
+            title="No work orders"
+          />
+        }
+        getRowKey={(item) => item.id}
+        rows={pageRows}
+        sortState={sortState}
+      />
+      <PlannerPagination
+        currentPage={safePage}
+        onPageChange={setCurrentPage}
+        pageSize={pageSize}
+        totalItems={sortedItems.length}
+      />
+    </div>
+  );
+}
+
+function buildBacklogColumns(
+  planningRunId: string,
+  sortState: WorkOrderBacklogSortState,
+  setSortState: (state: WorkOrderBacklogSortState) => void
+): readonly DataTableColumn<WorkOrderBacklogItem>[] {
+  const sortColumn = (columnKey: WorkOrderBacklogSortKey) => {
+    setSortState(nextSortState(sortState, columnKey));
+  };
+
+  return [
+    {
+      header: "Work order",
+      key: "work-order",
+      onSort: () => sortColumn("work-order"),
+      render: (item) => (
+        <span className="table-stack">
+          <strong>{item.workOrderNumber}</strong>
+          <span>{item.title}</span>
+        </span>
+      ),
+      sortLabel: "Sort by work order",
+      sortable: true
+    },
+    {
+      header: "Readiness",
+      key: "readiness",
+      onSort: () => sortColumn("readiness"),
+      render: (item) => (
+        <span className="badge-stack">
+          <StatusBadge tone={toneForReadiness(item.readinessStatus)}>
+            {item.readinessStatus}
+          </StatusBadge>
+          <StatusBadge tone={toneForPlannerState(item.plannerState)}>
+            {item.plannerState}
+          </StatusBadge>
+        </span>
+      ),
+      sortLabel: "Sort by readiness",
+      sortable: true
+    },
+    {
+      header: "Coordination note",
+      key: "issue",
+      render: (item) => workOrderIssueText(item)
+    },
+    {
+      header: "Package",
+      key: "package",
+      render: (item) => (
+        <span className="table-stack">
+          <strong>{item.packageNumber}</strong>
+          <Link
+            className="table-link"
+            href={packageRecommendationHref(item.packageId, { planningRunId })}
+          >
+            Open package
+            <span className="sr-only"> {item.packageNumber}</span>
+          </Link>
+        </span>
+      )
+    },
+    {
+      align: "end",
+      header: "Hours",
+      key: "hours",
+      onSort: () => sortColumn("hours"),
+      render: (item) => formatHours(item.estimatedHours),
+      sortLabel: "Sort by estimated hours",
+      sortable: true
+    },
+    {
+      align: "end",
+      header: "Due",
+      key: "due",
+      onSort: () => sortColumn("due"),
+      render: (item) => formatUtc(item.dueAtUtc),
+      sortLabel: "Sort by due date",
+      sortable: true
+    },
+    {
+      header: "Latest decision",
+      key: "decision",
+      render: (item) => (
+        <StatusBadge tone={toneForDecision(item.latestDecision?.decision)}>
+          {latestDecisionText(item.latestDecision)}
+        </StatusBadge>
+      )
+    }
+  ];
+}
+
+function nextSortState(
+  current: WorkOrderBacklogSortState,
+  columnKey: WorkOrderBacklogSortKey
+): WorkOrderBacklogSortState {
+  if (current.columnKey !== columnKey) {
+    return {
+      columnKey,
+      direction: "ascending"
+    };
+  }
+
+  return {
+    columnKey,
+    direction: current.direction === "ascending" ? "descending" : "ascending"
+  };
+}
+
+function filterBySearch(
+  items: readonly WorkOrderBacklogItem[],
+  searchQuery: string
+): readonly WorkOrderBacklogItem[] {
+  const query = searchQuery.trim().toLowerCase();
+
+  if (!query) return items;
+
+  return items.filter((item) =>
+    [
+      item.workOrderNumber,
+      item.title,
+      item.packageNumber,
+      item.packageTitle,
+      item.readinessIssueCode,
+      item.readinessIssueDetail,
+      item.blockerCodes.join(" "),
+      latestDecisionText(item.latestDecision)
+    ]
+      .filter((value): value is string => typeof value === "string")
+      .some((value) => value.toLowerCase().includes(query))
+  );
+}
+
+function sortWorkOrders(
+  items: readonly WorkOrderBacklogItem[],
+  sortState: WorkOrderBacklogSortState
+): readonly WorkOrderBacklogItem[] {
+  const sorted = [...items].sort((left, right) => {
+    if (sortState.columnKey === "hours") {
+      return compareNumbers(left.estimatedHours, right.estimatedHours);
+    }
+
+    if (sortState.columnKey === "due") {
+      return compareNumbers(toTime(left.dueAtUtc), toTime(right.dueAtUtc));
+    }
+
+    if (sortState.columnKey === "readiness") {
+      return compareText(
+        `${left.readinessStatus} ${left.plannerState}`,
+        `${right.readinessStatus} ${right.plannerState}`
+      );
+    }
+
+    return compareText(left.workOrderNumber, right.workOrderNumber);
+  });
+
+  return sortState.direction === "ascending" ? sorted : sorted.reverse();
+}
+
+function compareNumbers(
+  left: number | null | undefined,
+  right: number | null | undefined
+): number {
+  const leftValue = typeof left === "number" ? left : Number.POSITIVE_INFINITY;
+  const rightValue = typeof right === "number" ? right : Number.POSITIVE_INFINITY;
+
+  return leftValue - rightValue;
+}
+
+function compareText(left: string, right: string): number {
+  return left.localeCompare(right, undefined, {
+    sensitivity: "base"
+  });
+}
+
+function toTime(value: string | null | undefined): number | null {
+  if (!value) return null;
+
+  const parsed = new Date(value).getTime();
+  return Number.isNaN(parsed) ? null : parsed;
+}

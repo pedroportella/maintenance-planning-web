@@ -54,9 +54,12 @@ describe("ui-library theme", () => {
     expect(themeScss).toContain("../feedback/PlannerQuietNote/PlannerQuietNote");
     expect(themeScss).toContain("../feedback/PlannerStatusBadge/PlannerStatusBadge");
     expect(themeScss).toContain("../data/PlannerDataTable/PlannerDataTable");
+    expect(themeScss).toContain("../data/PlannerFilterToolbar/PlannerFilterToolbar");
     expect(themeScss).toContain("../data/PlannerMetricSummary/PlannerMetricSummary");
+    expect(themeScss).toContain("../data/PlannerPagination/PlannerPagination");
     expect(themeScss).toContain("../data/PlannerSummaryList/PlannerSummaryList");
     expect(themeScss).toContain("../radix/RadixDataList/RadixDataList");
+    expect(themeScss).toContain("../radix/RadixIconButton/RadixIconButton");
     expect(themeScss).toContain("../radix/RadixTable/RadixTable");
     expect(themeScss).toContain("../workflow/PlannerDecisionPanel/PlannerDecisionPanel");
     expect(themeScss).toContain("../workflow/PlannerMetadataPanel/PlannerMetadataPanel");

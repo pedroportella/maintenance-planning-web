@@ -25,6 +25,8 @@ export type { RadixHeadingProps } from "./RadixHeading";
 export { RadixHeading } from "./RadixHeading";
 export type { RadixIconName, RadixIconProps } from "./RadixIcon";
 export { RadixIcon } from "./RadixIcon";
+export type { RadixIconButtonProps, RadixIconButtonVariant } from "./RadixIconButton";
+export { RadixIconButton } from "./RadixIconButton";
 export type { RadixLinkProps } from "./RadixLink";
 export { RadixLink } from "./RadixLink";
 export type { RadixRadioCardOption, RadixRadioCardsProps } from "./RadixRadioCards";

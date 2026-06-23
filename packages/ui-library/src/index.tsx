@@ -12,17 +12,27 @@ export { DataTable } from "./components/data-table/data-table";
 export type {
   PlannerDataTableColumn,
   PlannerDataTableProps,
+  PlannerDataTableSortDirection,
+  PlannerDataTableSortState,
+  PlannerFilterToolbarFilter,
+  PlannerFilterToolbarLinkFilter,
+  PlannerFilterToolbarProps,
+  PlannerFilterToolbarSearch,
+  PlannerFilterToolbarSelectFilter,
   PlannerMetricCardProps,
   PlannerMetricSummaryItem,
   PlannerMetricSummaryProps,
   PlannerMetricSummarySlot,
+  PlannerPaginationProps,
   PlannerSummaryListItem,
   PlannerSummaryListProps
 } from "./data";
 export {
   PlannerDataTable,
+  PlannerFilterToolbar,
   PlannerMetricCard,
   PlannerMetricSummary,
+  PlannerPagination,
   PlannerSummaryList
 } from "./data";
 export type { EmptyStateProps } from "./components/empty-state/empty-state";
@@ -114,6 +124,8 @@ export type {
   RadixFormFieldProps,
   RadixHeadingProps,
   RadixIconName,
+  RadixIconButtonProps,
+  RadixIconButtonVariant,
   RadixIconProps,
   RadixLinkProps,
   RadixRadioCardOption,
@@ -143,6 +155,7 @@ export {
   RadixFormField,
   RadixHeading,
   RadixIcon,
+  RadixIconButton,
   RadixLink,
   RadixRadioCards,
   RadixRadioGroup,

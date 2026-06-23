@@ -1,0 +1,42 @@
+.planner-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-2);
+}
+
+.planner-pagination-summary {
+  margin: 0;
+}
+
+.planner-pagination-controls {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.planner-pagination-page {
+  min-width: 7.5rem;
+  text-align: center;
+}
+
+.planner-pagination-button {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 640px) {
+  .planner-pagination {
+    align-items: stretch;
+  }
+
+  .planner-pagination,
+  .planner-pagination-controls {
+    width: 100%;
+  }
+
+  .planner-pagination-controls {
+    justify-content: space-between;
+  }
+}

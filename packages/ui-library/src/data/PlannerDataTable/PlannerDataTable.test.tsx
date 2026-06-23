@@ -85,4 +85,54 @@ describe("PlannerDataTable", () => {
     expect(markup).toContain('colSpan="1"');
     expect(markup).toContain("planner-data-table-empty");
   });
+
+  it("renders sortable headers with aria-sort state and labels", () => {
+    type Row = {
+      hours: number;
+      workOrder: string;
+    };
+
+    const columns: Array<PlannerDataTableColumn<Row>> = [
+      {
+        header: "Work order",
+        key: "work-order",
+        onSort: () => undefined,
+        render: (row) => row.workOrder,
+        sortLabel: "Sort by work order",
+        sortable: true
+      },
+      {
+        align: "end",
+        header: "Hours",
+        key: "hours",
+        onSort: () => undefined,
+        render: (row) => row.hours,
+        sortable: true
+      }
+    ];
+
+    const markup = renderToStaticMarkup(
+      createElement(PlannerDataTable<Row>, {
+        caption: "Sortable planner queue",
+        columns,
+        getRowKey: (row) => row.workOrder,
+        rows: [
+          {
+            hours: 4,
+            workOrder: "WO-1000"
+          }
+        ],
+        sortState: {
+          columnKey: "hours",
+          direction: "descending"
+        }
+      })
+    );
+
+    expect(markup).toContain('aria-sort="none"');
+    expect(markup).toContain('aria-sort="descending"');
+    expect(markup).toContain('aria-label="Sort by work order"');
+    expect(markup).toContain("planner-data-table-sort-button");
+    expect(markup).toContain('data-sort-state="descending"');
+  });
 });

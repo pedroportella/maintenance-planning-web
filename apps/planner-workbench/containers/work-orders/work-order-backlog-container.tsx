@@ -1,33 +1,22 @@
 import {
   Alert,
-  DataTable,
-  EmptyState,
   MetricSummary,
   PageHeader,
   QuietNote,
-  SegmentedNav,
   StatusBadge,
-  WorkbenchPanel,
-  type DataTableColumn
+  WorkbenchPanel
 } from "@maintenance-planning/ui-library";
 import {
   createPlannerServices,
   type WorkOrderBacklogItem
 } from "@maintenance-planning/services";
 import { getWorkbenchSection } from "@maintenance-planning/utils";
-import Link from "next/link";
 import { PlannerRouteFailure } from "@/components/planner-route-state";
 import {
   buildBacklogMetrics,
-  formatHours,
   formatUtc,
-  latestDecisionText,
-  toneForDecision,
-  toneForPlannerState,
-  toneForReadiness,
-  workOrderIssueText
 } from "@/lib/planner-format";
-import { packageRecommendationHref } from "@/containers/recommendations/recommendation-links";
+import { WorkOrderBacklogTable } from "./work-order-backlog-table";
 
 type WorkOrderFilter = "all" | "deferred" | "exceptions" | "ready";
 
@@ -35,77 +24,6 @@ type WorkOrderBacklogPageProps = {
   initialFilter?: WorkOrderFilter;
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
-
-function buildBacklogColumns(
-  planningRunId: string
-): readonly DataTableColumn<WorkOrderBacklogItem>[] {
-  return [
-    {
-      header: "Work order",
-      key: "work-order",
-      render: (item) => (
-        <span className="table-stack">
-          <strong>{item.workOrderNumber}</strong>
-          <span>{item.title}</span>
-        </span>
-      )
-    },
-    {
-      header: "Readiness",
-      key: "readiness",
-      render: (item) => (
-        <span className="badge-stack">
-          <StatusBadge tone={toneForReadiness(item.readinessStatus)}>
-            {item.readinessStatus}
-          </StatusBadge>
-          <StatusBadge tone={toneForPlannerState(item.plannerState)}>{item.plannerState}</StatusBadge>
-        </span>
-      )
-    },
-    {
-      header: "Coordination note",
-      key: "issue",
-      render: (item) => workOrderIssueText(item)
-    },
-    {
-      header: "Package",
-      key: "package",
-      render: (item) => (
-        <span className="table-stack">
-          <strong>{item.packageNumber}</strong>
-          <Link
-            className="table-link"
-            href={packageRecommendationHref(item.packageId, { planningRunId })}
-          >
-            Open package
-            <span className="sr-only"> {item.packageNumber}</span>
-          </Link>
-        </span>
-      )
-    },
-    {
-      align: "end",
-      header: "Hours",
-      key: "hours",
-      render: (item) => formatHours(item.estimatedHours)
-    },
-    {
-      align: "end",
-      header: "Due",
-      key: "due",
-      render: (item) => formatUtc(item.dueAtUtc)
-    },
-    {
-      header: "Latest decision",
-      key: "decision",
-      render: (item) => (
-        <StatusBadge tone={toneForDecision(item.latestDecision?.decision)}>
-          {latestDecisionText(item.latestDecision)}
-        </StatusBadge>
-      )
-    }
-  ];
-}
 
 export default async function WorkOrderBacklogPage({
   initialFilter,
@@ -124,7 +42,6 @@ export default async function WorkOrderBacklogPage({
     const filteredItems = filterWorkOrders(backlog.items, selectedFilter);
     const section = selectedFilter === "exceptions" ? exceptionsSection : backlogSection;
     const filterOptions = buildFilterOptions(selectedFilter, backlog.items, exceptionItems);
-    const backlogColumns = buildBacklogColumns(backlog.planningRunId);
 
     return (
       <main className="page-stack">
@@ -146,11 +63,6 @@ export default async function WorkOrderBacklogPage({
           items={buildBacklogMetrics(backlog)}
           variant="compact"
         />
-
-        <div className="console-toolbar">
-          <SegmentedNav ariaLabel="Work-order triage filters" options={filterOptions} />
-          <StatusBadge tone="neutral">{filteredItems.length} shown</StatusBadge>
-        </div>
 
         {exceptionItems.length > 0 ? (
           <Alert title="Exceptions need review" tone="warning">
@@ -174,18 +86,11 @@ export default async function WorkOrderBacklogPage({
             </div>
             <StatusBadge tone="neutral">Generated {formatUtc(backlog.generatedAtUtc)}</StatusBadge>
           </div>
-          <DataTable
-            caption="Planner work-order triage"
-            columns={backlogColumns}
-            density="compact"
-            emptyState={
-              <EmptyState
-                description={`The service returned no work orders for the ${filterLabel(selectedFilter).toLowerCase()} filter.`}
-                title="No work orders"
-              />
-            }
-            getRowKey={(item) => item.id}
-            rows={filteredItems}
+          <WorkOrderBacklogTable
+            filterLabel={filterLabel(selectedFilter)}
+            filterOptions={filterOptions}
+            items={filteredItems}
+            planningRunId={backlog.planningRunId}
           />
         </WorkbenchPanel>
       </main>
