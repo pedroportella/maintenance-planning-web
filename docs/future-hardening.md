@@ -1,12 +1,12 @@
 # Future Hardening
 
-Future work should add the workbench implementation in small, reviewable slices.
+The current workbench implementation includes the app shell, mock service fixtures, backend-mode service boundary, Radix-backed adapter system and mock-mode reviewer evidence. Future work should stay focused on evidence gaps and production-next controls.
 
-- Add the Next.js app shell and mock service fixtures before API-backed workflows.
-- Add focused tests when planner decisions, recommendation filtering or API error states become visible.
-- Keep synthetic fixtures small and traceable to API contracts.
+- Investigate the non-blocking Radix hidden-input hydration warning seen in visual-test logs before broadening form-control usage.
+- Add focused tests only when planner decision, recommendation filtering, API error or backend-mode behaviour changes.
+- Keep synthetic fixtures small and traceable to API contracts; use simulator `--repeat` only for deliberate volume checks.
 - Expand visual review only around states that are hard to cover through normal planner routes.
-- Keep theme packages focused on reusable styling primitives, not runtime configuration or workflow logic.
-- Keep browser API origins runtime-configured and documented through safe examples.
+- Keep theme packages focused on reusable styling primitives, token mapping and component Sass, not runtime service configuration.
+- Keep backend API origins runtime-configured and server-only; do not introduce browser-visible backend URL variables.
 - Add deployed smoke coverage only when a temporary review host exists and its access boundary is intentionally configured.
 - Add SBOM generation, image provenance, signing and registry scanning policy before promoting container images beyond local review.

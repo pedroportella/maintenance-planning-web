@@ -2,7 +2,7 @@
 
 Planner workbench foundation for a synthetic maintenance-planning showcase.
 
-This repository hosts a React and Next.js workbench for planners who review work-order recommendations, schedule posture and decision history. The current implementation includes repo guardrails, a reusable component shell, a compact workbench start page, service-driven recommendation, work-order triage, coordination exception, planning-run, operations posture and scenario outcome screens, an internal UI-library evidence route, a typed service boundary that can run in deterministic mock mode or explicit backend mode, and a neutral visual foundation for the workbench.
+This repository hosts a React and Next.js workbench for planners who review work-order recommendations, schedule posture and decision history. The current implementation includes repo guardrails, a Radix-backed local UI adapter system, a compact workbench start page, service-driven recommendation, work-order triage, coordination exception, planning-run, operations posture and scenario outcome screens, an internal UI-library evidence route, a typed service boundary that can run in deterministic mock mode or explicit backend mode, and a Sass-first theme foundation for the workbench.
 
 ## Boundary
 
@@ -31,7 +31,7 @@ For a whole-system local Docker recipe, see the [local Docker system runbook](ht
 - [apps/planner-workbench](apps/planner-workbench/README.md) - Next.js app shell for the planner workbench.
 - [packages/services](packages/services/README.md) - typed API contracts, mock fixtures and backend service boundary.
 - [packages/ui-assets](packages/ui-assets/README.md) - neutral wordmark, icon metadata and asset provenance notes.
-- [packages/ui-library](packages/ui-library/README.md) - shared UI components and theme stylesheet entrypoint.
+- [packages/ui-library](packages/ui-library/README.md) - Radix-backed shared UI adapters and Sass theme entrypoint.
 - [packages/ui-tokens](packages/ui-tokens/README.md) - typed design tokens and CSS custom properties.
 - [packages/utils](packages/utils/README.md) - shared web utilities.
 
@@ -100,7 +100,7 @@ Full non-Docker gate:
 pnpm verify
 ```
 
-The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The library visual smoke checks only `/ui-library` across desktop, tablet and mobile light/dark viewports. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` plus routed workbench evidence across the same viewports. The post-build browser-bundle guard checks generated app assets for private backend origins.
+The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The library visual smoke checks only `/ui-library` across desktop, tablet and mobile light/dark viewports. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` plus routed workbench evidence across the same viewports. The post-build browser-bundle guard checks generated app assets for private backend origins. Backend/API, Docker and AWS evidence remain separate from these default mock-mode checks.
 
 ## Optional Docker And Backend Checks
 

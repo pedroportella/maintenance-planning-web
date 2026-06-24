@@ -16,12 +16,15 @@ The package is Sass-first and does not publish a generated `theme.css` artifact.
 ## Component Boundary
 
 The package owns reusable presentation components through architecture-aligned families:
-`PlannerAppLayout`, `PlannerPageHeader`, `PlannerStatusBadge`, `PlannerMetricSummary`,
-`PlannerDataTable`, `PlannerEmptyState`, `PlannerAlert`, `PlannerSegmentedNav` and
-`PlannerLoadingState`.
+`PlannerAppLayout`, `PlannerPage`, `PlannerPageHeader`, `PlannerStatusBadge`,
+`PlannerMetricSummary`, `PlannerDataTable`, `PlannerFilterToolbar`,
+`PlannerPagination`, `PlannerDecisionPanel`, `PlannerEmptyState`, `PlannerAlert`,
+`PlannerSegmentedNav` and `PlannerLoadingState`.
 
 Component family source lives under `src/components`, grouped by role as `data`,
 `feedback`, `forms`, `layout`, `radix` and `workflow`. Theme code stays under
-`src/theme`; shared non-visual helpers stay under `src/utils`.
+`src/theme`; shared non-visual helpers stay under `src/utils`. Direct Radix
+imports belong inside the local adapter/theme boundary, not planner route
+containers.
 
 It should not own API calls, scoring rules, simulator behavior or planner decision logic.

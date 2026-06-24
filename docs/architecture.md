@@ -8,7 +8,7 @@ The web repo is the planner-facing layer of the maintenance-planning showcase. I
 - `packages/services` holds API-facing contracts, mock adapters, backend adapters and response mappers.
 - `packages/ui-tokens` holds typed visual primitives, CSS custom properties and Sass palette sources.
 - `packages/ui-assets` holds neutral wordmark metadata, generic icon names and asset provenance notes.
-- `packages/ui-library` holds reusable presentation primitives and the shared Sass theme entrypoint.
+- `packages/ui-library` holds Radix fidelity adapters, planner workflow components and the shared Sass theme entrypoint.
 - `packages/utils` holds framework-neutral helpers such as planner route metadata.
 
 ## App Shell
@@ -28,9 +28,11 @@ The `/ui-library` route is separate from planner task navigation. It is a no-ind
 
 ## Visual System
 
-The app imports the shared theme from `@maintenance-planning/ui-library/theme.scss`. That Sass entry imports Radix Themes CSS, maps token custom properties from `@maintenance-planning/ui-tokens`, then loads shared adapter and component-local styles for shell, navigation, page, status, metrics, table, alert and empty/loading/error state styling.
+The app imports the shared theme from `@maintenance-planning/ui-library/theme.scss`. That Sass entry imports Radix Themes CSS, maps token custom properties from `@maintenance-planning/ui-tokens`, then loads shared adapter and component-local styles for shell, navigation, page, status, metrics, table, alert, form, decision and empty/loading/error state styling.
 
-Reusable route composition belongs to `packages/ui-library` adapters and component-local Sass. App-local CSS stays limited to app shell concerns. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
+Reusable route composition belongs to `packages/ui-library` adapters and component-local Sass. Component families live under `packages/ui-library/src/components`; theme code stays under `src/theme`; shared non-visual helpers stay under `src/utils`. The UI library publishes the Sass entrypoint and does not publish a generated `theme.css` artifact.
+
+App-local CSS stays limited to route handoff concerns. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
 
 Focused Playwright visual baselines cover `/ui-library` plus routed workbench evidence across desktop, tablet and mobile light/dark viewports. They complement route-level smoke tests and do not replace service-boundary tests.
 

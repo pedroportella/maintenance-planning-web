@@ -1,6 +1,6 @@
 # Guardrails
 
-The repo includes guard scripts before feature screens are added.
+The repo includes guard scripts for public docs, generated artefacts, secrets, browser-visible backend origins, package boundaries, reviewer evidence and visual baselines.
 
 ## Public Docs
 
@@ -22,10 +22,10 @@ The container smoke builds or reuses the local image, starts the standalone Next
 
 ## Reviewer Evidence
 
-Reviewer evidence checks required repo files, workspace boundaries, root scripts, local Markdown links, the reviewer-pack screenshot workflow, container scripts and the presence of the UI-library showcase smoke.
+Reviewer evidence checks required repo files, workspace boundaries, root scripts, local Markdown links, the reviewer-pack screenshot workflow, container scripts and the presence of focused UI-library and route-wide visual smokes.
 
 ## Visual Foundation
 
-Token tests cover required theme variables and contrast-sensitive foreground/background pairs. Asset tests cover neutral wordmark metadata, icon-map coverage and local provenance notes. Theme tests confirm that the UI-library stylesheet imports token custom properties before shared component styles.
+Token tests cover required theme variables and contrast-sensitive foreground/background pairs. Asset tests cover neutral wordmark metadata, icon-map coverage and local provenance notes. Theme tests confirm that the UI-library Sass entrypoint imports token custom properties before shared component styles and that the package does not publish a generated theme CSS artifact.
 
-The `/ui-library` route is an internal reviewer/developer evidence page. `pnpm test:visual:showcase` verifies the route plus routed workbench evidence across desktop, tablet and mobile light/dark viewports and checks accessible names plus tone contrast for reusable states.
+The `/ui-library` route is an internal reviewer/developer evidence page. `pnpm test:visual:library` verifies only the focused UI-library baselines. `pnpm test:visual:showcase` verifies the route plus routed workbench evidence across desktop, tablet and mobile light/dark viewports and checks accessible names plus tone contrast for reusable states.
