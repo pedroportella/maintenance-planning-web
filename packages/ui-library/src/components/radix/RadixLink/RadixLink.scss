@@ -1,7 +1,7 @@
-.radix-link {
+.rt-Link.radix-link {
   display: inline-flex;
   align-items: center;
-  min-height: var(--mp-target-size-min);
+  min-height: var(--mp-target-size-min, 24px);
   max-width: 100%;
   font-weight: 700;
   overflow-wrap: anywhere;
