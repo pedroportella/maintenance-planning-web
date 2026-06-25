@@ -34,22 +34,44 @@ export async function collectFocusReport(page: Page) {
       return `${element.tagName.toLowerCase()}${classes ? `.${classes}` : ""}: ${name}`;
     }
 
+    function hasVisibleOutline(style: CSSStyleDeclaration) {
+      return style.outlineStyle !== "none" && Number.parseFloat(style.outlineWidth) >= 2;
+    }
+
+    function readFocusIndicatorEntry(element: HTMLElement, label: string) {
+      const styles = getComputedStyle(element);
+      const beforeStyles = getComputedStyle(element, "::before");
+      const afterStyles = getComputedStyle(element, "::after");
+      const adjacentFocusRing =
+        element.nextElementSibling instanceof HTMLElement &&
+        element.nextElementSibling.classList.contains("rt-ScrollAreaViewportFocusRing")
+          ? getComputedStyle(element.nextElementSibling)
+          : null;
+      const hasIndicator = [styles, beforeStyles, afterStyles, adjacentFocusRing].some(
+        (style) => style !== null && hasVisibleOutline(style)
+      );
+
+      return {
+        hasIndicator,
+        label,
+        adjacentFocusRingOutline: adjacentFocusRing
+          ? `${adjacentFocusRing.outlineWidth} ${adjacentFocusRing.outlineStyle} ${adjacentFocusRing.outlineColor}`
+          : "none",
+        outline: `${styles.outlineWidth} ${styles.outlineStyle} ${styles.outlineColor}`,
+        pseudoAfterOutline: `${afterStyles.outlineWidth} ${afterStyles.outlineStyle} ${afterStyles.outlineColor}`,
+        pseudoBeforeOutline: `${beforeStyles.outlineWidth} ${beforeStyles.outlineStyle} ${beforeStyles.outlineColor}`,
+        shadow: styles.boxShadow
+      };
+    }
+
     const focusable = Array.from(document.querySelectorAll<HTMLElement>(focusableSelector))
       .filter(isVisible)
       .slice(0, 24);
     const focused = focusable.map((element) => {
       element.focus();
-      const styles = getComputedStyle(element);
-      const hasOutline =
-        styles.outlineStyle !== "none" && Number.parseFloat(styles.outlineWidth) > 0;
-      const hasShadow = styles.boxShadow !== "none";
+      const entry = readFocusIndicatorEntry(element, labelFor(element));
 
-      return {
-        hasIndicator: hasOutline || hasShadow,
-        label: labelFor(element),
-        outline: `${styles.outlineWidth} ${styles.outlineStyle} ${styles.outlineColor}`,
-        shadow: styles.boxShadow
-      };
+      return entry;
     });
 
     return {
@@ -60,4 +82,102 @@ export async function collectFocusReport(page: Page) {
         .map((entry) => entry.label)
     };
   });
+}
+
+export async function collectKeyboardFocusReport(page: Page, tabStops = 16) {
+  const entries = [];
+
+  for (let step = 1; step <= tabStops; step += 1) {
+    await page.keyboard.press("Tab");
+    entries.push(
+      await page.evaluate((currentStep) => {
+        function labelFor(element: Element) {
+          const name =
+            element.getAttribute("aria-label")?.trim() ??
+            element.textContent?.replace(/\s+/g, " ").trim() ??
+            element.getAttribute("name")?.trim() ??
+            element.tagName.toLowerCase();
+          const classes = Array.from(element.classList).slice(0, 3).join(".");
+
+          return `${element.tagName.toLowerCase()}${classes ? `.${classes}` : ""}: ${name}`;
+        }
+
+        function hasVisibleOutline(style: CSSStyleDeclaration) {
+          return style.outlineStyle !== "none" && Number.parseFloat(style.outlineWidth) >= 2;
+        }
+
+        function readFocusIndicatorEntry(element: HTMLElement, label: string) {
+          const styles = getComputedStyle(element);
+          const beforeStyles = getComputedStyle(element, "::before");
+          const afterStyles = getComputedStyle(element, "::after");
+          const adjacentFocusRing =
+            element.nextElementSibling instanceof HTMLElement &&
+            element.nextElementSibling.classList.contains("rt-ScrollAreaViewportFocusRing")
+              ? getComputedStyle(element.nextElementSibling)
+              : null;
+          const hasIndicator = [styles, beforeStyles, afterStyles, adjacentFocusRing].some(
+            (style) => style !== null && hasVisibleOutline(style)
+          );
+
+          return {
+            hasIndicator,
+            label,
+            adjacentFocusRingOutline: adjacentFocusRing
+              ? `${adjacentFocusRing.outlineWidth} ${adjacentFocusRing.outlineStyle} ${adjacentFocusRing.outlineColor}`
+              : "none",
+            outline: `${styles.outlineWidth} ${styles.outlineStyle} ${styles.outlineColor}`,
+            pseudoAfterOutline: `${afterStyles.outlineWidth} ${afterStyles.outlineStyle} ${afterStyles.outlineColor}`,
+            pseudoBeforeOutline: `${beforeStyles.outlineWidth} ${beforeStyles.outlineStyle} ${beforeStyles.outlineColor}`,
+            shadow: styles.boxShadow
+          };
+        }
+
+        function isLocalDevChrome(element: HTMLElement) {
+          return Boolean(
+            element.closest(
+              [
+                "nextjs-portal",
+                "[data-nextjs-dialog-overlay]",
+                "[data-nextjs-dev-tools-button]",
+                "[data-next-badge-root]",
+                "[data-nextjs-toast]",
+                ".__nextjs-dev-overlay"
+              ].join(",")
+            )
+          );
+        }
+
+        const element = document.activeElement;
+
+        if (
+          !(element instanceof HTMLElement) ||
+          element === document.body ||
+          isLocalDevChrome(element)
+        ) {
+          return {
+            focusable: false,
+            hasIndicator: false,
+            label: "document body",
+            outline: "none",
+            shadow: "none",
+            step: currentStep
+          };
+        }
+
+        return {
+          ...readFocusIndicatorEntry(element, labelFor(element)),
+          focusable: true,
+          step: currentStep
+        };
+      }, step)
+    );
+  }
+
+  return {
+    focused: entries,
+    missingIndicator: entries
+      .filter((entry) => entry.focusable && !entry.hasIndicator)
+      .map((entry) => entry.label),
+    tabStops
+  };
 }

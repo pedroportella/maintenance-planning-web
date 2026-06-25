@@ -9,6 +9,7 @@ import {
   normaliseDecisionNotes,
   resolvePlannerDecisionAction
 } from "../lib/planner-decisions";
+import { decisionHistoryItemKey } from "../lib/decision-history";
 import {
   buildBacklogMetrics,
   buildOperationsMetrics,
@@ -69,6 +70,22 @@ describe("workbench section model", () => {
     expect(normaliseDecisionNotes("  review after parts check  ")).toBe(
       "review after parts check"
     );
+  });
+
+  it("keeps repeated decision ids unique for React decision-history rows", () => {
+    const duplicateDecision = {
+      decidedAtUtc: "2026-01-15T08:00:00.000Z",
+      decidedBy: "planner-workbench",
+      decision: "Accepted",
+      id: "80000000-0000-4000-8000-000000009990",
+      packageId: "60000000-0000-4000-8000-000000002000",
+      reasonCode: "planner-accepted",
+      workOrderId: "30000000-0000-4000-8000-000000002000"
+    };
+    const keys = [duplicateDecision, duplicateDecision].map(decisionHistoryItemKey);
+
+    expect(new Set(keys).size).toBe(2);
+    expect(keys[0]).toContain(duplicateDecision.id);
   });
 
   it("formats planner metrics and state labels", () => {

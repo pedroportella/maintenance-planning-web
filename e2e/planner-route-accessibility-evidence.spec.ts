@@ -11,6 +11,7 @@ import {
   collectOverflowReport,
   collectReducedMotionReport
 } from "./ui-library-accessibility/preference-layout-reports";
+import { collectKeyboardFocusReport } from "./ui-library-accessibility/focus-report";
 import { collectStructuralAccessibilityScan } from "./ui-library-accessibility/structural-scan";
 
 test("records automated accessibility evidence for mock planner routes", async ({
@@ -55,9 +56,18 @@ test("records automated accessibility evidence for mock planner routes", async (
     expect(scan.positiveTabIndex).toEqual([]);
     expect(scan.labelInNameFailures).toEqual([]);
 
+    await page.evaluate(() => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    });
+    const keyboardFocus = await collectKeyboardFocusReport(page, 16);
+    expect(keyboardFocus.missingIndicator).toEqual([]);
+
     evidence.automatedBrowserSmoke.routes.push(
       createRouteEvidenceEntry({
         fixture,
+        keyboardFocus,
         scan,
         snapshot: await main.ariaSnapshot()
       })

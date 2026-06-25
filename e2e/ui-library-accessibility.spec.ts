@@ -6,7 +6,10 @@ import {
   themes,
   tones
 } from "./ui-library-accessibility/contrast-samples";
-import { collectFocusReport } from "./ui-library-accessibility/focus-report";
+import {
+  collectFocusReport,
+  collectKeyboardFocusReport
+} from "./ui-library-accessibility/focus-report";
 import { collectIconAndTargetSizeReport } from "./ui-library-accessibility/icon-target-size-report";
 import {
   collectOverflowReport,
@@ -49,7 +52,7 @@ for (const theme of themes) {
     });
 
     expect(focusReport.focusableCount).toBeGreaterThan(0);
-    expect(focusReport.focused.some((entry) => entry.hasIndicator)).toBe(true);
+    expect(focusReport.missingIndicator).toEqual([]);
   });
 }
 
@@ -116,6 +119,7 @@ test("smokes reduced motion, forced colors, zoom, reflow and text spacing", asyn
   });
   expect(await page.evaluate(() => matchMedia("(forced-colors: active)").matches)).toBe(true);
   expect(forcedColorsReport.focusableCount).toBeGreaterThan(0);
+  expect(forcedColorsReport.missingIndicator).toEqual([]);
 
   await page.emulateMedia({ forcedColors: "none", reducedMotion: "reduce" });
   await page.setViewportSize({ height: 900, width: 640 });
@@ -150,4 +154,19 @@ test("smokes reduced motion, forced colors, zoom, reflow and text spacing", asyn
 
   expect(zoomReport.visibleBody).toBe(true);
   expect(textSpacingReport.visibleBody).toBe(true);
+});
+
+test("keeps keyboard tab focus visibly outlined on the UI library route", async ({
+  page
+}, testInfo) => {
+  await openUiLibrary(page, "light");
+  await hideLocalDevChrome(page);
+
+  const keyboardFocusReport = await collectKeyboardFocusReport(page, 18);
+  await testInfo.attach("ui-library-keyboard-focus-report.json", {
+    body: JSON.stringify(keyboardFocusReport, null, 2),
+    contentType: "application/json"
+  });
+
+  expect(keyboardFocusReport.missingIndicator).toEqual([]);
 });

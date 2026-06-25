@@ -160,6 +160,30 @@ test("resolves visible package numbers to stable package detail routes", async (
   await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
 });
 
+test("keeps repeated mock decision history free of duplicate React keys", async ({ page }) => {
+  const consoleErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") {
+      consoleErrors.push(message.text());
+    }
+  });
+
+  await page.goto("/recommendations/60000000-0000-4000-8000-000000002000");
+  await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
+
+  for (const note of ["Repeated mock decision one", "Repeated mock decision two"]) {
+    await page.getByRole("textbox", { name: "Decision note" }).fill(note);
+    await page.getByRole("button", { name: "Accept package" }).click();
+    await expect(page.locator(".planner-decision-notice-focus")).toBeFocused();
+  }
+
+  expect(
+    consoleErrors.filter((message) =>
+      message.includes("Encountered two children with the same key")
+    )
+  ).toEqual([]);
+});
+
 test("renders a controlled state for an unknown package recommendation", async ({ page }) => {
   await page.goto("/recommendations/not-a-package");
 

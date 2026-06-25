@@ -1,9 +1,11 @@
 import type { collectStructuralAccessibilityScan } from "../ui-library-accessibility/structural-scan";
+import type { collectKeyboardFocusReport } from "../ui-library-accessibility/focus-report";
 import type { PlannerRouteAccessibilityFixture } from "./route-fixtures";
 
 export type PlannerRouteAccessibilityRouteEvidence = {
   form?: string;
   heading: string;
+  keyboardFocus: Awaited<ReturnType<typeof collectKeyboardFocusReport>>;
   path: string;
   scan: Awaited<ReturnType<typeof collectStructuralAccessibilityScan>>;
   snapshotExcerpt: string;
@@ -53,16 +55,19 @@ export function createPlannerRouteAccessibilityEvidence() {
 
 export function createRouteEvidenceEntry({
   fixture,
+  keyboardFocus,
   scan,
   snapshot
 }: {
   fixture: PlannerRouteAccessibilityFixture;
+  keyboardFocus: Awaited<ReturnType<typeof collectKeyboardFocusReport>>;
   scan: Awaited<ReturnType<typeof collectStructuralAccessibilityScan>>;
   snapshot: string;
 }): PlannerRouteAccessibilityRouteEvidence {
   return {
     form: fixture.form,
     heading: fixture.heading,
+    keyboardFocus,
     path: fixture.path,
     scan,
     snapshotExcerpt: trimAccessibilitySnapshot(snapshot),

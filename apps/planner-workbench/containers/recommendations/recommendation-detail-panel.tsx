@@ -25,6 +25,7 @@ import {
   toneForReadiness,
   toneForStatus
 } from "@/lib/planner-format";
+import { decisionHistoryItemKey } from "@/lib/decision-history";
 import { RecommendationDecisionForm } from "./recommendation-decision-form";
 
 type RecommendationDetailPanelProps = {
@@ -229,8 +230,8 @@ function RecommendationDecisions({
       titleId="planner-decision-history"
     >
       <PlannerPlainList>
-        {decisions.map((decision) => (
-          <li key={decision.id}>
+        {decisions.map((decision, index) => (
+          <li key={decisionHistoryItemKey(decision, index)}>
             <PlannerStatusBadge tone={toneForDecision(decision.decision)}>
               {decision.decision}
             </PlannerStatusBadge>

@@ -11,5 +11,5 @@
   --mp-palette-border-strong: var(--mp-color-border-strong);
   --mp-palette-text: var(--mp-color-text);
   --mp-palette-text-muted: var(--mp-color-text-muted);
-  --mp-palette-focus: var(--mp-color-focus);
+  --mp-palette-focus: #{product-palette.color($mode, focus)};
 }
