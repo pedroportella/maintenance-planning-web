@@ -57,6 +57,9 @@ export function PlannerAppLayout({
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const LinkComponent = linkComponent ?? DefaultLayoutLink;
+  const brandAccessibleName = [brand.name, brand.tagline, brand.ariaLabel]
+    .filter(Boolean)
+    .join(" - ");
 
   function closeDrawer(restoreFocus = true) {
     setIsDrawerOpen(false);
@@ -132,7 +135,11 @@ export function PlannerAppLayout({
       </a>
 
       <header className="planner-app-layout-header">
-        <LinkComponent aria-label={brand.ariaLabel} className="planner-app-layout-brand" href={brand.href}>
+        <LinkComponent
+          aria-label={brandAccessibleName}
+          className="planner-app-layout-brand"
+          href={brand.href}
+        >
           {brand.icon ? <span className="planner-app-layout-brand-mark">{brand.icon}</span> : null}
           <span className="planner-app-layout-brand-copy">
             <strong>{brand.name}</strong>

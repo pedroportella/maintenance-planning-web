@@ -19,6 +19,7 @@ export type RadixIconButtonProps = Omit<
 export function RadixIconButton({
   children,
   className,
+  highContrast = true,
   label,
   tone = "accent",
   type = "button",
@@ -32,6 +33,7 @@ export function RadixIconButton({
       aria-label={label}
       className={joinClasses("radix-icon-button", className)}
       color={radixAdapterColorByTone[tone]}
+      highContrast={highContrast}
       type={buttonType}
       variant={variant}
       {...buttonProps}

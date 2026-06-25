@@ -44,7 +44,7 @@
   position: absolute;
   left: 10px;
   z-index: 1;
-  color: var(--gray-10);
+  color: var(--mp-color-text-subtle);
   pointer-events: none;
 }
 
@@ -53,8 +53,8 @@
 }
 
 .planner-filter-toolbar-label {
-  color: var(--gray-11);
-  font-size: var(--mp-font-size-xs);
+  color: var(--mp-color-text-subtle);
+  font-size: var(--mp-font-size-sm);
   font-weight: 700;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -83,7 +83,7 @@
 
 .planner-filter-toolbar-result {
   margin: 0;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .planner-filter-toolbar-clear {

@@ -12,7 +12,7 @@
 .planner-side-nav-heading {
   margin: 0 0 2px;
   color: var(--mp-color-text-subtle);
-  font-size: var(--mp-font-size-xs);
+  font-size: var(--mp-font-size-sm);
   font-weight: 800;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -61,7 +61,7 @@
 .planner-side-nav-copy span {
   overflow: hidden;
   color: var(--mp-color-text-subtle);
-  font-size: 0.82rem;
+  font-size: var(--mp-font-size-sm);
   line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -82,6 +82,7 @@
 }
 
 .planner-side-nav-link:focus-visible {
-  outline: 0;
-  box-shadow: var(--mp-shadow-focus);
+  outline: var(--mp-focus-ring-width) solid var(--mp-color-focus);
+  outline-offset: var(--mp-focus-ring-offset);
+  box-shadow: 0 0 0 1px var(--mp-color-background);
 }

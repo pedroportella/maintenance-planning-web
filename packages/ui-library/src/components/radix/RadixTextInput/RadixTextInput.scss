@@ -1,3 +1,38 @@
-.radix-text-input {
+.radix-text-input.radix-text-input {
   width: 100%;
+  min-height: var(--mp-target-size-comfortable);
+  color: var(--mp-color-text-default);
+}
+
+.radix-text-input :where(input) {
+  min-height: var(--mp-target-size-comfortable);
+  color: var(--mp-color-text-default);
+}
+
+.radix-text-input :where(input)::placeholder {
+  color: var(--mp-color-text-subtle);
+  opacity: 1;
+}
+
+.radix-text-input :where(input:disabled) {
+  color: var(--mp-color-text-subtle);
+  opacity: 1;
+}
+
+.radix-text-input:focus-within {
+  outline: var(--mp-focus-ring-width) solid var(--mp-color-focus);
+  outline-offset: var(--mp-focus-ring-offset);
+}
+
+@media (max-width: 640px) {
+  .radix-text-input.radix-text-input,
+  .radix-text-input :where(input) {
+    min-height: var(--mp-target-size-touch);
+  }
+}
+
+@media (forced-colors: active) {
+  .radix-text-input.radix-text-input {
+    border: 1px solid CanvasText;
+  }
 }

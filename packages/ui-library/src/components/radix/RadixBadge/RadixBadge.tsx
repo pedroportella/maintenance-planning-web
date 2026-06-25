@@ -14,6 +14,7 @@ export type RadixBadgeProps = Omit<BadgeProps, "children" | "color" | "variant">
 export function RadixBadge({
   children,
   className,
+  highContrast = true,
   tone = "neutral",
   variant = "soft",
   ...badgeProps
@@ -22,6 +23,7 @@ export function RadixBadge({
     <Badge
       className={joinClasses("radix-badge", className)}
       color={radixAdapterColorByTone[tone]}
+      highContrast={highContrast}
       variant={variant}
       {...badgeProps}
     >

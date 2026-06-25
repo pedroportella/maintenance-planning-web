@@ -3,6 +3,7 @@ import { joinClasses } from "../../../utils";
 
 export type RadixFormFieldControlProps = {
   "aria-describedby"?: string;
+  "aria-errormessage"?: string;
   "aria-invalid"?: true;
   "aria-required"?: true;
   id: string;
@@ -40,6 +41,7 @@ export function RadixFormField({
   const requirementLabel = required ? requiredLabel : optionalLabel;
   const controlProps: RadixFormFieldControlProps = {
     "aria-describedby": describedBy,
+    "aria-errormessage": errorId,
     "aria-invalid": hasError ? true : undefined,
     "aria-required": required ? true : undefined,
     id: fieldId
@@ -50,6 +52,7 @@ export function RadixFormField({
     return (
       <fieldset
         aria-describedby={describedBy}
+        aria-invalid={hasError ? true : undefined}
         className={joinClasses(
           "radix-form-field",
           "radix-form-field-group",
@@ -88,6 +91,7 @@ export function RadixFormField({
         className
       )}
       data-invalid={hasError ? true : undefined}
+      data-required={required ? true : undefined}
     >
       <label className="radix-form-field-label" htmlFor={fieldId}>
         <span>{label}</span>

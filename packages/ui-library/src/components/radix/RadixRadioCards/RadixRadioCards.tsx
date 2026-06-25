@@ -40,7 +40,6 @@ export function RadixRadioCards({
     >
       {options.map((option) => (
         <RadioCards.Item
-          aria-label={typeof option.label === "string" ? option.label : undefined}
           disabled={option.disabled}
           key={option.value}
           value={option.value}

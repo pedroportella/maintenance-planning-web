@@ -15,6 +15,7 @@ export type RadixButtonProps = Omit<ButtonProps, "children" | "color" | "type" |
 export function RadixButton({
   children,
   className,
+  highContrast = true,
   tone = "accent",
   type = "button",
   variant = "solid",
@@ -26,6 +27,7 @@ export function RadixButton({
     <Button
       className={joinClasses("radix-button", className)}
       color={radixAdapterColorByTone[tone]}
+      highContrast={highContrast}
       type={resolvedType}
       variant={variant}
       {...buttonProps}

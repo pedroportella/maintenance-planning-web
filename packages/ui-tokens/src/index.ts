@@ -7,6 +7,7 @@ export const colorTokens = {
   borderStrong: "#b9c4bb",
   text: "#17211b",
   textMuted: "#4f5b52",
+  focus: "#0f766e",
   accent: {
     amber: "#b45309",
     blue: "#2563eb",
@@ -48,8 +49,8 @@ export const radiusTokens = {
 export const typographyTokens = {
   fontFamilySans:
     'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  fontSizeXs: "0.78rem",
-  fontSizeSm: "0.84rem",
+  fontSizeXs: "0.8125rem",
+  fontSizeSm: "0.875rem",
   fontSizeMd: "1rem",
   fontSizeLg: "1.35rem",
   fontSizeXl: "2rem",
@@ -60,7 +61,7 @@ export const typographyTokens = {
 
 export const shadowTokens = {
   soft: "0 18px 40px rgba(23, 33, 27, 0.08)",
-  focus: "0 0 0 3px rgba(15, 118, 110, 0.24)"
+  focus: "0 0 0 3px #0f766e"
 } as const;
 
 export const statusToneTokens = {
@@ -109,6 +110,7 @@ export const cssCustomProperties = {
     surface: "--mp-color-surface",
     surfaceMuted: "--mp-color-surface-muted",
     surfaceRaised: "--mp-color-surface-raised",
+    focus: "--mp-color-focus",
     text: "--mp-color-text",
     textMuted: "--mp-color-text-muted"
   },
@@ -135,6 +137,7 @@ export const workbenchTokens = {
   colorSurface: colorTokens.surface,
   colorText: colorTokens.text,
   colorTextMuted: colorTokens.textMuted,
+  colorFocus: colorTokens.focus,
   colorTeal: colorTokens.accent.teal,
   colorBlue: colorTokens.accent.blue,
   colorAmber: colorTokens.accent.amber,

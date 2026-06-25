@@ -20,7 +20,7 @@
 
 .radix-form-field-requirement {
   color: var(--mp-color-text-muted);
-  font-size: var(--mp-font-size-xs);
+  font-size: var(--mp-font-size-sm);
   font-weight: 700;
 }
 
@@ -28,7 +28,7 @@
 .radix-form-field-error {
   margin: 0;
   font-size: var(--mp-font-size-sm);
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .radix-form-field-hint {
@@ -36,10 +36,27 @@
 }
 
 .radix-form-field-error {
+  width: fit-content;
+  padding: 4px 8px;
   color: var(--mp-tone-critical-text);
+  background: var(--mp-tone-critical-bg);
+  border: 1px solid var(--mp-tone-critical-border);
+  border-radius: var(--mp-radius-sm);
   font-weight: 700;
 }
 
 .radix-form-field-control {
   min-width: 0;
+}
+
+.radix-form-field-invalid .radix-form-field-label {
+  color: var(--mp-tone-critical-text);
+}
+
+@media (forced-colors: active) {
+  .radix-form-field-error {
+    color: CanvasText;
+    background: Canvas;
+    border-color: Highlight;
+  }
 }

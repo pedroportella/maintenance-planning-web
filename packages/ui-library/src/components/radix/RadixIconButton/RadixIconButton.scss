@@ -1,3 +1,33 @@
-.radix-icon-button {
+.radix-icon-button.radix-icon-button {
   flex: 0 0 auto;
+  min-width: var(--mp-target-size-comfortable);
+  min-height: var(--mp-target-size-comfortable);
+}
+
+.radix-icon-button.radix-icon-button:disabled,
+.radix-icon-button.radix-icon-button[data-disabled] {
+  color: var(--mp-color-text-subtle);
+  background: var(--mp-color-surface-subtle);
+  border-color: var(--mp-color-border-default);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .radix-icon-button.radix-icon-button {
+    min-width: var(--mp-target-size-touch);
+    min-height: var(--mp-target-size-touch);
+  }
+}
+
+@media (forced-colors: active) {
+  .radix-icon-button.radix-icon-button {
+    border: 1px solid ButtonText;
+  }
+
+  .radix-icon-button.radix-icon-button:disabled,
+  .radix-icon-button.radix-icon-button[data-disabled] {
+    color: GrayText;
+    border-color: GrayText;
+  }
 }

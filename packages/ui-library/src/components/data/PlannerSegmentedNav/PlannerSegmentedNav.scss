@@ -14,12 +14,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 34px;
+  min-height: var(--mp-target-size-comfortable);
   padding: 6px 12px;
   color: var(--mp-color-text-muted);
   border-radius: var(--mp-radius-sm);
   font-size: var(--mp-font-size-sm);
   font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .planner-segmented-nav-link-active {
@@ -29,6 +32,13 @@
 }
 
 .planner-segmented-nav-link:focus-visible {
-  outline: 0;
-  box-shadow: var(--mp-shadow-focus);
+  outline: var(--mp-focus-ring-width) solid var(--mp-color-focus);
+  outline-offset: var(--mp-focus-ring-offset);
+  box-shadow: 0 0 0 1px var(--mp-color-background);
+}
+
+@media (max-width: 640px) {
+  .planner-segmented-nav-link {
+    min-height: var(--mp-target-size-touch);
+  }
 }

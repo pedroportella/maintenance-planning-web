@@ -30,12 +30,10 @@
   color: var(--mp-color-action-primary-text);
   background: var(--mp-color-action-primary);
   border-radius: var(--mp-radius-control);
-  box-shadow: var(--mp-shadow-focus);
   transform: translateY(-160%);
 }
 
 .planner-app-layout-skip-link:focus-visible {
-  outline: 0;
   transform: translateY(0);
 }
 
@@ -58,6 +56,7 @@
   display: inline-flex;
   gap: var(--mp-space-md);
   align-items: center;
+  min-height: var(--mp-target-size-touch);
   min-width: 0;
   border-radius: var(--mp-radius-control);
 }
@@ -111,7 +110,7 @@
   gap: var(--mp-space-xs);
   align-items: center;
   justify-content: center;
-  min-height: 38px;
+  min-height: var(--mp-target-size-touch);
   padding: 8px 12px;
   color: var(--mp-color-text-default);
   background: var(--mp-color-surface-default);
@@ -211,8 +210,9 @@
 .planner-app-layout-brand:focus-visible,
 .planner-app-layout-menu-button:focus-visible,
 .planner-app-layout-drawer-close:focus-visible {
-  outline: 0;
-  box-shadow: var(--mp-shadow-focus);
+  outline: var(--mp-focus-ring-width) solid var(--mp-color-focus);
+  outline-offset: var(--mp-focus-ring-offset);
+  box-shadow: 0 0 0 1px var(--mp-color-background);
 }
 
 body.planner-app-layout-drawer-open {

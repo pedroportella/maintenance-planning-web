@@ -12,8 +12,8 @@
 }
 
 .planner-data-table :where(.rt-TableColumnHeaderCell) {
-  color: var(--gray-11);
-  font-size: var(--mp-font-size-xs);
+  color: var(--mp-color-text-subtle);
+  font-size: var(--mp-font-size-sm);
   font-weight: 700;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -33,7 +33,9 @@
   gap: var(--space-1);
   align-items: center;
   justify-content: flex-start;
-  min-height: 28px;
+  min-width: var(--mp-target-size-min);
+  min-height: 32px;
+  line-height: 1.25;
 }
 
 .planner-data-table :where([data-align="end"]) .planner-data-table-sort-label,
@@ -53,7 +55,7 @@
 }
 
 .planner-data-table-sort-icon {
-  color: var(--gray-10);
+  color: var(--mp-color-text-subtle);
 }
 
 .planner-data-table :where([data-sort-state="none"]) .planner-data-table-sort-icon {

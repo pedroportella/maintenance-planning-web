@@ -4,6 +4,11 @@
   gap: 10px;
 }
 
+.radix-radio-cards :where(.rt-RadioCardsItem, [role="radio"]) {
+  min-height: 72px;
+  line-height: 1.35;
+}
+
 .radix-radio-card-label,
 .radix-radio-card-hint {
   display: block;
@@ -11,13 +16,21 @@
 
 .radix-radio-card-label {
   color: var(--mp-color-text);
+  font-size: var(--mp-font-size-sm);
   font-weight: 800;
 }
 
 .radix-radio-card-hint {
   margin-top: 2px;
   color: var(--mp-color-text-muted);
-  line-height: 1.35;
+  font-size: var(--mp-font-size-sm);
+  line-height: 1.45;
+}
+
+@media (forced-colors: active) {
+  .radix-radio-cards :where(.rt-RadioCardsItem, [role="radio"]) {
+    border: 1px solid CanvasText;
+  }
 }
 
 @media (max-width: 700px) {

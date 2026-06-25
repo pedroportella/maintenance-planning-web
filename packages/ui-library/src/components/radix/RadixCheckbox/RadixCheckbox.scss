@@ -1,3 +1,17 @@
-.radix-checkbox {
+.radix-checkbox.radix-checkbox {
   margin-top: 2px;
+  min-width: var(--mp-target-size-min);
+  min-height: var(--mp-target-size-min);
+}
+
+.radix-checkbox.radix-checkbox:disabled,
+.radix-checkbox.radix-checkbox[data-disabled] {
+  color: var(--mp-color-text-subtle);
+  opacity: 1;
+}
+
+@media (forced-colors: active) {
+  .radix-checkbox.radix-checkbox {
+    border: 1px solid CanvasText;
+  }
 }

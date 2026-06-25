@@ -3,6 +3,11 @@
   gap: 10px;
 }
 
+.radix-radio-group :where(.rt-RadioGroupItem, [role="radio"]) {
+  min-width: var(--mp-target-size-min);
+  min-height: var(--mp-target-size-min);
+}
+
 .radix-radio-group-option {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -14,12 +19,22 @@
   display: grid;
   gap: 2px;
   min-width: 0;
+  min-height: var(--mp-target-size-min);
   color: var(--mp-color-text);
+  font-size: var(--mp-font-size-sm);
   font-weight: 700;
+  line-height: 1.4;
 }
 
 .radix-radio-group-hint {
   color: var(--mp-color-text-muted);
+  font-size: var(--mp-font-size-sm);
   font-weight: 400;
-  line-height: 1.35;
+  line-height: 1.45;
+}
+
+@media (forced-colors: active) {
+  .radix-radio-group :where(.rt-RadioGroupItem, [role="radio"]) {
+    border: 1px solid CanvasText;
+  }
 }

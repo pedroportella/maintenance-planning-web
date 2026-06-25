@@ -1,14 +1,17 @@
 .planner-alert {
   align-items: start;
+  border-color: var(--mp-color-border-default);
 }
 
 .planner-alert .radix-callout-title {
+  color: var(--mp-color-text-default);
   font-weight: 800;
 }
 
 .planner-alert .radix-callout-body {
   display: grid;
   gap: var(--mp-space-xs);
+  color: var(--mp-color-text-subtle);
 }
 
 .planner-alert p {

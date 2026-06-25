@@ -1,4 +1,22 @@
-.radix-text-area {
+.radix-text-area.radix-text-area {
   width: 100%;
   min-height: 92px;
+  color: var(--mp-color-text-default);
+  line-height: var(--mp-line-height-base);
+}
+
+.radix-text-area.radix-text-area::placeholder {
+  color: var(--mp-color-text-subtle);
+  opacity: 1;
+}
+
+.radix-text-area.radix-text-area:disabled {
+  color: var(--mp-color-text-subtle);
+  opacity: 1;
+}
+
+@media (forced-colors: active) {
+  .radix-text-area.radix-text-area {
+    border: 1px solid CanvasText;
+  }
 }

@@ -1,7 +1,7 @@
 .planner-loading-state {
   display: grid;
   gap: var(--mp-space-md);
-  color: var(--gray-11);
+  color: var(--mp-color-text-subtle);
 }
 
 .planner-loading-state-message {
@@ -10,6 +10,7 @@
   align-items: center;
   min-height: 40px;
   width: fit-content;
+  line-height: 1.35;
 }
 
 .planner-loading-state-skeleton {

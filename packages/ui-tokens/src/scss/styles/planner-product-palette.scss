@@ -11,6 +11,7 @@ $planner-product-palette: (
     border-strong: primitive.color(light, border-strong),
     text: primitive.color(light, text),
     text-muted: primitive.color(light, text-muted),
+    focus: primitive.color(light, focus),
     accent-teal: primitive.color(light, teal),
     accent-blue: primitive.color(light, blue),
     accent-amber: primitive.color(light, amber),
@@ -53,6 +54,7 @@ $planner-product-palette: (
     border-strong: primitive.color(dark, border-strong),
     text: primitive.color(dark, text),
     text-muted: primitive.color(dark, text-muted),
+    focus: primitive.color(dark, focus),
     accent-teal: primitive.color(dark, teal),
     accent-blue: primitive.color(dark, blue),
     accent-amber: primitive.color(dark, amber),
@@ -113,6 +115,7 @@ $planner-product-palette: (
   --mp-color-border-strong: #{color($mode, border-strong)};
   --mp-color-text: #{color($mode, text)};
   --mp-color-text-muted: #{color($mode, text-muted)};
+  --mp-color-focus: #{color($mode, focus)};
   --mp-color-accent-teal: #{color($mode, accent-teal)};
   --mp-color-accent-blue: #{color($mode, accent-blue)};
   --mp-color-accent-amber: #{color($mode, accent-amber)};

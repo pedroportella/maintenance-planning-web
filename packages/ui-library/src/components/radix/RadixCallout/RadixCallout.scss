@@ -1,5 +1,7 @@
 .radix-callout-content {
   min-width: 0;
+  color: var(--mp-color-text-default);
+  line-height: var(--mp-line-height-base);
 }
 
 .radix-callout-title,
@@ -9,6 +11,15 @@
 
 .radix-callout-title + .radix-callout-body {
   margin-top: 2px;
+}
+
+.radix-callout-title {
+  color: var(--mp-color-text-default);
+  line-height: 1.35;
+}
+
+.radix-callout-body {
+  color: var(--mp-color-text-subtle);
 }
 
 .radix-callout-body p:last-child {

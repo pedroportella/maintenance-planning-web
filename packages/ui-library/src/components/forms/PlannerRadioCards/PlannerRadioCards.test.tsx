@@ -26,7 +26,8 @@ describe("PlannerRadioCards", () => {
 
     expect(markup).toContain("<fieldset");
     expect(markup).toContain('role="radiogroup"');
-    expect(markup).toContain('aria-label="Approve"');
+    expect(markup).not.toContain('aria-label="Approve"');
+    expect(markup).toContain('<span class="radix-radio-card-label">Approve</span>');
     expect(markup).toContain("The package can proceed.");
   });
 });

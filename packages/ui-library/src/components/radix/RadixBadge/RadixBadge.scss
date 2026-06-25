@@ -1,3 +1,7 @@
-.radix-badge {
+.radix-badge.radix-badge {
+  max-width: 100%;
+  min-height: var(--mp-target-size-min);
+  white-space: normal;
+  line-height: 1.2;
   font-weight: 700;
 }

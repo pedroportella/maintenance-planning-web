@@ -55,7 +55,9 @@ describe("ui-library components", () => {
       })
     );
 
-    expect(markup).toContain('aria-label="Planner workbench home"');
+    expect(markup).toContain(
+      'aria-label="Planner Workbench - Synthetic planning review - Planner workbench home"'
+    );
     expect(markup).toContain('aria-label="Planner sections"');
     expect(markup).toContain('href="#planner-main"');
     expect(markup).toContain('aria-expanded="false"');

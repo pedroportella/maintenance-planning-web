@@ -27,7 +27,11 @@ export function PlannerStatusBadge({
       tone={tone}
       variant="soft"
     >
-      {icon ? <span className="planner-status-badge-icon">{icon}</span> : null}
+      {icon ? (
+        <span aria-hidden="true" className="planner-status-badge-icon">
+          {icon}
+        </span>
+      ) : null}
       <span>{children}</span>
     </RadixBadge>
   );

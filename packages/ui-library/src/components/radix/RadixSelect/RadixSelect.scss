@@ -1,3 +1,26 @@
-.radix-select-trigger {
+.radix-select-trigger.radix-select-trigger {
   width: 100%;
+  min-height: var(--mp-target-size-comfortable);
+  color: var(--mp-color-text-default);
+  line-height: 1.25;
+}
+
+.radix-select-trigger.radix-select-trigger:disabled,
+.radix-select-trigger.radix-select-trigger[data-disabled] {
+  color: var(--mp-color-text-subtle);
+  background: var(--mp-color-surface-subtle);
+  border-color: var(--mp-color-border-default);
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .radix-select-trigger.radix-select-trigger {
+    min-height: var(--mp-target-size-touch);
+  }
+}
+
+@media (forced-colors: active) {
+  .radix-select-trigger.radix-select-trigger {
+    border: 1px solid CanvasText;
+  }
 }

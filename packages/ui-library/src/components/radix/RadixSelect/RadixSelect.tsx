@@ -16,6 +16,7 @@ export type RadixSelectProps = Omit<
   "children" | "onValueChange" | "value"
 > & {
   "aria-describedby"?: string;
+  "aria-errormessage"?: string;
   "aria-invalid"?: true;
   "aria-required"?: true;
   className?: string;
@@ -29,6 +30,7 @@ export type RadixSelectProps = Omit<
 
 export function RadixSelect({
   "aria-describedby": ariaDescribedBy,
+  "aria-errormessage": ariaErrorMessage,
   "aria-invalid": ariaInvalid,
   "aria-required": ariaRequired,
   className,
@@ -42,6 +44,7 @@ export function RadixSelect({
     <Select.Root {...selectProps}>
       <Select.Trigger
         aria-describedby={ariaDescribedBy}
+        aria-errormessage={ariaErrorMessage}
         aria-invalid={ariaInvalid}
         aria-required={ariaRequired}
         className={joinClasses("radix-select-trigger", className)}

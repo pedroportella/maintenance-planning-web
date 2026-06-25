@@ -1,4 +1,9 @@
 .radix-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--mp-target-size-min);
+  max-width: 100%;
   font-weight: 700;
+  overflow-wrap: anywhere;
   text-underline-offset: 3px;
 }
