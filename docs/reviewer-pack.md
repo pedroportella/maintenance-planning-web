@@ -39,7 +39,7 @@ The default local review verification path includes:
 
 - source guardrails for generated artefacts, public docs, secrets and browser-visible backend origins;
 - workspace lint, type checks and package tests;
-- mock-mode browser checks for the planner journey and UI-library showcase;
+- mock-mode browser checks for the planner journey, planner-route accessibility evidence and UI-library showcase;
 - focused `/ui-library` screenshot baselines for fast visual review;
 - reviewer evidence smoke for required docs, scripts, configs and local Markdown links.
 

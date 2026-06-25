@@ -66,6 +66,10 @@ export async function collectStructuralAccessibilityScan(page: Page) {
       return `${role}${classes ? `.${classes}` : ""}${name ? `: ${name}` : ""}`;
     }
 
+    function comparableLabel(value: string) {
+      return value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    }
+
     const interactiveSelector = [
       "a[href]",
       "button",
@@ -103,7 +107,7 @@ export async function collectStructuralAccessibilityScan(page: Page) {
         const visibleText = element.textContent?.replace(/\s+/g, " ").trim();
         if (!visibleText || visibleText.length < 2) return false;
 
-        return !accessibleName(element).toLowerCase().includes(visibleText.toLowerCase());
+        return !comparableLabel(accessibleName(element)).includes(comparableLabel(visibleText));
       })
       .map(elementLabel);
     const missingPageLanguage = !document.documentElement.lang;

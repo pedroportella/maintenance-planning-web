@@ -38,6 +38,8 @@ Durable repo guidance for the maintenance-planning web prototype.
 
 - Run guard scripts after public-doc, config or browser-source changes.
 - Keep reviewer evidence independent of the API, simulator and cloud credentials.
+- Keep Playwright specs focused on orchestration; move reusable route fixtures,
+  evidence builders and report helpers into `e2e/*/` helper modules.
 - Expand `lint`, `typecheck`, `test` and `build` package scripts as implementation grows.
 
 ## Documentation
