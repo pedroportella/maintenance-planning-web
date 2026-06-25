@@ -19,6 +19,7 @@
     "test": "node scripts/workspace-runner.mjs test",
     "test:e2e:backend": "node scripts/run-backend-playwright.mjs",
     "test:e2e:mock": "node scripts/run-playwright.mjs test --config playwright.config.mjs",
+    "test:a11y:library": "node scripts/run-playwright.mjs test --config playwright.a11y-library.config.mjs",
     "test:links": "node scripts/markdown-link-check.mjs",
     "test:reviewer-pack": "node scripts/run-playwright.mjs test --config playwright.reviewer.config.mjs",
     "test:reviewer-evidence": "node scripts/reviewer-evidence-smoke.mjs",
