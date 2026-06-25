@@ -61,6 +61,9 @@ describe("PlannerDecisionPanel", () => {
     );
 
     expect(markup).toContain('aria-label="Record planner decision for PKG-READY-001"');
+    expect(markup).toContain('aria-describedby="planner-decision-panel-');
+    expect(markup).toContain("Accepted selected for PKG-READY-001");
+    expect(markup).toContain("Submitting records planner-accepted.");
     expect(markup).toContain('name="packageId"');
     expect(markup).toContain('value="package-1"');
     expect(markup).toContain('name="planningRunId"');
@@ -100,6 +103,7 @@ describe("PlannerDecisionPanel", () => {
     );
 
     expect(markup).toContain("Acceptance is blocked");
+    expect(markup).toContain("Deferred selected for PKG-BLOCKED-001");
     expect(markup).toContain("Resolve blockers before accepting.");
     expect(markup).toContain('value="defer"');
     expect(markup).toContain("Defer reason");

@@ -90,7 +90,7 @@ export function WorkOrderBacklogTable({
   };
 
   return (
-    <div>
+    <>
       <PlannerFilterToolbar
         ariaLabel="Work-order table controls"
         clearAction={{
@@ -105,7 +105,14 @@ export function WorkOrderBacklogTable({
             options: filterOptions
           }
         ]}
-        resultSummary={`${pageRows.length} shown from ${searchedItems.length} ${filterLabel.toLowerCase()} rows`}
+        resultSummary={
+          <>
+            {pageRows.length} shown from {searchedItems.length} {filterLabel.toLowerCase()} rows
+            <span className="sr-only">
+              . {formatSortState(sortState)}. Page {safePage} of {pageCount}.
+            </span>
+          </>
+        }
         search={{
           clearLabel: "Clear search",
           id: "work-order-table-search",
@@ -120,6 +127,7 @@ export function WorkOrderBacklogTable({
         caption="Planner work-order triage"
         columns={backlogColumns}
         density="compact"
+        description={`Use the work-order row header, readiness, coordination note, package, hours, due date and latest decision columns to triage ${filterLabel.toLowerCase()} work orders. Horizontal scrolling is limited to this table region on narrow screens.`}
         emptyState={
           <PlannerEmptyState
             description={
@@ -135,12 +143,13 @@ export function WorkOrderBacklogTable({
         sortState={sortState}
       />
       <PlannerPagination
+        ariaLabel="Work-order triage pagination"
         currentPage={safePage}
         onPageChange={setCurrentPage}
         pageSize={pageSize}
         totalItems={sortedItems.length}
       />
-    </div>
+    </>
   );
 }
 
@@ -161,6 +170,7 @@ function buildBacklogColumns(
       render: (item) => (
         <PlannerTableCellStack detail={item.title} title={item.workOrderNumber} />
       ),
+      rowHeader: true,
       sortLabel: "Sort by work order",
       sortable: true
     },
@@ -246,6 +256,17 @@ function nextSortState(
     columnKey,
     direction: current.direction === "ascending" ? "descending" : "ascending"
   };
+}
+
+function formatSortState(sortState: WorkOrderBacklogSortState) {
+  const labelByKey = {
+    due: "due date",
+    hours: "estimated hours",
+    readiness: "readiness",
+    "work-order": "work order"
+  } as const satisfies Record<WorkOrderBacklogSortKey, string>;
+
+  return `Sorted by ${labelByKey[sortState.columnKey]} ${sortState.direction}`;
 }
 
 function filterBySearch(

@@ -21,11 +21,11 @@ import {
   toneForStatus
 } from "@/lib/planner-format";
 import { RecommendationDetailPanel } from "./recommendation-detail-panel";
+import { RecommendationDecisionNotice } from "./recommendation-notices";
 import {
-  RecommendationDecisionNotice,
   readRecommendationSearchParam,
   type RecommendationSearchParams
-} from "./recommendation-notices";
+} from "./recommendation-search-params";
 
 type RecommendationDetailContainerProps = {
   params: Promise<{

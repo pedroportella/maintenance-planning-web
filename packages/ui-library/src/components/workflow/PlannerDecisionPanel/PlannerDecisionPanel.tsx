@@ -98,6 +98,7 @@ export function PlannerDecisionPanel({
   const [selectedDeferActionCode, setSelectedDeferActionCode] = useState(
     () => resolveInitialDeferActionCode(deferActions, defaultDeferActionCode)
   );
+  const decisionStatusId = `planner-decision-panel-${generatedId}-status`;
 
   const selectedDeferAction =
     deferActions.find((action) => action.actionCode === selectedDeferActionCode) ??
@@ -113,6 +114,13 @@ export function PlannerDecisionPanel({
   const submitTone = selectedAction?.tone ?? toneByDecision[selectedDecision];
   const isSubmitDisabled = !selectedAction || selectedAction.disabled === true;
   const hasBlockers = blockers.length > 0;
+  const selectedActionStatus = buildSelectedActionStatus({
+    isSubmitDisabled,
+    packageNumber,
+    selectedAction,
+    selectedDecision,
+    selectedDeferAction
+  });
 
   return (
     <section
@@ -132,6 +140,7 @@ export function PlannerDecisionPanel({
 
       <form
         action={recordAction}
+        aria-describedby={decisionStatusId}
         aria-label={ariaLabel ?? `Record planner decision for ${packageNumber}`}
         className="planner-decision-panel-form"
         id={formId}
@@ -149,6 +158,13 @@ export function PlannerDecisionPanel({
           />
         ))}
         <input name="actionCode" type="hidden" value={submittedActionCode} />
+        <p
+          aria-live="polite"
+          className="sr-only"
+          id={decisionStatusId}
+        >
+          {selectedActionStatus}
+        </p>
 
         {facts.length > 0 ? (
           <PlannerSummaryList
@@ -225,6 +241,7 @@ export function PlannerDecisionPanel({
 
         <footer className="planner-decision-panel-action-bar">
           <RadixButton
+            aria-describedby={decisionStatusId}
             className="planner-decision-panel-submit"
             disabled={isSubmitDisabled}
             tone={submitTone}
@@ -338,6 +355,41 @@ function getSubmitLabel(decision: PlannerDecisionKind) {
   if (decision === "Accepted") return "Accept package";
   if (decision === "Rejected") return "Reject package";
   return "Defer package";
+}
+
+function buildSelectedActionStatus({
+  isSubmitDisabled,
+  packageNumber,
+  selectedAction,
+  selectedDecision,
+  selectedDeferAction
+}: {
+  isSubmitDisabled: boolean;
+  packageNumber: string;
+  selectedAction?: PlannerDecisionPanelAction;
+  selectedDecision: PlannerDecisionKind;
+  selectedDeferAction?: PlannerDecisionPanelAction;
+}) {
+  if (!selectedAction) {
+    return `No ${selectedDecision.toLowerCase()} action is available for ${packageNumber}.`;
+  }
+
+  const reason =
+    selectedDecision === "Deferred"
+      ? labelToPlainText(selectedDeferAction?.label) ??
+        selectedDeferAction?.reasonCode ??
+        selectedDeferAction?.actionCode
+      : selectedAction.reasonCode ?? selectedAction.actionCode;
+  const reasonText = reason ?? selectedAction.actionCode;
+  const disabledText = isSubmitDisabled
+    ? " This action is unavailable until blockers are resolved."
+    : "";
+
+  return `${selectedDecision} selected for ${packageNumber}. Submitting records ${reasonText}.${disabledText}`;
+}
+
+function labelToPlainText(label: ReactNode) {
+  return typeof label === "string" || typeof label === "number" ? String(label) : undefined;
 }
 
 function getBlockerKey(blocker: PlannerDecisionPanelBlocker, index: number) {

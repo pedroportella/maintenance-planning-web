@@ -45,6 +45,8 @@ describe("PlannerFilterToolbar", () => {
     );
 
     expect(markup).toContain('aria-label="Planner table controls"');
+    expect(markup).toContain('role="status"');
+    expect(markup).toContain('aria-live="polite"');
     expect(markup).toContain('for="queue-search"');
     expect(markup).toContain('value="pump"');
     expect(markup).toContain('role="combobox"');

@@ -41,7 +41,8 @@ export function PlannerAppShell({ children }: Readonly<{ children: ReactNode }>)
         name: workbenchBrand.name,
         tagline: workbenchBrand.tagline
       }}
-      contentId="planner-shell-content"
+      contentId="planner-main"
+      contentTarget="route"
       linkComponent={ShellLink}
       navAriaLabel="Planner sections"
       navItems={navItems}

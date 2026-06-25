@@ -55,6 +55,7 @@ describe("PlannerDataTable", () => {
     expect(markup).toContain("rt-TableRoot");
     expect(markup).toContain("planner-data-table");
     expect(markup).toContain("data-table");
+    expect(markup).toContain('role="region"');
     expect(markup).toContain('scope="row"');
     expect(markup).toContain('data-align="end"');
   });
@@ -115,6 +116,7 @@ describe("PlannerDataTable", () => {
       createElement(PlannerDataTable<Row>, {
         caption: "Sortable planner queue",
         columns,
+        description: "Sort and review the planner queue.",
         getRowKey: (row) => row.workOrder,
         rows: [
           {
@@ -131,7 +133,9 @@ describe("PlannerDataTable", () => {
 
     expect(markup).toContain('aria-sort="none"');
     expect(markup).toContain('aria-sort="descending"');
-    expect(markup).toContain('aria-label="Sort by work order"');
+    expect(markup).toContain("Sort by work order. Not sorted. Activate to sort ascending.");
+    expect(markup).toContain("Sort by Hours. Sorted descending. Activate to sort ascending.");
+    expect(markup).toContain("Sort and review the planner queue.");
     expect(markup).toContain("planner-data-table-sort-button");
     expect(markup).toContain('data-sort-state="descending"');
   });

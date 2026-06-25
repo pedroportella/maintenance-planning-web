@@ -38,7 +38,8 @@ const workOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] 
     key: "work-order",
     render: (item) => (
       <PlannerTableCellStack detail={item.title} title={item.workOrderNumber} />
-    )
+    ),
+    rowHeader: true
   },
   {
     header: "Readiness",
@@ -172,6 +173,7 @@ export function RecommendationDetailPanel({
         caption={`${recommendation.packageNumber} work orders`}
         columns={workOrderColumns}
         density="compact"
+        description={`Use the work-order row header, readiness, asset context, hours and due-date columns to review the work included in ${recommendation.packageNumber}.`}
         getRowKey={(item) => item.id}
         rows={recommendation.workOrders}
       />

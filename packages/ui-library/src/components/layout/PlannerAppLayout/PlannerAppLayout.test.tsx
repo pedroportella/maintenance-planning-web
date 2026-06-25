@@ -52,4 +52,25 @@ describe("PlannerAppLayout", () => {
     expect(markup).not.toContain("planner-app-layout-sidebar");
     expect(markup).not.toContain("planner-app-layout-menu-button");
   });
+
+  it("can delegate the skip target to a route-owned main landmark", () => {
+    const markup = renderToStaticMarkup(
+      createElement(PlannerAppLayout, {
+        brand: {
+          ariaLabel: "Planner home",
+          href: "/",
+          name: "Planner Workbench"
+        },
+        children: createElement("main", { id: "route-main", tabIndex: -1 }, "Route body"),
+        contentId: "route-main",
+        contentTarget: "route",
+        navAriaLabel: "Planner sections",
+        navItems: []
+      })
+    );
+
+    expect(markup).toContain('href="#route-main"');
+    expect(markup).toContain('<main id="route-main" tabindex="-1">');
+    expect(markup).not.toContain('class="planner-app-layout-content" id="route-main"');
+  });
 });

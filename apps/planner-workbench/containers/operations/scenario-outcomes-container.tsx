@@ -35,7 +35,8 @@ const outcomeColumns: readonly PlannerDataTableColumn<ScenarioOutcomeView>[] = [
     key: "scenario",
     render: (outcome) => (
       <PlannerTableCellStack detail={outcome.scenarioId} title={outcome.label} />
-    )
+    ),
+    rowHeader: true
   },
   {
     header: "Outcome",
@@ -83,7 +84,8 @@ const latestSignalColumns: readonly PlannerDataTableColumn<OperationsSignalView>
     key: "signal",
     render: (signal) => (
       <PlannerTableCellStack detail={signal.summary} title={signal.label} />
-    )
+    ),
+    rowHeader: true
   },
   {
     header: "State",
@@ -174,6 +176,7 @@ export default async function ScenarioOutcomesPage() {
             caption="Latest scenario outcome signals"
             columns={latestSignalColumns}
             density="compact"
+            description={`Use the signal row header, state and detail columns to review ${latest.label}.`}
             emptyState={
               <PlannerEmptyState
                 description="No scenario signals were returned for this synthetic review state."
@@ -200,6 +203,7 @@ export default async function ScenarioOutcomesPage() {
             caption="Synthetic scenario outcomes"
             columns={outcomeColumns}
             density="compact"
+            description="Use the scenario row header, outcome, planning run, package count, rejected count, stale count and checked columns to compare synthetic scenario evidence."
             emptyState={
               <PlannerEmptyState
                 description="The service returned no synthetic scenario outcomes for this review state."

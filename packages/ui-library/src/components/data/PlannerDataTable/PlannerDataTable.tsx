@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { PlannerEmptyState } from "../../feedback";
 import { joinClasses } from "../../../utils";
 import { RadixButton, RadixIcon, RadixTable } from "../../radix";
@@ -27,6 +27,7 @@ export type PlannerDataTableProps<TRow> = {
   className?: string;
   columns: readonly PlannerDataTableColumn<TRow>[];
   density?: "compact" | "default";
+  description?: ReactNode;
   emptyState?: ReactNode;
   getRowKey: (row: TRow) => string;
   rows: readonly TRow[];
@@ -38,11 +39,15 @@ export function PlannerDataTable<TRow>({
   className,
   columns,
   density = "default",
+  description,
   emptyState,
   getRowKey,
   rows,
   sortState
 }: PlannerDataTableProps<TRow>) {
+  const generatedId = useId().replace(/:/g, "");
+  const captionId = `planner-data-table-${generatedId}-caption`;
+  const descriptionId = description ? `planner-data-table-${generatedId}-description` : undefined;
   const fallbackEmptyState = (
     <PlannerEmptyState
       description="No rows are available for this local review state."
@@ -58,7 +63,16 @@ export function PlannerDataTable<TRow>({
         "data-table-region",
         className
       )}
+      aria-describedby={descriptionId}
+      aria-labelledby={captionId}
+      role="region"
+      tabIndex={0}
     >
+      {description ? (
+        <p className="sr-only" id={descriptionId}>
+          {description}
+        </p>
+      ) : null}
       <RadixTable.Root
         className={joinClasses(
           "planner-data-table",
@@ -67,7 +81,7 @@ export function PlannerDataTable<TRow>({
         )}
         density={density}
       >
-        <RadixTable.Caption className="planner-data-table-caption sr-only">
+        <RadixTable.Caption className="planner-data-table-caption sr-only" id={captionId}>
           {caption}
         </RadixTable.Caption>
         <RadixTable.Header>
@@ -146,11 +160,13 @@ function PlannerDataTableHeaderContent<TRow>({
     column.sortLabel ??
     (typeof column.header === "string" ? `Sort by ${column.header}` : "Sort table column");
   const iconName = sortDirection === "ascending" ? "caretUp" : "caretDown";
+  const sortDescription = getSortDescription(sortLabel, sortDirection);
 
   if (!column.onSort) {
     return (
       <span className="planner-data-table-sort-label">
         <span>{column.header}</span>
+        <span className="sr-only"> {sortDescription}</span>
         <RadixIcon
           className="planner-data-table-sort-icon"
           decorative
@@ -162,13 +178,13 @@ function PlannerDataTableHeaderContent<TRow>({
 
   return (
     <RadixButton
-      aria-label={sortLabel}
       className="planner-data-table-sort-button"
       onClick={column.onSort}
       tone="neutral"
       variant="ghost"
     >
       <span>{column.header}</span>
+      <span className="sr-only"> {sortDescription}</span>
       <RadixIcon
         className="planner-data-table-sort-icon"
         decorative
@@ -176,4 +192,17 @@ function PlannerDataTableHeaderContent<TRow>({
       />
     </RadixButton>
   );
+}
+
+function getSortDescription(
+  sortLabel: string,
+  sortDirection?: PlannerDataTableSortDirection
+) {
+  if (!sortDirection) {
+    return `${sortLabel}. Not sorted. Activate to sort ascending.`;
+  }
+
+  const nextDirection = sortDirection === "ascending" ? "descending" : "ascending";
+
+  return `${sortLabel}. Sorted ${sortDirection}. Activate to sort ${nextDirection}.`;
 }

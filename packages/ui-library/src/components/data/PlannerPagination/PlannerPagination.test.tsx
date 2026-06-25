@@ -14,10 +14,12 @@ describe("PlannerPagination", () => {
     );
 
     expect(markup).toContain('aria-label="Table pagination"');
+    expect(markup).toContain('role="status"');
+    expect(markup).toContain('aria-describedby=');
     expect(markup).toContain("Showing 11-20 of 42");
     expect(markup).toContain("Page 2 of 5");
-    expect(markup).toContain('aria-label="Previous page"');
-    expect(markup).toContain('aria-label="Next page"');
+    expect(markup).toContain('aria-label="Previous page, go to page 1"');
+    expect(markup).toContain('aria-label="Next page, go to page 3"');
   });
 
   it("can render URL-addressable page controls without router imports", () => {
@@ -30,7 +32,7 @@ describe("PlannerPagination", () => {
       })
     );
 
-    expect(markup).toContain('aria-label="Previous page"');
+    expect(markup).toContain('aria-label="Previous page unavailable"');
     expect(markup).toContain("disabled");
     expect(markup).toContain('href="/work-order-backlog?page=2"');
   });

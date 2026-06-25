@@ -41,7 +41,8 @@ const planningRunColumns: readonly PlannerDataTableColumn<PlanningRunRow>[] = [
     key: "run",
     render: (run) => (
       <PlannerTableCellStack detail={run.id} title={run.runNumber} />
-    )
+    ),
+    rowHeader: true
   },
   {
     header: "Status",
@@ -127,6 +128,7 @@ export default async function PlanningRunsPage() {
             caption="Planning run list"
             columns={planningRunColumns}
             density="compact"
+            description="Use the run row header, status, package count, ready count and blocked count before opening a planning-run detail route."
             emptyState={
               <PlannerEmptyState
                 description="The service returned no planning runs for this synthetic review state."

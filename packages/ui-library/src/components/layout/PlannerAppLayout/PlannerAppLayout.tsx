@@ -24,6 +24,7 @@ export type PlannerAppLayoutProps = {
   children: ReactNode;
   className?: string;
   contentId?: string;
+  contentTarget?: "layout" | "route";
   focusMode?: boolean;
   headerActions?: ReactNode;
   linkComponent?: ComponentType<PlannerSideNavLinkProps>;
@@ -44,6 +45,7 @@ export function PlannerAppLayout({
   children,
   className,
   contentId = defaultContentId,
+  contentTarget = "layout",
   focusMode = false,
   headerActions,
   linkComponent,
@@ -57,6 +59,7 @@ export function PlannerAppLayout({
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const LinkComponent = linkComponent ?? DefaultLayoutLink;
+  const layoutOwnsContentTarget = contentTarget === "layout";
   const brandAccessibleName = [brand.name, brand.tagline, brand.ariaLabel]
     .filter(Boolean)
     .join(" - ");
@@ -173,7 +176,11 @@ export function PlannerAppLayout({
           </aside>
         ) : null}
 
-        <div className="planner-app-layout-content" id={contentId} tabIndex={-1}>
+        <div
+          className="planner-app-layout-content"
+          id={layoutOwnsContentTarget ? contentId : undefined}
+          tabIndex={layoutOwnsContentTarget ? -1 : undefined}
+        >
           {children}
         </div>
       </div>

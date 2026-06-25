@@ -57,7 +57,8 @@ function buildRecommendationColumns(
           </Link>
         }
       />
-    )
+    ),
+    rowHeader: true
   },
   {
     header: "Readiness",
@@ -168,6 +169,7 @@ export default async function PlanningRunDetailPage({ params }: PlanningRunDetai
             caption="Planning run recommendation detail"
             columns={recommendationColumns}
             density="compact"
+            description={`Use the package row header, readiness, score, hours, constraint state and decision columns to review ${recommendationSet.runNumber}.`}
             emptyState={
               <PlannerEmptyState
                 description="The service returned no recommendations for this planning run."

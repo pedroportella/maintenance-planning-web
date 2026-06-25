@@ -30,10 +30,8 @@ import {
   toneForReadiness,
   toneForStatus
 } from "@/lib/planner-format";
-import {
-  RecommendationDecisionNotice,
-  type RecommendationSearchParams
-} from "./recommendation-notices";
+import { RecommendationDecisionNotice } from "./recommendation-notices";
+import type { RecommendationSearchParams } from "./recommendation-search-params";
 import { packageRecommendationHref } from "./recommendation-links";
 
 type RecommendationListContainerProps = {
@@ -52,7 +50,8 @@ function buildPackageColumns(
         detail={recommendation.title}
         title={recommendation.packageNumber}
       />
-    )
+    ),
+    rowHeader: true
   },
   {
     header: "Status",
@@ -192,6 +191,7 @@ export default async function RecommendationListContainer({
             caption="Package recommendation queue"
             columns={packageColumns}
             density="compact"
+            description="Use the package row header, status, score, hours, blocker count, work-order count and latest decision columns before opening a package detail route."
             emptyState={
               <PlannerEmptyState
                 description="The service returned no package recommendations for this planning run."

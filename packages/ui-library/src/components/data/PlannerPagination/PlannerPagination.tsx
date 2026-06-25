@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { joinClasses } from "../../../utils";
 import { RadixIcon, RadixIconButton, RadixText } from "../../radix";
 
@@ -20,6 +21,9 @@ export function PlannerPagination({
   pageSize,
   totalItems
 }: PlannerPaginationProps) {
+  const generatedId = useId().replace(/:/g, "");
+  const summaryId = `planner-pagination-${generatedId}-summary`;
+  const pageId = `planner-pagination-${generatedId}-page`;
   const pageCount = Math.max(1, Math.ceil(totalItems / Math.max(pageSize, 1)));
   const safePage = Math.min(Math.max(currentPage, 1), pageCount);
   const rangeStart = totalItems === 0 ? 0 : (safePage - 1) * pageSize + 1;
@@ -30,32 +34,39 @@ export function PlannerPagination({
   return (
     <nav
       aria-label={ariaLabel}
+      aria-describedby={`${summaryId} ${pageId}`}
       className={joinClasses("planner-pagination", className)}
     >
-      <RadixText
+      <p
+        id={summaryId}
         aria-live="polite"
-        as="p"
+        aria-atomic="true"
         className="planner-pagination-summary"
-        tone="muted"
+        role="status"
       >
         Showing {rangeStart}-{rangeEnd} of {totalItems}
-      </RadixText>
+      </p>
       <div className="planner-pagination-controls">
         <PlannerPaginationControl
           disabled={!canGoBack}
           href={canGoBack ? hrefForPage?.(safePage - 1) : undefined}
           icon="arrowLeft"
-          label="Previous page"
+          label={canGoBack ? `Previous page, go to page ${safePage - 1}` : "Previous page unavailable"}
           onClick={canGoBack && onPageChange ? () => onPageChange(safePage - 1) : undefined}
         />
-        <RadixText as="span" className="planner-pagination-page" tone="default">
+        <RadixText
+          as="span"
+          className="planner-pagination-page"
+          id={pageId}
+          tone="default"
+        >
           Page {safePage} of {pageCount}
         </RadixText>
         <PlannerPaginationControl
           disabled={!canGoForward}
           href={canGoForward ? hrefForPage?.(safePage + 1) : undefined}
           icon="arrowRight"
-          label="Next page"
+          label={canGoForward ? `Next page, go to page ${safePage + 1}` : "Next page unavailable"}
           onClick={canGoForward && onPageChange ? () => onPageChange(safePage + 1) : undefined}
         />
       </div>

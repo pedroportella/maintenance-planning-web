@@ -1,6 +1,16 @@
 .planner-data-table-region,
 .data-table-region {
   min-width: 0;
+  overflow-x: auto;
+  border-radius: var(--mp-radius-surface);
+  scroll-padding-inline: var(--mp-space-sm);
+}
+
+.planner-data-table-region:focus-visible,
+.data-table-region:focus-visible {
+  outline: var(--mp-focus-ring-width) solid var(--mp-color-focus);
+  outline-offset: var(--mp-focus-ring-offset);
+  box-shadow: 0 0 0 1px var(--mp-color-background);
 }
 
 .planner-data-table {

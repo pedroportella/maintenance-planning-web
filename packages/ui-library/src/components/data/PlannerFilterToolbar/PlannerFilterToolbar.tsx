@@ -1,4 +1,4 @@
-import type { ChangeEvent, ComponentType, ReactNode } from "react";
+import { useId, type ChangeEvent, type ComponentType, type ReactNode } from "react";
 import {
   PlannerSegmentedNav,
   type PlannerSegmentedNavLinkProps,
@@ -10,7 +10,6 @@ import {
   RadixIcon,
   RadixSelect,
   type RadixSelectOption,
-  RadixText,
   RadixTextInput
 } from "../../radix";
 
@@ -71,9 +70,15 @@ export function PlannerFilterToolbar({
   resultSummary,
   search
 }: PlannerFilterToolbarProps) {
+  const generatedId = useId().replace(/:/g, "");
+  const resultSummaryId = resultSummary
+    ? `planner-filter-toolbar-${generatedId}-result`
+    : undefined;
+
   return (
     <section
       aria-label={ariaLabel}
+      aria-describedby={resultSummaryId}
       className={joinClasses("planner-filter-toolbar", className)}
     >
       {filters.length > 0 ? (
@@ -85,16 +90,28 @@ export function PlannerFilterToolbar({
       ) : null}
 
       <div className="planner-filter-toolbar-controls">
-        {search ? <PlannerFilterToolbarSearchControl search={search} /> : null}
+        {search ? (
+          <PlannerFilterToolbarSearchControl
+            resultSummaryId={resultSummaryId}
+            search={search}
+          />
+        ) : null}
 
         <div className="planner-filter-toolbar-summary">
           {resultSummary ? (
-            <RadixText as="p" className="planner-filter-toolbar-result" tone="muted">
+            <p
+              aria-atomic="true"
+              aria-live="polite"
+              className="planner-filter-toolbar-result"
+              id={resultSummaryId}
+              role="status"
+            >
               {resultSummary}
-            </RadixText>
+            </p>
           ) : null}
           {clearAction ? (
             <RadixButton
+              aria-describedby={resultSummaryId}
               className="planner-filter-toolbar-clear"
               disabled={clearAction.disabled}
               onClick={clearAction.onClear}
@@ -113,8 +130,10 @@ export function PlannerFilterToolbar({
 }
 
 function PlannerFilterToolbarSearchControl({
+  resultSummaryId,
   search
 }: {
+  readonly resultSummaryId?: string;
   readonly search: PlannerFilterToolbarSearch;
 }) {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -130,6 +149,7 @@ function PlannerFilterToolbarSearchControl({
         <RadixIcon className="planner-filter-toolbar-search-icon" decorative name="magnifyingGlass" />
         <RadixTextInput
           aria-label={search.label}
+          aria-describedby={resultSummaryId}
           disabled={search.disabled}
           id={search.id}
           name={search.name}

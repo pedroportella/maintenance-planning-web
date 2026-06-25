@@ -37,7 +37,8 @@ const signalColumns: readonly PlannerDataTableColumn<OperationsSignalView>[] = [
     key: "signal",
     render: (signal) => (
       <PlannerTableCellStack detail={signal.summary} title={signal.label} />
-    )
+    ),
+    rowHeader: true
   },
   {
     header: "State",
@@ -135,6 +136,7 @@ export default async function OperationsPosturePage() {
               caption="Operations posture signals"
               columns={signalColumns}
               density="compact"
+              description="Use the signal row header, state, detail and checked columns to review planner-visible operations posture."
               getRowKey={(signal) => signal.label}
               rows={posture.signals}
             />
