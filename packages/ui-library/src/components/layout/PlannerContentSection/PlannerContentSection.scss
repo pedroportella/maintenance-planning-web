@@ -1,11 +1,11 @@
 .planner-content-section {
   display: grid;
-  gap: var(--mp-space-lg);
+  gap: var(--mp-space-xl);
   min-width: 0;
 }
 
 .planner-content-section[data-variant="surface"] {
-  padding: var(--mp-space-xl);
+  padding: var(--mp-space-2xl);
   background: var(--mp-color-surface-elevated);
   border: 1px solid var(--mp-color-border-default);
   border-radius: var(--mp-radius-surface);
@@ -13,14 +13,14 @@
 
 .planner-content-section-header {
   display: flex;
-  gap: var(--mp-space-lg);
+  gap: var(--mp-space-xl);
   align-items: start;
   justify-content: space-between;
 }
 
 .planner-content-section-copy {
   display: grid;
-  gap: var(--mp-space-xs);
+  gap: var(--mp-space-sm);
   min-width: 0;
 }
 
@@ -41,14 +41,14 @@
 .planner-content-section-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--mp-space-sm);
+  gap: var(--mp-space-md);
   align-items: center;
   justify-content: flex-end;
 }
 
 .planner-content-section-body {
   display: grid;
-  gap: var(--mp-space-lg);
+  gap: var(--mp-space-xl);
   min-width: 0;
 }
 

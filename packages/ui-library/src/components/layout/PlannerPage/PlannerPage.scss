@@ -1,6 +1,7 @@
 .planner-page {
   display: grid;
-  gap: var(--mp-space-3xl);
+  align-content: start;
+  gap: var(--mp-space-4xl);
   width: 100%;
   min-width: 0;
 }

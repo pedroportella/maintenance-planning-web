@@ -1,23 +1,31 @@
 .planner-page-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--mp-space-xl);
-  align-items: end;
-  padding-bottom: var(--mp-space-sm);
+  gap: var(--mp-space-2xl);
+  align-items: start;
+  padding-bottom: var(--mp-space-md);
   border-bottom: 1px solid var(--mp-color-border-default);
 }
 
 .planner-page-header-copy {
   display: grid;
-  gap: var(--mp-space-sm);
+  gap: var(--mp-space-md);
 }
 
 .planner-page-header-badge,
 .planner-page-header-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--mp-space-sm);
+  gap: var(--mp-space-md);
   align-items: center;
+}
+
+.planner-page-header-actions {
+  padding-top: 0;
+}
+
+.planner-page-header[data-title-prefix="true"] .planner-page-header-actions {
+  padding-top: calc(var(--mp-target-size-min) + var(--mp-space-md));
 }
 
 .planner-page-header-eyebrow {
@@ -42,5 +50,6 @@
 
   .planner-page-header-actions {
     width: 100%;
+    padding-top: 0;
   }
 }

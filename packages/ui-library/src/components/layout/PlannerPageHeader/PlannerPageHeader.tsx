@@ -22,8 +22,13 @@ export function PlannerPageHeader({
   title,
   titleId
 }: PlannerPageHeaderProps) {
+  const hasTitlePrefix = Boolean(badge || eyebrow);
+
   return (
-    <header className={joinClasses("planner-page-header", className)}>
+    <header
+      className={joinClasses("planner-page-header", className)}
+      data-title-prefix={hasTitlePrefix ? true : undefined}
+    >
       <div className="planner-page-header-copy">
         {badge ? <div className="planner-page-header-badge">{badge}</div> : null}
         {eyebrow ? <p className="planner-page-header-eyebrow">{eyebrow}</p> : null}

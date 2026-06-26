@@ -151,6 +151,8 @@
 }
 
 .planner-app-layout-content {
+  display: grid;
+  align-items: stretch;
   min-width: 0;
   padding: clamp(var(--mp-space-lg), 4vw, var(--mp-space-4xl));
 }

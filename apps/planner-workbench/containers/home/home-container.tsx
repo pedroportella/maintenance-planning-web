@@ -22,7 +22,7 @@ export default function HomePage() {
   const scenariosSection = getWorkbenchSection("scenario-outcomes");
 
   return (
-    <PlannerPage width="narrow">
+    <PlannerPage width="wide">
       <PlannerPageHeader
         actions={
           <PlannerActionLink asChild>
