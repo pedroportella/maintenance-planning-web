@@ -48,7 +48,14 @@ function buildPackageColumns(
     render: (recommendation) => (
       <PlannerTableCellStack
         detail={recommendation.title}
-        title={recommendation.packageNumber}
+        title={
+          <Link
+            aria-label={`Open package ${recommendation.packageNumber}`}
+            href={packageRecommendationHref(recommendation.packageId, { planningRunId })}
+          >
+            {recommendation.packageNumber}
+          </Link>
+        }
       />
     ),
     rowHeader: true
@@ -109,10 +116,10 @@ function buildPackageColumns(
     key: "detail",
     render: (recommendation) => (
       <Link
+        aria-label={`Open package detail for ${recommendation.packageNumber}`}
         href={packageRecommendationHref(recommendation.packageId, { planningRunId })}
       >
         Open package
-        <span className="sr-only"> {recommendation.packageNumber}</span>
       </Link>
     )
   }

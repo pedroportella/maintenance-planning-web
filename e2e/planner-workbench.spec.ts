@@ -78,6 +78,41 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
   await expect(page.getByRole("link", { name: /Exceptions/ })).toHaveAttribute("aria-current", "page");
 });
 
+test("opens packages from the first visible mobile recommendation column", async ({
+  page
+}, testInfo) => {
+  await page.setViewportSize({ height: 844, width: 390 });
+  await page.goto("/recommendations");
+
+  const packageQueue = page.getByRole("table", { name: "Package recommendation queue" });
+  await expect(packageQueue).toBeVisible();
+
+  const packageLink = packageQueue
+    .getByRole("rowheader", { name: /PKG-BASE-001/ })
+    .getByRole("link", { name: "Open package PKG-BASE-001" });
+  await expect(packageLink).toBeVisible();
+
+  const linkBounds = await packageLink.boundingBox();
+  if (!linkBounds) {
+    throw new Error("Expected the mobile package link to have visible bounds.");
+  }
+
+  expect(linkBounds.x).toBeGreaterThanOrEqual(0);
+  expect(linkBounds.x).toBeLessThan(390);
+
+  const mobileOverflowReport = await collectOverflowReport(page);
+  await testInfo.attach("recommendations-route-mobile-overflow.json", {
+    body: JSON.stringify(mobileOverflowReport, null, 2),
+    contentType: "application/json"
+  });
+  expect(mobileOverflowReport.visibleBody).toBe(true);
+  expect(mobileOverflowReport.offenders).toEqual([]);
+
+  await packageLink.click();
+  await expect(page).toHaveURL(/recommendations\/60000000-0000-4000-8000-000000002000/);
+  await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
+});
+
 test("supports keyboard and low-vision access through the work-order triage route", async ({
   page
 }, testInfo) => {
