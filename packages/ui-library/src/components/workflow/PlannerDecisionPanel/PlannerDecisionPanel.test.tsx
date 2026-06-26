@@ -105,6 +105,7 @@ describe("PlannerDecisionPanel", () => {
     expect(markup).toContain("Acceptance is blocked");
     expect(markup).toContain("Deferred selected for PKG-BLOCKED-001");
     expect(markup).toContain("Resolve blockers before accepting.");
+    expect(markup).toContain("Unavailable");
     expect(markup).toContain('value="defer"');
     expect(markup).toContain("Defer reason");
     expect(markup).toContain('name="deferActionCode"');

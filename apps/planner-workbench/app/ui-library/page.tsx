@@ -46,6 +46,7 @@ import {
   type WorkOrderBacklogItem
 } from "@maintenance-planning/services";
 import {
+  acceptDisabledReason,
   buildOperationsMetrics,
   formatHours,
   formatUtc,
@@ -829,7 +830,7 @@ function buildShowcaseDecisionActions(recommendation: PlannerRecommendation) {
       ? {
           ...action,
           disabled: !readyForAcceptance,
-          disabledDescription: "Resolve blockers before accepting."
+          disabledDescription: acceptDisabledReason(recommendation)
         }
       : action
   );

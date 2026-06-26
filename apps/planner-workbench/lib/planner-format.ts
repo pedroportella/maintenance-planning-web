@@ -207,6 +207,20 @@ export function latestDecisionText(decision: PlannerDecisionRecord | null | unde
   return `${decision.decision} for ${decision.reasonCode}`;
 }
 
+export function acceptDisabledReason(recommendation: PlannerRecommendation): string | undefined {
+  if (isReadyRecommendation(recommendation)) {
+    return undefined;
+  }
+
+  const blockerSummaries = recommendation.blockers
+    .map((blocker) => blocker.summary)
+    .filter((summary) => summary.length > 0);
+
+  return blockerSummaries.length > 0
+    ? `Cannot accept yet: ${blockerSummaries.join(" ")}`
+    : "Cannot accept yet: resolve package blockers before accepting.";
+}
+
 export function workOrderIssueText(item: WorkOrderBacklogItem): string {
   if (item.readinessIssueDetail) return item.readinessIssueDetail;
   if (item.blockerCodes.length > 0) return item.blockerCodes.join(", ");

@@ -11,6 +11,7 @@ import {
 } from "../lib/planner-decisions";
 import { decisionHistoryItemKey } from "../lib/decision-history";
 import {
+  acceptDisabledReason,
   buildBacklogMetrics,
   buildOperationsMetrics,
   buildRecommendationMetrics,
@@ -211,6 +212,45 @@ describe("workbench section model", () => {
         ]
       }).map((item) => `${item.label}:${item.value}`)
     ).toEqual(["Healthy:1", "Stale data:1", "Needs attention:0"]);
+  });
+
+  it("explains blocked acceptance with recommendation blocker summaries", () => {
+    expect(
+      acceptDisabledReason({
+        blockers: [
+          {
+            category: "source-data",
+            code: "missing-estimate",
+            severity: "blocking",
+            summary: "Work order WO-1000 has no estimate.",
+            workOrderNumbers: ["WO-1000"]
+          }
+        ],
+        decisions: [],
+        estimatedHours: 0,
+        explanation: {
+          actionability: "blocked",
+          blockerSummaries: ["Work order WO-1000 has no estimate."],
+          readinessSummary: "Source data has blockers.",
+          score: 82,
+          text: "Acceptance is blocked until source data is corrected."
+        },
+        packageId: "60000000-0000-4000-8000-000000002001",
+        packageNumber: "PKG-BLOCKED-001",
+        score: 82,
+        sourceDataReadiness: {
+          blockedCount: 1,
+          needsReviewCount: 0,
+          readyCount: 0,
+          status: "blocked",
+          summary: "Source data has blockers."
+        },
+        status: "Blocked",
+        actionability: "blocked",
+        title: "Blocked package",
+        workOrders: []
+      })
+    ).toBe("Cannot accept yet: Work order WO-1000 has no estimate.");
   });
 
   it("classifies unauthorized planner service errors for route states", () => {

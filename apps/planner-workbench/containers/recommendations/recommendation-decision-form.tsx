@@ -6,6 +6,7 @@ import {
 import type { PlannerRecommendation } from "@maintenance-planning/services";
 import { plannerDecisionActions } from "@/lib/planner-decisions";
 import {
+  acceptDisabledReason,
   formatHours,
   isReadyRecommendation,
   toneForReadiness
@@ -27,7 +28,7 @@ export function RecommendationDecisionForm({
       ? {
           ...action,
           disabled: !readyForAcceptance,
-          disabledDescription: "Resolve blockers before accepting."
+          disabledDescription: acceptDisabledReason(recommendation)
         }
       : action
   );

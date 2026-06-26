@@ -40,11 +40,18 @@ export function RadixRadioCards({
     >
       {options.map((option) => (
         <RadioCards.Item
+          className={joinClasses(
+            "radix-radio-card",
+            option.disabled ? "radix-radio-card-disabled" : undefined
+          )}
           disabled={option.disabled}
           key={option.value}
           value={option.value}
         >
           <span className="radix-radio-card-label">{option.label}</span>
+          {option.disabled ? (
+            <span className="radix-radio-card-state">Unavailable</span>
+          ) : null}
           {option.hint ? <small className="radix-radio-card-hint">{option.hint}</small> : null}
         </RadioCards.Item>
       ))}
