@@ -17,12 +17,12 @@ import type { WorkOrderBacklogItem } from "@maintenance-planning/services";
 import Link from "next/link";
 import { packageRecommendationHref } from "@/containers/recommendations/recommendation-links";
 import {
+  formatBacklogResultSummary,
   formatHours,
   formatUtc,
   latestDecisionText,
   toneForDecision,
-  toneForPlannerState,
-  toneForReadiness,
+  workOrderStateBadgeSpecs,
   workOrderIssueText
 } from "@/lib/planner-format";
 
@@ -107,7 +107,13 @@ export function WorkOrderBacklogTable({
         ]}
         resultSummary={
           <>
-            {pageRows.length} shown from {searchedItems.length} {filterLabel.toLowerCase()} rows
+            {formatBacklogResultSummary({
+              baseRowCount: items.length,
+              filterLabel,
+              hasSearchQuery: searchQuery.trim().length > 0,
+              searchMatchCount: searchedItems.length,
+              visibleRowCount: pageRows.length
+            })}
             <span className="sr-only">
               . {formatSortState(sortState)}. Page {safePage} of {pageCount}.
             </span>
@@ -127,7 +133,7 @@ export function WorkOrderBacklogTable({
         caption="Planner work-order triage"
         columns={backlogColumns}
         density="compact"
-        description={`Use the work-order row header, readiness, coordination note, package, hours, due date and latest decision columns to triage ${filterLabel.toLowerCase()} work orders. Horizontal scrolling is limited to this table region on narrow screens.`}
+        description={`Use the work-order row header, planning state, coordination note, package, hours, due date and latest decision columns to triage ${filterLabel.toLowerCase()} work orders. Horizontal scrolling is limited to this table region on narrow screens.`}
         emptyState={
           <PlannerEmptyState
             description={
@@ -175,20 +181,19 @@ function buildBacklogColumns(
       sortable: true
     },
     {
-      header: "Readiness",
+      header: "Planning state",
       key: "readiness",
       onSort: () => sortColumn("readiness"),
       render: (item) => (
         <PlannerBadgeGroup>
-          <PlannerStatusBadge tone={toneForReadiness(item.readinessStatus)}>
-            {item.readinessStatus}
-          </PlannerStatusBadge>
-          <PlannerStatusBadge tone={toneForPlannerState(item.plannerState)}>
-            {item.plannerState}
-          </PlannerStatusBadge>
+          {workOrderStateBadgeSpecs(item).map((badge) => (
+            <PlannerStatusBadge key={badge.id} tone={badge.tone}>
+              {badge.label}
+            </PlannerStatusBadge>
+          ))}
         </PlannerBadgeGroup>
       ),
-      sortLabel: "Sort by readiness",
+      sortLabel: "Sort by planning state",
       sortable: true
     },
     {
@@ -262,7 +267,7 @@ function formatSortState(sortState: WorkOrderBacklogSortState) {
   const labelByKey = {
     due: "due date",
     hours: "estimated hours",
-    readiness: "readiness",
+    readiness: "planning state",
     "work-order": "work order"
   } as const satisfies Record<WorkOrderBacklogSortKey, string>;
 

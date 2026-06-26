@@ -19,6 +19,20 @@ import type {
   PlannerStatusTone
 } from "@maintenance-planning/ui-library";
 
+export type PlannerStateBadgeSpec = {
+  readonly id: string;
+  readonly label: string;
+  readonly tone: PlannerStatusTone;
+};
+
+export type BacklogResultSummaryInput = {
+  readonly baseRowCount: number;
+  readonly filterLabel: string;
+  readonly hasSearchQuery: boolean;
+  readonly searchMatchCount: number;
+  readonly visibleRowCount: number;
+};
+
 export function buildBacklogMetrics(
   backlog: WorkOrderBacklogView
 ): readonly PlannerMetricSummaryItem[] {
@@ -207,6 +221,84 @@ export function latestDecisionText(decision: PlannerDecisionRecord | null | unde
   return `${decision.decision} for ${decision.reasonCode}`;
 }
 
+export function recommendationStateBadgeSpecs(
+  recommendation: Pick<PlannerRecommendation, "sourceDataReadiness" | "status">
+): readonly PlannerStateBadgeSpec[] {
+  const packageStatusLabel = formatStateLabel(recommendation.status);
+  const readinessLabel = formatStateLabel(recommendation.sourceDataReadiness.status);
+
+  if (sameStateLabel(recommendation.status, recommendation.sourceDataReadiness.status)) {
+    return [
+      {
+        id: "package-state",
+        label: packageStatusLabel,
+        tone: toneForStatus(recommendation.status)
+      }
+    ];
+  }
+
+  return [
+    {
+      id: "package-status",
+      label: `Package ${packageStatusLabel}`,
+      tone: toneForStatus(recommendation.status)
+    },
+    {
+      id: "readiness",
+      label: `Readiness ${readinessLabel}`,
+      tone: toneForReadiness(recommendation.sourceDataReadiness.status)
+    }
+  ];
+}
+
+export function workOrderStateBadgeSpecs(
+  item: Pick<WorkOrderBacklogItem, "plannerState" | "readinessStatus">
+): readonly PlannerStateBadgeSpec[] {
+  const readinessLabel = formatStateLabel(item.readinessStatus);
+  const plannerStateLabel = formatStateLabel(item.plannerState);
+
+  if (sameStateLabel(item.readinessStatus, item.plannerState)) {
+    return [
+      {
+        id: "work-order-state",
+        label: readinessLabel,
+        tone: toneForReadiness(item.readinessStatus)
+      }
+    ];
+  }
+
+  return [
+    {
+      id: "readiness",
+      label: `Readiness ${readinessLabel}`,
+      tone: toneForReadiness(item.readinessStatus)
+    },
+    {
+      id: "planner-state",
+      label: `Planner ${plannerStateLabel}`,
+      tone: toneForPlannerState(item.plannerState)
+    }
+  ];
+}
+
+export function formatBacklogResultSummary({
+  baseRowCount,
+  filterLabel,
+  hasSearchQuery,
+  searchMatchCount,
+  visibleRowCount
+}: BacklogResultSummaryInput): string {
+  const baseLabel = `${filterLabel.toLowerCase()} rows`;
+
+  if (!hasSearchQuery) {
+    return `${visibleRowCount} shown from ${baseRowCount} ${baseLabel}`;
+  }
+
+  const matchLabel = searchMatchCount === 1 ? "search match" : "search matches";
+
+  return `${visibleRowCount} shown from ${baseRowCount} ${baseLabel} after ${searchMatchCount} ${matchLabel}`;
+}
+
 export function acceptDisabledReason(recommendation: PlannerRecommendation): string | undefined {
   if (isReadyRecommendation(recommendation)) {
     return undefined;
@@ -300,9 +392,26 @@ export function isBlockedRecommendation(recommendation: PlannerRecommendation): 
   );
 }
 
-function titleCase(value: string): string {
-  return value
-    .split(/[\s_-]/g)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+export function formatStateLabel(value: string): string {
+  const spaced = value
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[\s_-]+/g, " ")
+    .trim();
+
+  if (!spaced) return value;
+
+  return spaced
+    .split(" ")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join(" ");
 }
+
+function sameStateLabel(left: string, right: string): boolean {
+  return stateKey(left) === stateKey(right);
+}
+
+function stateKey(value: string): string {
+  return value.replace(/[\s_-]/g, "").toLowerCase();
+}
+
+const titleCase = formatStateLabel;

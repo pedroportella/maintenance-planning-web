@@ -16,10 +16,7 @@ import {
 import { getWorkbenchSection } from "@maintenance-planning/utils";
 import Link from "next/link";
 import { PlannerRouteFailure } from "@/components/planner-route-state";
-import {
-  toneForReadiness,
-  toneForStatus
-} from "@/lib/planner-format";
+import { recommendationStateBadgeSpecs } from "@/lib/planner-format";
 import { RecommendationDetailPanel } from "./recommendation-detail-panel";
 import { RecommendationDecisionNotice } from "./recommendation-notices";
 import {
@@ -86,12 +83,11 @@ export default async function RecommendationDetailContainer({
           }
           badge={
             <PlannerBadgeGroup align="end">
-              <PlannerStatusBadge tone={toneForStatus(recommendation.status)}>
-                {recommendation.status}
-              </PlannerStatusBadge>
-              <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
-                {recommendation.sourceDataReadiness.status}
-              </PlannerStatusBadge>
+              {recommendationStateBadgeSpecs(recommendation).map((badge) => (
+                <PlannerStatusBadge key={badge.id} tone={badge.tone}>
+                  {badge.label}
+                </PlannerStatusBadge>
+              ))}
               <PlannerStatusBadge tone="neutral">{runtime.mode} mode</PlannerStatusBadge>
             </PlannerBadgeGroup>
           }

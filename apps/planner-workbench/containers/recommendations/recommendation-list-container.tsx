@@ -26,8 +26,8 @@ import {
   formatHours,
   isBlockedRecommendation,
   latestDecisionText,
+  recommendationStateBadgeSpecs,
   toneForDecision,
-  toneForReadiness,
   toneForStatus
 } from "@/lib/planner-format";
 import { RecommendationDecisionNotice } from "./recommendation-notices";
@@ -61,16 +61,15 @@ function buildPackageColumns(
     rowHeader: true
   },
   {
-    header: "Status",
+    header: "Package state",
     key: "status",
     render: (recommendation) => (
       <PlannerBadgeGroup>
-        <PlannerStatusBadge tone={toneForStatus(recommendation.status)}>
-          {recommendation.status}
-        </PlannerStatusBadge>
-        <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
-          {recommendation.sourceDataReadiness.status}
-        </PlannerStatusBadge>
+        {recommendationStateBadgeSpecs(recommendation).map((badge) => (
+          <PlannerStatusBadge key={badge.id} tone={badge.tone}>
+            {badge.label}
+          </PlannerStatusBadge>
+        ))}
       </PlannerBadgeGroup>
     )
   },
@@ -198,7 +197,7 @@ export default async function RecommendationListContainer({
             caption="Package recommendation queue"
             columns={packageColumns}
             density="compact"
-            description="Use the package row header, status, score, hours, blocker count, work-order count and latest decision columns before opening a package detail route."
+            description="Use the package row header, package state, score, hours, blocker count, work-order count and latest decision columns before opening a package detail route."
             emptyState={
               <PlannerEmptyState
                 description="The service returned no package recommendations for this planning run."

@@ -149,9 +149,13 @@ test("supports keyboard and low-vision access through the work-order triage rout
   ).toBeVisible();
 
   await page.getByRole("textbox", { name: "Search work orders" }).fill("WO-2000");
-  await expect(page.getByRole("status").filter({ hasText: /1 shown from 1 all rows/i })).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: /1 shown from 2 all rows after 1 search match/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Next page unavailable" })).toBeDisabled();
   await expect(page.getByRole("button", { name: "Previous page unavailable" })).toBeDisabled();
+
+  await page.getByRole("textbox", { name: "Search work orders" }).fill("zzzz");
+  await expect(page.getByRole("status").filter({ hasText: /0 shown from 2 all rows after 0 search matches/i })).toBeVisible();
+  await expect(page.getByText('No work orders match "zzzz" within the all filter.')).toBeVisible();
 
   const mobileOverflowReport = await collectOverflowReport(page);
   await testInfo.attach("work-order-route-mobile-overflow.json", {

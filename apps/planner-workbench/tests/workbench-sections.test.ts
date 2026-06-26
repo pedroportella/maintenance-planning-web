@@ -16,11 +16,15 @@ import {
   buildOperationsMetrics,
   buildRecommendationMetrics,
   buildScenarioOutcomeMetrics,
+  formatBacklogResultSummary,
   formatHours,
+  formatStateLabel,
   formatUtc,
+  recommendationStateBadgeSpecs,
   toneForDecision,
   toneForPostureState,
-  toneForScenarioOutcome
+  toneForScenarioOutcome,
+  workOrderStateBadgeSpecs
 } from "../lib/planner-format";
 import { toPlannerRouteIssue } from "../lib/planner-route-state";
 
@@ -251,6 +255,66 @@ describe("workbench section model", () => {
         workOrders: []
       })
     ).toBe("Cannot accept yet: Work order WO-1000 has no estimate.");
+  });
+
+  it("formats state badges without duplicated equivalent labels", () => {
+    const blockedRecommendation = {
+      sourceDataReadiness: {
+        blockedCount: 1,
+        needsReviewCount: 0,
+        readyCount: 0,
+        status: "blocked" as const,
+        summary: "Source data has blockers."
+      },
+      status: "Blocked"
+    };
+    const readyRecommendation = {
+      sourceDataReadiness: {
+        blockedCount: 0,
+        needsReviewCount: 0,
+        readyCount: 1,
+        status: "ready" as const,
+        summary: "Source data is ready."
+      },
+      status: "Recommended"
+    };
+
+    expect(recommendationStateBadgeSpecs(blockedRecommendation).map((badge) => badge.label)).toEqual([
+      "Blocked"
+    ]);
+    expect(recommendationStateBadgeSpecs(readyRecommendation).map((badge) => badge.label)).toEqual([
+      "Package Recommended",
+      "Readiness Ready"
+    ]);
+    expect(workOrderStateBadgeSpecs({ plannerState: "ready", readinessStatus: "ready" }).map((badge) => badge.label)).toEqual([
+      "Ready"
+    ]);
+    expect(workOrderStateBadgeSpecs({ plannerState: "deferred", readinessStatus: "ready" }).map((badge) => badge.label)).toEqual([
+      "Readiness Ready",
+      "Planner Deferred"
+    ]);
+    expect(formatStateLabel("NeedsPlannerReview")).toBe("Needs Planner Review");
+  });
+
+  it("preserves the base backlog row count while reporting search matches", () => {
+    expect(
+      formatBacklogResultSummary({
+        baseRowCount: 2,
+        filterLabel: "All",
+        hasSearchQuery: false,
+        searchMatchCount: 2,
+        visibleRowCount: 2
+      })
+    ).toBe("2 shown from 2 all rows");
+    expect(
+      formatBacklogResultSummary({
+        baseRowCount: 2,
+        filterLabel: "All",
+        hasSearchQuery: true,
+        searchMatchCount: 0,
+        visibleRowCount: 0
+      })
+    ).toBe("0 shown from 2 all rows after 0 search matches");
   });
 
   it("classifies unauthorized planner service errors for route states", () => {

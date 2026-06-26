@@ -21,6 +21,8 @@ import type {
 import {
   formatHours,
   formatUtc,
+  formatStateLabel,
+  recommendationStateBadgeSpecs,
   toneForDecision,
   toneForReadiness,
   toneForStatus
@@ -81,12 +83,11 @@ export function RecommendationDetailPanel({
       as="article"
       badge={
         <PlannerBadgeGroup align="end">
-          <PlannerStatusBadge tone={toneForStatus(recommendation.status)}>
-            {recommendation.status}
-          </PlannerStatusBadge>
-          <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
-            {recommendation.sourceDataReadiness.status}
-          </PlannerStatusBadge>
+          {recommendationStateBadgeSpecs(recommendation).map((badge) => (
+            <PlannerStatusBadge key={badge.id} tone={badge.tone}>
+              {badge.label}
+            </PlannerStatusBadge>
+          ))}
         </PlannerBadgeGroup>
       }
       description={recommendation.title}
@@ -108,8 +109,8 @@ export function RecommendationDetailPanel({
           {
             id: "actionability",
             label: "Actionability",
-            tone: recommendation.actionability === "ready" ? "success" : "warning",
-            value: recommendation.actionability
+            tone: toneForStatus(recommendation.actionability),
+            value: formatStateLabel(recommendation.actionability)
           },
           {
             id: "estimated-work",
