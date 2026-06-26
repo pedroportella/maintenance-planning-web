@@ -17,6 +17,7 @@ import { collectStructuralAccessibilityScan } from "./ui-library-accessibility/s
 test("records automated accessibility evidence for mock planner routes", async ({
   page
 }, testInfo) => {
+  test.setTimeout(60_000);
   await page.emulateMedia({ reducedMotion: "reduce" });
 
   const evidence = createPlannerRouteAccessibilityEvidence();

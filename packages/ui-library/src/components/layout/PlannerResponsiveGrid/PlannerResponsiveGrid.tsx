@@ -9,6 +9,7 @@ export type PlannerResponsiveGridProps = {
   balance?: "equal" | "primary" | "secondary";
   children: ReactNode;
   className?: string;
+  collapseAt?: "standard" | "wide";
   columns?: "three" | "two";
   labelledBy?: string;
 };
@@ -19,6 +20,7 @@ export function PlannerResponsiveGrid({
   balance = "equal",
   children,
   className,
+  collapseAt = "standard",
   columns = "two",
   labelledBy
 }: PlannerResponsiveGridProps) {
@@ -30,6 +32,7 @@ export function PlannerResponsiveGrid({
       aria-labelledby={labelledBy}
       className={joinClasses("planner-responsive-grid", className)}
       data-balance={balance}
+      data-collapse-at={collapseAt}
       data-columns={columns}
     >
       {children}

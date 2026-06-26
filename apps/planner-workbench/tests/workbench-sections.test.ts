@@ -13,8 +13,10 @@ import { decisionHistoryItemKey } from "../lib/decision-history";
 import {
   acceptDisabledReason,
   buildBacklogMetrics,
+  buildOperationsNextAction,
   buildOperationsMetrics,
   buildRecommendationMetrics,
+  buildScenarioNextAction,
   buildScenarioOutcomeMetrics,
   formatBacklogResultSummary,
   formatHours,
@@ -216,6 +218,61 @@ describe("workbench section model", () => {
         ]
       }).map((item) => `${item.label}:${item.value}`)
     ).toEqual(["Healthy:1", "Stale data:1", "Needs attention:0"]);
+  });
+
+  it("builds evidence next-action guidance for attention states", () => {
+    const latestOutcome = {
+      blockedPackageCount: 1,
+      checkedAtUtc: "2026-01-15T08:00:00.000Z",
+      deferredDecisionCount: 0,
+      label: "Parts Delay Replan",
+      latestImport: null,
+      packageCount: 2,
+      planningRunId: "50000000-0000-4000-8000-000000002200",
+      readyPackageCount: 1,
+      runNumber: "RUN-PARTS-2026-03-10",
+      scenarioId: "parts-delay-replan",
+      signals: [],
+      status: "degraded" as const,
+      statusText: "Degraded",
+      summary: "The synthetic scenario completed with degraded evidence."
+    };
+
+    expect(
+      buildOperationsNextAction(
+        {
+          checkedAtUtc: "2026-01-15T08:00:00.000Z",
+          databaseConfigured: true,
+          freshness: "unknown",
+          latestImport: null,
+          signals: [],
+          state: "degraded",
+          status: "ready",
+          summary: "Operations evidence needs attention."
+        },
+        latestOutcome
+      )
+    ).toMatchObject({
+      primaryHref: "/planning-runs/50000000-0000-4000-8000-000000002200",
+      tone: "critical"
+    });
+    expect(buildScenarioNextAction(latestOutcome, 2)).toMatchObject({
+      primaryHref: "/planning-runs/50000000-0000-4000-8000-000000002200",
+      tone: "critical"
+    });
+    expect(
+      buildScenarioNextAction(
+        {
+          ...latestOutcome,
+          status: "healthy",
+          statusText: "Healthy"
+        },
+        2
+      )
+    ).toMatchObject({
+      primaryHref: "/operations-posture",
+      tone: "warning"
+    });
   });
 
   it("explains blocked acceptance with recommendation blocker summaries", () => {

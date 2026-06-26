@@ -16,6 +16,7 @@ describe("PlannerResponsiveGrid", () => {
             createElement("div", { key: "signals" }, "Signals"),
             createElement("div", { key: "import" }, "Import")
           ],
+          collapseAt: "wide",
           columns: "two"
         }
       )
@@ -23,6 +24,7 @@ describe("PlannerResponsiveGrid", () => {
 
     expect(markup).toContain('aria-label="Posture details"');
     expect(markup).toContain('data-balance="primary"');
+    expect(markup).toContain('data-collapse-at="wide"');
     expect(markup).toContain('data-columns="two"');
     expect(markup).toContain("planner-responsive-grid");
   });

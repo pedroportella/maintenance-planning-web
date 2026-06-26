@@ -25,6 +25,7 @@ import { getWorkbenchSection } from "@maintenance-planning/utils";
 import Link from "next/link";
 import { PlannerRouteFailure } from "@/components/planner-route-state";
 import {
+  buildOperationsNextAction,
   buildOperationsMetrics,
   formatUtc,
   toneForFreshness,
@@ -74,6 +75,7 @@ export default async function OperationsPosturePage() {
       services.getScenarioOutcomeSummary()
     ]);
     const latestOutcome = scenarioSummary.latest;
+    const nextAction = buildOperationsNextAction(posture, latestOutcome);
 
     return (
       <PlannerPage>
@@ -120,6 +122,7 @@ export default async function OperationsPosturePage() {
           ariaLabel="Operations posture details"
           as="section"
           balance="primary"
+          collapseAt="wide"
         >
           <PlannerContentSection
             badge={
@@ -165,6 +168,22 @@ export default async function OperationsPosturePage() {
             {formatUtc(latestOutcome.checkedAtUtc)}.
           </p>
         </PlannerQuietNote>
+
+        {nextAction ? (
+          <PlannerAlert title={nextAction.title} tone={nextAction.tone}>
+            <p>{nextAction.summary}</p>
+            <PlannerActionGroup align="start">
+              <PlannerActionLink asChild>
+                <Link href={nextAction.primaryHref}>{nextAction.primaryLabel}</Link>
+              </PlannerActionLink>
+              {nextAction.secondaryHref && nextAction.secondaryLabel ? (
+                <PlannerActionLink asChild priority="secondary">
+                  <Link href={nextAction.secondaryHref}>{nextAction.secondaryLabel}</Link>
+                </PlannerActionLink>
+              ) : null}
+            </PlannerActionGroup>
+          </PlannerAlert>
+        ) : null}
       </PlannerPage>
     );
   } catch (error) {

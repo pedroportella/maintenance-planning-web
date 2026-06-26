@@ -33,6 +33,16 @@ export type BacklogResultSummaryInput = {
   readonly visibleRowCount: number;
 };
 
+export type PlannerEvidenceNextAction = {
+  readonly primaryHref: string;
+  readonly primaryLabel: string;
+  readonly secondaryHref?: string;
+  readonly secondaryLabel?: string;
+  readonly summary: string;
+  readonly title: string;
+  readonly tone: PlannerStatusTone;
+};
+
 export function buildBacklogMetrics(
   backlog: WorkOrderBacklogView
 ): readonly PlannerMetricSummaryItem[] {
@@ -170,6 +180,108 @@ export function buildScenarioOutcomeMetrics(
       value: String(degradedCount)
     }
   ];
+}
+
+export function buildOperationsNextAction(
+  posture: OperationsPostureView,
+  latestOutcome: ScenarioOutcomeView
+): PlannerEvidenceNextAction | null {
+  const hasBlockedPackages = latestOutcome.blockedPackageCount > 0;
+  const blockedPackages = formatPackageGroupCount(latestOutcome.blockedPackageCount);
+  const latestRunHref = `/planning-runs/${latestOutcome.planningRunId}`;
+
+  if (posture.state === "healthy" && !hasBlockedPackages) {
+    return null;
+  }
+
+  if (posture.state === "degraded") {
+    return {
+      primaryHref: latestRunHref,
+      primaryLabel: "Review latest run",
+      secondaryHref: "/scenario-outcomes",
+      secondaryLabel: "Compare scenario outcomes",
+      summary: hasBlockedPackages
+        ? `Open the latest run before packaging: ${blockedPackages} and degraded import evidence need attention.`
+        : "Compare scenario outcomes before using degraded posture evidence for planner decisions.",
+      title: "Recommended next step",
+      tone: "critical"
+    };
+  }
+
+  if (posture.state === "stale" || posture.freshness === "stale") {
+    return {
+      primaryHref: "/scenario-outcomes",
+      primaryLabel: "Compare scenario outcomes",
+      secondaryHref: latestRunHref,
+      secondaryLabel: "Review latest run",
+      summary: hasBlockedPackages
+        ? `Compare stale import evidence in scenario outcomes, then inspect ${blockedPackages} in the latest run.`
+        : "Compare stale import evidence in scenario outcomes before committing planner decisions.",
+      title: "Recommended next step",
+      tone: "warning"
+    };
+  }
+
+  return {
+    primaryHref: hasBlockedPackages ? latestRunHref : "/scenario-outcomes",
+    primaryLabel: hasBlockedPackages ? "Review latest run" : "Compare scenario outcomes",
+    secondaryHref: hasBlockedPackages ? "/scenario-outcomes" : latestRunHref,
+    secondaryLabel: hasBlockedPackages ? "Compare scenario outcomes" : "Review latest run",
+    summary: hasBlockedPackages
+      ? `Open the latest run and inspect ${blockedPackages} before packaging ready work.`
+      : "Check source-data readiness evidence before continuing planner review.",
+    title: "Recommended next step",
+    tone: "warning"
+  };
+}
+
+export function buildScenarioNextAction(
+  latest: ScenarioOutcomeView,
+  attentionCount: number
+): PlannerEvidenceNextAction | null {
+  if (attentionCount === 0) {
+    return null;
+  }
+
+  const latestRunHref = `/planning-runs/${latest.planningRunId}`;
+
+  if (latest.status === "degraded") {
+    const hasBlockedPackages = latest.blockedPackageCount > 0;
+
+    return {
+      primaryHref: latestRunHref,
+      primaryLabel: "Review latest run",
+      secondaryHref: "/recommendations",
+      secondaryLabel: "Review recommendations",
+      summary: hasBlockedPackages
+        ? `Open ${latest.runNumber} and review ${formatPackageGroupCount(latest.blockedPackageCount)} before using this scenario as planner evidence.`
+        : `Open ${latest.runNumber} and compare degraded evidence before planner decisions.`,
+      title: "Recommended next step",
+      tone: "critical"
+    };
+  }
+
+  if (latest.status === "stale") {
+    return {
+      primaryHref: "/operations-posture",
+      primaryLabel: "Check operations posture",
+      secondaryHref: latestRunHref,
+      secondaryLabel: "Review latest run",
+      summary: `Check operations posture for stale import evidence, then review package readiness in ${latest.runNumber}.`,
+      title: "Recommended next step",
+      tone: "warning"
+    };
+  }
+
+  return {
+    primaryHref: "/operations-posture",
+    primaryLabel: "Check operations posture",
+    secondaryHref: "/recommendations",
+    secondaryLabel: "Review recommendations",
+    summary: "Compare the stale or degraded outcome rows with operations posture before continuing planner review in the current run.",
+    title: "Recommended next step",
+    tone: "warning"
+  };
 }
 
 export function buildCoordinationExceptionMetrics(
@@ -412,6 +524,10 @@ function sameStateLabel(left: string, right: string): boolean {
 
 function stateKey(value: string): string {
   return value.replace(/[\s_-]/g, "").toLowerCase();
+}
+
+function formatPackageGroupCount(count: number): string {
+  return `${count} blocked package group${count === 1 ? "" : "s"}`;
 }
 
 const titleCase = formatStateLabel;

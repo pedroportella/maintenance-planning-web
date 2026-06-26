@@ -23,6 +23,7 @@ import { getWorkbenchSection } from "@maintenance-planning/utils";
 import Link from "next/link";
 import { PlannerRouteFailure } from "@/components/planner-route-state";
 import {
+  buildScenarioNextAction,
   buildScenarioOutcomeMetrics,
   formatUtc,
   toneForPostureState,
@@ -114,6 +115,7 @@ export default async function ScenarioOutcomesPage() {
     const attentionCount = scenarioSummary.outcomes.filter(
       (outcome) => outcome.status !== "healthy"
     ).length;
+    const nextAction = buildScenarioNextAction(latest, attentionCount);
 
     return (
       <PlannerPage>
@@ -147,12 +149,29 @@ export default async function ScenarioOutcomesPage() {
         />
 
         {attentionCount > 0 ? (
-          <PlannerAlert title="Scenario review scope" tone="warning">
+          <PlannerAlert title="Scenario review scope" tone={nextAction?.tone ?? "warning"}>
             <p>
               {attentionCount} synthetic scenario outcome
               {attentionCount === 1 ? " has" : "s have"} stale or degraded evidence visible for
               review.
             </p>
+            {nextAction ? (
+              <>
+                <p>
+                  {nextAction.title}: {nextAction.summary}
+                </p>
+                <PlannerActionGroup align="start">
+                  <PlannerActionLink asChild>
+                    <Link href={nextAction.primaryHref}>{nextAction.primaryLabel}</Link>
+                  </PlannerActionLink>
+                  {nextAction.secondaryHref && nextAction.secondaryLabel ? (
+                    <PlannerActionLink asChild priority="secondary">
+                      <Link href={nextAction.secondaryHref}>{nextAction.secondaryLabel}</Link>
+                    </PlannerActionLink>
+                  ) : null}
+                </PlannerActionGroup>
+              </>
+            ) : null}
           </PlannerAlert>
         ) : (
           <PlannerQuietNote title="Scenario review scope">
