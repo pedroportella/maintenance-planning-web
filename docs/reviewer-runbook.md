@@ -12,6 +12,26 @@ This workbench is the React planner surface in a three-repo synthetic showcase:
 
 Use mock checks for default review evidence. Use backend smoke only after the sibling API is healthy and populated by the simulator. Keep backend origins and tokens server-only and out of browser-visible bundles.
 
+## Review Surface
+
+The current mock-mode handover surface is intentionally focused:
+
+- `/` introduces the workbench and points reviewers toward package
+  recommendations, work-order triage and evidence pages.
+- `/recommendations` is the primary planner decision route, including package
+  status, blockers, work orders and mock decision recording.
+- `/work-order-backlog`, `/coordination-exceptions` and `/planning-runs` show
+  supporting planner context without changing the API source-of-truth boundary.
+- `/operations-posture` and `/scenario-outcomes` expose trust and scenario
+  evidence in reviewer-safe synthetic language.
+- `/ui-library` is not planner navigation. It is an internal evidence page for
+  shared theme modes, component states, constrained workflow controls and
+  route-rollout snapshots.
+
+All of these routes use the same workbench shell and responsive page-width
+system, so the start page should not appear materially narrower than
+data-heavy routes during review.
+
 ## Prerequisites
 
 - Node.js 22.
@@ -41,7 +61,7 @@ The mock end-to-end smoke starts the workbench locally, verifies the planner she
 
 The mock end-to-end smoke also records automated browser accessibility evidence for the planner routes. That evidence covers landmarks, headings, table names, row headers, form labels, label-in-name checks, keyboard-style control activation, reduced motion, forced colors, narrow viewport overflow and text-spacing pressure. It is Playwright/Chromium evidence, not a claim that manual screen-reader, speech-input or platform assistive-technology review has been performed.
 
-The library visual smoke starts the workbench in deterministic mock mode and verifies only the `/ui-library` screenshot baselines in desktop, tablet and mobile light/dark viewports. The showcase visual smoke verifies `/ui-library` plus routed workbench evidence in those same viewports. It checks accessible landmarks, route metadata, component family headings, table captions, live-region state names, tone contrast and focused screenshot baselines.
+The library visual smoke starts the workbench in deterministic mock mode and verifies only the `/ui-library` screenshot baselines in desktop, tablet and mobile light/dark viewports. The showcase visual smoke verifies `/ui-library` plus routed workbench evidence in those same viewports. It checks accessible landmarks, route metadata, component family headings, table captions, live-region state names, tone contrast and focused screenshot baselines, including theme-mode readability and constrained decision-control states.
 
 Generate a compact screenshot pack when review notes need current app images:
 

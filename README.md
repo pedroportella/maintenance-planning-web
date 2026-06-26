@@ -12,6 +12,30 @@ This repository hosts a React and Next.js workbench for planners who review work
 - Does not require the API, simulator or cloud credentials for CI guardrails.
 - Avoids hard-coded private backend origins in browser-visible code.
 
+## Current Review Posture
+
+The default handover path is deterministic mock mode. It lets reviewers inspect
+the planner journey, shared UI states and visual baselines without Docker, API
+services, simulator feeds or cloud credentials.
+
+Current reviewer evidence covers:
+
+- the compact start page plus recommendations, work-order backlog,
+  coordination exception, planning-run, operations posture and scenario outcome
+  routes;
+- shared workbench layout behavior across desktop, tablet and mobile viewports;
+- `/ui-library` theme-mode contrast, reusable component states, constrained
+  decision controls and route-rollout snapshots;
+- automated browser accessibility checks for route landmarks, headings,
+  labelled controls, table structure, keyboard activation, forced colors,
+  reduced motion and text-spacing pressure;
+- a Sass-first theme entrypoint through `@maintenance-planning/ui-library/theme.scss`,
+  with no generated `theme.css` artifact published by the UI-library package.
+
+This evidence is suitable for professional review and handover. It is not a
+claim of live source-system connectivity, production traffic readiness or
+manual assistive-technology certification.
+
 ## Showcase Repos
 
 This web workbench is one part of a three-repo synthetic maintenance-planning showcase:
@@ -100,7 +124,7 @@ Full non-Docker gate:
 pnpm verify
 ```
 
-The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The library visual smoke checks only `/ui-library` across desktop, tablet and mobile light/dark viewports. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` plus routed workbench evidence across the same viewports. The post-build browser-bundle guard checks generated app assets for private backend origins. Backend/API, Docker and AWS evidence remain separate from these default mock-mode checks.
+The `lint`, `typecheck`, `test` and `build` commands are workspace-aware. The app, services and visual-system packages own executable checks; utility-only packages stay thin source boundaries until they need package-local tests. The reviewer-pack screenshot workflow writes ignored screenshots to `test-results/reviewer-pack`. The library visual smoke checks only `/ui-library` across desktop, tablet and mobile light/dark viewports. The showcase visual smoke starts the workbench in mock mode and checks `/ui-library` plus routed workbench evidence across the same viewports. These visual checks are intended to keep the handover surface stable, including shared page widths, theme readability and constrained workflow controls. The post-build browser-bundle guard checks generated app assets for private backend origins. Backend/API, Docker and AWS evidence remain separate from these default mock-mode checks.
 
 ## Optional Docker And Backend Checks
 

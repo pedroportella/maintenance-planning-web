@@ -2,6 +2,20 @@
 
 This pack gives a compact review path for the synthetic planner workbench.
 
+## What This Demonstrates
+
+- A planner can move from the start page into recommendation review, work-order
+  triage and evidence routes without live services.
+- The shared app shell, route widths and responsive spacing are stable across
+  desktop, tablet and mobile review viewports.
+- The `/ui-library` route provides focused evidence for reusable component
+  states, theme-mode readability and constrained decision controls.
+- Automated browser checks cover route accessibility signals, visual baselines
+  and reviewer docs, while keeping manual assistive-technology review as a
+  separate human evidence item.
+- Mock mode remains the default. API-backed, container and cloud evidence are
+  optional review paths, not prerequisites for inspecting this repo.
+
 ## Five-Minute Review
 
 ```sh
@@ -17,7 +31,10 @@ pnpm test:reviewer-pack
 Then inspect:
 
 - the app shell and planner task flow at the local URL printed by Playwright;
-- the UI evidence page at `/ui-library`;
+- recommendations, work-order backlog, operations posture and scenario
+  outcomes as the main route-level handover surfaces;
+- the UI evidence page at `/ui-library`, especially theme modes, tables,
+  status/alert states and decision controls;
 - the focused baselines in `e2e/__visual-baselines__`;
 - the reviewer runbook in [docs/reviewer-runbook.md](reviewer-runbook.md).
 
@@ -40,7 +57,8 @@ The default local review verification path includes:
 - source guardrails for generated artefacts, public docs, secrets and browser-visible backend origins;
 - workspace lint, type checks and package tests;
 - mock-mode browser checks for the planner journey, planner-route accessibility evidence and UI-library showcase;
-- focused `/ui-library` screenshot baselines for fast visual review;
+- focused `/ui-library` screenshot baselines for theme-mode, responsive and constrained-control review;
+- route-wide visual baselines for the current planner handover surfaces;
 - reviewer evidence smoke for required docs, scripts, configs and local Markdown links.
 
 Run the post-build guard directly after `pnpm build` when checking deployment packaging:

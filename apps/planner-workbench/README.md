@@ -6,6 +6,11 @@ The app focuses on planner task routes for synthetic maintenance-planning review
 
 The app imports shared theme styles from `@maintenance-planning/ui-library/theme.scss`. App-local global CSS should stay focused on route handoff; reusable shell, table, status, alert, form and workflow styling belongs to the UI library.
 
+The start page and task routes share the same workbench shell and responsive
+page-width system. Route-level visual evidence should therefore be reviewed as a
+single handover surface, while `/ui-library` remains the focused component and
+theme evidence route.
+
 ## Local Mock Development
 
 Run from the repository root:
@@ -27,6 +32,6 @@ pnpm test:visual:library
 pnpm test:visual:showcase
 ```
 
-The library visual smoke checks only the `/ui-library` baselines. The reviewer-pack screenshot workflow captures current planner and evidence surfaces under ignored test output. Container smoke and backend mode are optional repo-level checks for packaging and API-backed review. Backend mode is server-only and is exercised after the local API has been seeded with deterministic simulator data. Copy the repo root `.env.local.example` to `.env.local` only when the backend smoke needs local API settings.
+The library visual smoke checks only the `/ui-library` baselines for theme modes, component states and constrained workflow controls. The reviewer-pack screenshot workflow captures current planner and evidence surfaces under ignored test output. Container smoke and backend mode are optional repo-level checks for packaging and API-backed review. Backend mode is server-only and is exercised after the local API has been seeded with deterministic simulator data. Copy the repo root `.env.local.example` to `.env.local` only when the backend smoke needs local API settings.
 
 See the repo [architecture](../../docs/architecture.md), [API integration](../../docs/api-integration.md) and [containerisation](../../docs/containerisation.md) notes.

@@ -8,5 +8,6 @@ The current workbench implementation includes the app shell, mock service fixtur
 - Expand visual review only around states that are hard to cover through normal planner routes.
 - Keep theme packages focused on reusable styling primitives, token mapping and component Sass, not runtime service configuration.
 - Keep backend API origins runtime-configured and server-only; do not introduce browser-visible backend URL variables.
+- Add manual assistive-technology review when a handover requires human screen-reader, speech-input or platform accessibility evidence beyond the automated browser checks.
 - Add deployed smoke coverage only when a temporary review host exists and its access boundary is intentionally configured.
 - Add SBOM generation, image provenance, signing and registry scanning policy before promoting container images beyond local review.

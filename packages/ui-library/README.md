@@ -28,3 +28,18 @@ imports belong inside the local adapter/theme boundary, not planner route
 containers.
 
 It should not own API calls, scoring rules, simulator behavior or planner decision logic.
+
+## Reviewer Evidence
+
+The planner workbench `/ui-library` route is the public review surface for this
+package. It exercises theme modes, reusable layout/status/table/form states and
+constrained decision controls in deterministic mock mode.
+
+Use the focused visual smoke after intentional UI-library changes:
+
+```sh
+pnpm test:visual:library
+```
+
+Route-wide visual evidence lives in the app showcase smoke. Keep this package
+focused on reusable component semantics and Sass theme behavior.

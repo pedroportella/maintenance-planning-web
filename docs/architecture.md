@@ -24,7 +24,12 @@ The workbench currently renders local task routes for:
 
 The first screen is a compact workbench start page that points reviewers into the service-backed recommendation, work-order triage and evidence routes without introducing a home-screen service call. The backlog, coordination exception, planning-run, recommendation, operations posture and scenario outcome routes read from the server-side services package. Operations and scenario pages expose compact freshness, import, posture and scenario evidence for reviewer flow without adding a broad admin dashboard.
 
-The `/ui-library` route is separate from planner task navigation. It is a no-index reviewer/developer evidence page for reusable UI states and uses deterministic mock services only.
+The routed pages share the same planner shell and responsive page-width model.
+The start page, decision flow and evidence routes should therefore read as one
+workbench surface during desktop, tablet and mobile review, even when individual
+routes have different data density.
+
+The `/ui-library` route is separate from planner task navigation. It is a no-index reviewer/developer evidence page for reusable UI states and uses deterministic mock services only. Its review role is to make theme-mode readability, constrained workflow controls, status/alert states, table structure and route-rollout snapshots inspectable without needing live services.
 
 ## Visual System
 
@@ -34,7 +39,7 @@ Reusable route composition belongs to `packages/ui-library` adapters and compone
 
 App-local CSS stays limited to route handoff concerns. Brand text, generic icon names and provenance notes live in `packages/ui-assets`, keeping visual metadata out of route files.
 
-Focused Playwright visual baselines cover `/ui-library` plus routed workbench evidence across desktop, tablet and mobile light/dark viewports. They complement route-level smoke tests and do not replace service-boundary tests.
+Focused Playwright visual baselines cover `/ui-library` plus routed workbench evidence across desktop, tablet and mobile light/dark viewports. They complement route-level smoke tests and do not replace service-boundary tests or manual assistive-technology review.
 
 ## Runtime Boundary
 
