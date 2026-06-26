@@ -1,0 +1,17 @@
+.themeGrid {
+  align-items: stretch;
+}
+
+.themeSampleSurface {
+  display: grid;
+  min-width: 0;
+  padding: var(--mp-space-sm);
+  color: var(--mp-color-text-default);
+  background: var(--mp-color-page);
+  border: 1px solid var(--mp-color-border-default);
+  border-radius: var(--mp-radius-surface);
+}
+
+.themeSampleSurface > * {
+  min-width: 0;
+}

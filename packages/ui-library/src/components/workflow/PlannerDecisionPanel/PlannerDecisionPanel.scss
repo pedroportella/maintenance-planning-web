@@ -112,6 +112,13 @@
   }
 }
 
+@container radix-radio-cards (max-width: 42rem) {
+  .planner-decision-panel-choice-list,
+  .planner-decision-panel-defer-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 520px) {
   .planner-decision-panel {
     padding: var(--space-3);
