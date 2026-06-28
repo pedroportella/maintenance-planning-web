@@ -14,7 +14,7 @@ export default defineConfig({
   fullyParallel: false,
   reporter: [["list"]],
   webServer: {
-    command: `pnpm --dir apps/planner-workbench dev --hostname ${host} --port ${port}`,
+    command: `pnpm --dir apps/planner-workbench exec next dev --hostname ${host} --port ${port}`,
     env: {
       MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_END_UTC:
         process.env.MAINTENANCE_PLANNING_WEB_BACKEND_HORIZON_END_UTC ?? "2026-01-30T00:00:00Z",

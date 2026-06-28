@@ -78,7 +78,7 @@ pnpm install
 pnpm --filter @maintenance-planning/planner-workbench dev
 ```
 
-Open `http://localhost:3000`. The app defaults to deterministic mock mode for local development, so no `.env.local` file is required for this path.
+Open `http://127.0.0.1:3100`. The app defaults to deterministic mock mode for local development, so no `.env.local` file is required for this path.
 
 Useful mock-mode routes:
 

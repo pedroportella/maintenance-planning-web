@@ -20,7 +20,7 @@ export default defineConfig({
   reporter: [["list"]],
   snapshotPathTemplate: "{testDir}/__visual-baselines__/{arg}{ext}",
   webServer: {
-    command: `pnpm --dir apps/planner-workbench dev --hostname ${host} --port ${port}`,
+    command: `pnpm --dir apps/planner-workbench exec next dev --hostname ${host} --port ${port}`,
     env: {
       MAINTENANCE_PLANNING_WEB_DATA_MODE: "mock",
       MAINTENANCE_PLANNING_WEB_MOCK_SCENARIO: "parts-delay-replan"

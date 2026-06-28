@@ -20,7 +20,7 @@ pnpm install
 pnpm --dir apps/planner-workbench dev
 ```
 
-Open `http://localhost:3000`. The app defaults to mock mode for local UI review, so this path does not require Docker, the API, the simulator or `.env.local`.
+Open `http://127.0.0.1:3100`. The app defaults to mock mode for local UI review, so this path does not require Docker, the API, the simulator or `.env.local`.
 
 Useful local checks:
 
