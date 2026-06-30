@@ -45,13 +45,20 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
   await expect(page.getByRole("table", { name: "PKG-BASE-001 work orders" })).toBeVisible();
   await expect(page.getByText("Ready work can be grouped inside the current planning horizon.")).toBeVisible();
 
+  await openRecommendationDecisionForm(page);
   await page.getByRole("textbox", { name: "Decision note" }).fill("Mock reviewer accepted the ready package.");
   await page.getByRole("button", { name: /Accept package/ }).click();
 
   await expect(page).toHaveURL(/decisionResult=success/);
   await expect(page.locator(".planner-decision-notice-focus")).toBeFocused();
-  await expect(page.getByText("Accepted was recorded for PKG-BASE-001")).toBeVisible();
+  await expect(
+    page.getByText("Latest decision: Accepted for PKG-BASE-001. The package queue has been updated.")
+  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Latest decision recorded" })).toBeVisible();
+  await expect(page.getByText("Accepted for planner-accepted on 2026-01-15 08:00 UTC.")).toBeVisible();
   await expect(page.getByText("planner-accepted", { exact: true }).first()).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Decision note" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Change decision" })).toBeVisible();
 
   await page.getByRole("link", { name: "Open planning run" }).click();
   await expect(page).toHaveURL(/planning-runs\/50000000-0000-4000-8000-000000002000/);
@@ -199,6 +206,27 @@ test("resolves visible package numbers to stable package detail routes", async (
   await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
 });
 
+test("keeps a rejected blocked package completed until change is explicit", async ({ page }) => {
+  await page.goto("/recommendations/60000000-0000-4000-8000-000000002001");
+  await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-REVIEW" })).toBeVisible();
+
+  await openRecommendationDecisionForm(page);
+  await page.getByRole("radio", { name: /Reject package/ }).click();
+  await page.getByRole("textbox", { name: "Decision note" }).fill("Mock reviewer rejected the blocked package.");
+  await page.getByRole("button", { name: /Reject package/ }).click();
+
+  await expect(page).toHaveURL(/decisionResult=success/);
+  await expect(page.getByRole("heading", { name: "Latest decision recorded" })).toBeVisible();
+  await expect(page.getByText("Rejected for planning-conflict on 2026-01-15 08:00 UTC.")).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Decision note" })).toHaveCount(0);
+
+  await page.getByRole("link", { name: "Change decision" }).click();
+  await expect(page).toHaveURL(/changeDecision=true/);
+  await expect(page.getByRole("heading", { name: "Change decision" })).toBeVisible();
+  await expect(page.getByRole("radio", { name: /Reject package/ })).toBeChecked();
+  await expect(page.getByRole("button", { name: /Reject package/ })).toBeVisible();
+});
+
 test("keeps repeated mock decision history free of duplicate React keys", async ({ page }) => {
   const consoleErrors: string[] = [];
   page.on("console", (message) => {
@@ -211,6 +239,7 @@ test("keeps repeated mock decision history free of duplicate React keys", async 
   await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
 
   for (const note of ["Repeated mock decision one", "Repeated mock decision two"]) {
+    await openRecommendationDecisionForm(page);
     await page.getByRole("textbox", { name: "Decision note" }).fill(note);
     await page.getByRole("button", { name: "Accept package" }).click();
     await expect(page.locator(".planner-decision-notice-focus")).toBeFocused();
@@ -230,3 +259,13 @@ test("renders a controlled state for an unknown package recommendation", async (
   await expect(page.getByText("No package recommendation matched not-a-package")).toBeVisible();
   await expect(page.getByRole("link", { name: "Back to recommendations" })).toBeVisible();
 });
+
+async function openRecommendationDecisionForm(page: import("@playwright/test").Page) {
+  const changeDecisionLink = page.getByRole("link", { name: "Change decision" });
+
+  if (await changeDecisionLink.isVisible()) {
+    await changeDecisionLink.click();
+  }
+
+  await expect(page.getByRole("textbox", { name: "Decision note" })).toBeVisible();
+}

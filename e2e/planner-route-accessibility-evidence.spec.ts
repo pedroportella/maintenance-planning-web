@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import {
   createPlannerRouteAccessibilityEvidence,
   createRouteEvidenceEntry
@@ -40,7 +40,7 @@ test("records automated accessibility evidence for mock planner routes", async (
     }
 
     if (fixture.form) {
-      await expect(page.getByRole("form", { name: fixture.form })).toBeVisible();
+      await openDecisionFormIfCompleted(page, fixture.form);
       await expect(page.getByRole("textbox", { name: "Decision note" })).toBeVisible();
 
       const rejectOption = page.getByRole("radio", { name: /Reject package/ });
@@ -110,9 +110,7 @@ test("smokes planner route user-preference modes in mock mode", async ({ page },
   await expect(
     page.getByRole("heading", { level: 1, name: recommendationDecisionRoute.heading })
   ).toBeVisible();
-  await expect(
-    page.getByRole("form", { name: recommendationDecisionRoute.form })
-  ).toBeVisible();
+  await openDecisionFormIfCompleted(page, recommendationDecisionRoute.form);
 
   const preferenceEvidence = {
     automatedBrowserSmoke: {
@@ -137,3 +135,15 @@ test("smokes planner route user-preference modes in mock mode", async ({ page },
   expect(textSpacingReport.offenders).toEqual([]);
   expect(preferenceEvidence.automatedBrowserSmoke.forcedColorsActive).toBe(true);
 });
+
+async function openDecisionFormIfCompleted(page: Page, formName: string) {
+  const decisionForm = page.getByRole("form", { name: formName });
+
+  if (await decisionForm.isVisible()) {
+    return;
+  }
+
+  await expect(page.getByRole("heading", { name: "Latest decision recorded" })).toBeVisible();
+  await page.getByRole("link", { name: "Change decision" }).click();
+  await expect(decisionForm).toBeVisible();
+}

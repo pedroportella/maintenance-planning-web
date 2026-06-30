@@ -117,7 +117,22 @@ describe("PlannerDecisionPanel", () => {
   it("supports an explicit rejected default with a single final submit action", () => {
     const markup = renderToStaticMarkup(
       createElement(PlannerDecisionPanel, {
-        actions,
+        actions: actions.map((action) =>
+          action.decision === "Accepted"
+            ? {
+                ...action,
+                disabled: true,
+                disabledDescription: "Resolve blockers before accepting."
+              }
+            : action
+        ),
+        blockers: [
+          {
+            id: "missing-estimate",
+            label: "Missing estimate",
+            summary: "Estimated effort is required before packaging."
+          }
+        ],
         defaultDecision: "Rejected",
         packageId: "package-3",
         packageNumber: "PKG-REVIEW-001",
@@ -127,8 +142,10 @@ describe("PlannerDecisionPanel", () => {
     );
 
     expect(markup).toContain('value="reject:planning-conflict"');
+    expect(markup).toContain("Rejected selected for PKG-REVIEW-001");
     expect(markup).toContain("Reject package");
     expect(markup).not.toContain('name="deferActionCode"');
+    expect(markup).toContain("Resolve blockers before accepting.");
     expect(markup).toContain('href="/recommendations"');
   });
 });

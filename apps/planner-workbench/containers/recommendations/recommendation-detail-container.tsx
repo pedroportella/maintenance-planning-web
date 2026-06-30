@@ -19,6 +19,7 @@ import { PlannerRouteFailure } from "@/components/planner-route-state";
 import { recommendationStateBadgeSpecs } from "@/lib/planner-format";
 import { RecommendationDetailPanel } from "./recommendation-detail-panel";
 import { RecommendationDecisionNotice } from "./recommendation-notices";
+import { isChangeDecisionRequested } from "./recommendation-decision-state";
 import {
   readRecommendationSearchParam,
   type RecommendationSearchParams
@@ -98,6 +99,7 @@ export default async function RecommendationDetailContainer({
         <RecommendationDecisionNotice params={queryParams} />
 
         <RecommendationDetailPanel
+          isChangingDecision={isChangeDecisionRequested(queryParams)}
           planningRunId={recommendationSet.planningRunId}
           recommendation={recommendation}
         />

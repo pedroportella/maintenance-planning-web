@@ -1,8 +1,10 @@
 import {
   PlannerDecisionPanel,
+  type PlannerDecisionKind,
   type PlannerDecisionPanelAction,
   type PlannerDecisionPanelBlocker
 } from "@maintenance-planning/ui-library";
+import type { ReactNode } from "react";
 import type { PlannerRecommendation } from "@maintenance-planning/services";
 import { plannerDecisionActions } from "@/lib/planner-decisions";
 import {
@@ -14,13 +16,21 @@ import {
 import { recordRecommendationDecision } from "./recommendation-decision-actions";
 
 type RecommendationDecisionFormProps = {
+  defaultDecision?: PlannerDecisionKind;
+  defaultDeferActionCode?: string;
   recommendation: PlannerRecommendation;
   planningRunId: string;
+  secondaryAction?: ReactNode;
+  title?: ReactNode;
 };
 
 export function RecommendationDecisionForm({
+  defaultDecision,
+  defaultDeferActionCode,
   recommendation,
-  planningRunId
+  planningRunId,
+  secondaryAction,
+  title
 }: RecommendationDecisionFormProps) {
   const readyForAcceptance = isReadyRecommendation(recommendation);
   const actions: readonly PlannerDecisionPanelAction[] = plannerDecisionActions.map((action) =>
@@ -44,6 +54,8 @@ export function RecommendationDecisionForm({
     <PlannerDecisionPanel
       actions={actions}
       blockers={blockers}
+      defaultDecision={defaultDecision}
+      defaultDeferActionCode={defaultDeferActionCode}
       facts={[
         {
           id: "package",
@@ -71,6 +83,8 @@ export function RecommendationDecisionForm({
       packageNumber={recommendation.packageNumber}
       planningRunId={planningRunId}
       recordAction={recordRecommendationDecision}
+      secondaryAction={secondaryAction}
+      title={title}
       workOrderIds={recommendation.workOrders.map((workOrder) => workOrder.id)}
     />
   );

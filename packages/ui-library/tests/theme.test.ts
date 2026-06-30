@@ -75,6 +75,7 @@ describe("ui-library theme", () => {
     expect(themeScss).toContain("../components/radix/RadixIconButton/RadixIconButton");
     expect(themeScss).toContain("../components/radix/RadixTable/RadixTable");
     expect(themeScss).toContain("../components/workflow/PlannerDecisionPanel/PlannerDecisionPanel");
+    expect(themeScss).toContain("../components/workflow/PlannerDecisionSummary/PlannerDecisionSummary");
     expect(themeScss).toContain("../components/workflow/PlannerMetadataPanel/PlannerMetadataPanel");
     expect(themeScss).not.toContain("../data/");
     expect(themeScss).not.toContain("../feedback/");

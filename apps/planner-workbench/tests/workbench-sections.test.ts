@@ -11,6 +11,14 @@ import {
 } from "../lib/planner-decisions";
 import { decisionHistoryItemKey } from "../lib/decision-history";
 import {
+  changeDecisionQuery,
+  decisionKindFromLatest,
+  deferActionCodeFromLatest,
+  isChangeDecisionRequested,
+  latestRecommendationDecision,
+  recommendationDetailQuery
+} from "../containers/recommendations/recommendation-decision-state";
+import {
   acceptDisabledReason,
   buildBacklogMetrics,
   buildOperationsNextAction,
@@ -93,6 +101,45 @@ describe("workbench section model", () => {
 
     expect(new Set(keys).size).toBe(2);
     expect(keys[0]).toContain(duplicateDecision.id);
+  });
+
+  it("derives completed recommendation decision state without changing action contracts", () => {
+    const acceptedDecision = {
+      decidedAtUtc: "2026-01-15T08:00:00.000Z",
+      decidedBy: "planner-workbench",
+      decision: "Accepted",
+      id: "80000000-0000-4000-8000-000000009991",
+      packageId: "60000000-0000-4000-8000-000000002000",
+      reasonCode: "planner-accepted"
+    };
+    const rejectedDecision = {
+      ...acceptedDecision,
+      decision: "Rejected",
+      reasonCode: "planning-conflict"
+    };
+    const deferredDecision = {
+      ...acceptedDecision,
+      decision: "Deferred",
+      reasonCode: "crew-unavailable"
+    };
+
+    expect(isChangeDecisionRequested({ changeDecision: "true" })).toBe(true);
+    expect(isChangeDecisionRequested({ changeDecision: "1" })).toBe(true);
+    expect(isChangeDecisionRequested({ changeDecision: "false" })).toBe(false);
+    expect(
+      latestRecommendationDecision({
+        decisions: [acceptedDecision, rejectedDecision]
+      })
+    ).toBe(rejectedDecision);
+    expect(decisionKindFromLatest(rejectedDecision)).toBe("Rejected");
+    expect(decisionKindFromLatest({ ...acceptedDecision, decision: "Other" })).toBeUndefined();
+    expect(deferActionCodeFromLatest(deferredDecision)).toBe("defer:crew");
+    expect(deferActionCodeFromLatest({ ...deferredDecision, reasonCode: "parts-delay" })).toBeUndefined();
+    expect(recommendationDetailQuery("run-1")).toEqual({ planningRunId: "run-1" });
+    expect(changeDecisionQuery("run-1")).toEqual({
+      changeDecision: "true",
+      planningRunId: "run-1"
+    });
   });
 
   it("formats planner metrics and state labels", () => {

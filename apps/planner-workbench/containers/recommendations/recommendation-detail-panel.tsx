@@ -1,8 +1,10 @@
 import {
+  PlannerActionLink,
   PlannerAlert,
   PlannerBadgeGroup,
   PlannerContentSection,
   PlannerDataTable,
+  PlannerDecisionSummary,
   PlannerMetadataPanel,
   PlannerPlainList,
   PlannerResponsiveGrid,
@@ -18,6 +20,7 @@ import type {
   RecommendationBlockerView,
   WorkOrderBacklogItem
 } from "@maintenance-planning/services";
+import Link from "next/link";
 import {
   formatHours,
   formatUtc,
@@ -29,8 +32,17 @@ import {
 } from "@/lib/planner-format";
 import { decisionHistoryItemKey } from "@/lib/decision-history";
 import { RecommendationDecisionForm } from "./recommendation-decision-form";
+import { packageRecommendationHref } from "./recommendation-links";
+import {
+  changeDecisionQuery,
+  decisionKindFromLatest,
+  deferActionCodeFromLatest,
+  latestRecommendationDecision,
+  recommendationDetailQuery
+} from "./recommendation-decision-state";
 
 type RecommendationDetailPanelProps = {
+  isChangingDecision?: boolean;
   recommendation: PlannerRecommendation;
   planningRunId: string;
 };
@@ -73,10 +85,12 @@ const workOrderColumns: readonly PlannerDataTableColumn<WorkOrderBacklogItem>[] 
 ];
 
 export function RecommendationDetailPanel({
+  isChangingDecision = false,
   recommendation,
   planningRunId
 }: RecommendationDetailPanelProps) {
   const headingId = `recommendation-detail-${recommendation.packageId}`;
+  const latestDecision = latestRecommendationDecision(recommendation);
 
   return (
     <PlannerContentSection
@@ -182,7 +196,9 @@ export function RecommendationDetailPanel({
 
       <RecommendationDecisions decisions={recommendation.decisions} />
 
-      <RecommendationDecisionForm
+      <RecommendationDecisionState
+        isChangingDecision={isChangingDecision}
+        latestDecision={latestDecision}
         planningRunId={planningRunId}
         recommendation={recommendation}
       />
@@ -209,6 +225,75 @@ function RecommendationBlockers({ blockers }: { blockers: readonly Recommendatio
         ))}
       </PlannerPlainList>
     </PlannerAlert>
+  );
+}
+
+function RecommendationDecisionState({
+  isChangingDecision,
+  latestDecision,
+  planningRunId,
+  recommendation
+}: {
+  isChangingDecision: boolean;
+  latestDecision?: PlannerDecisionRecord;
+  planningRunId: string;
+  recommendation: PlannerRecommendation;
+}) {
+  const detailHref = packageRecommendationHref(
+    recommendation.packageId,
+    recommendationDetailQuery(planningRunId)
+  );
+
+  if (latestDecision && !isChangingDecision) {
+    return (
+      <PlannerDecisionSummary
+        actions={
+          <>
+            <PlannerActionLink asChild>
+              <Link href="/recommendations">Back to queue</Link>
+            </PlannerActionLink>
+            <PlannerActionLink asChild priority="secondary">
+              <Link
+                href={packageRecommendationHref(
+                  recommendation.packageId,
+                  changeDecisionQuery(planningRunId)
+                )}
+              >
+                Change decision
+              </Link>
+            </PlannerActionLink>
+          </>
+        }
+        decidedAt={formatUtc(latestDecision.decidedAtUtc)}
+        decidedBy={latestDecision.decidedBy}
+        decision={latestDecision.decision}
+        note={latestDecision.notes}
+        packageNumber={recommendation.packageNumber}
+        reason={latestDecision.reasonCode}
+        summary={`${latestDecision.decision} for ${latestDecision.reasonCode} on ${formatUtc(
+          latestDecision.decidedAtUtc
+        )}.`}
+        titleId={`latest-decision-${recommendation.packageId}`}
+        tone={toneForDecision(latestDecision.decision)}
+      />
+    );
+  }
+
+  return (
+    <RecommendationDecisionForm
+      defaultDecision={decisionKindFromLatest(latestDecision)}
+      defaultDeferActionCode={deferActionCodeFromLatest(latestDecision)}
+      planningRunId={planningRunId}
+      recommendation={recommendation}
+      secondaryAction={
+        latestDecision ? (
+          <Link href={detailHref}>Cancel change</Link>
+        ) : (
+          <Link href="/recommendations">Back to queue</Link>
+        )
+      }
+      title={latestDecision ? "Change decision" : undefined}
+    />
   );
 }
 

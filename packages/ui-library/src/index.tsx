@@ -169,9 +169,11 @@ export type {
   PlannerDecisionPanelAction,
   PlannerDecisionPanelBlocker,
   PlannerDecisionPanelProps,
+  PlannerDecisionSummaryProps,
   PlannerMetadataPanelProps
 } from "./components/workflow";
 export {
   PlannerDecisionPanel,
+  PlannerDecisionSummary,
   PlannerMetadataPanel
 } from "./components/workflow";
