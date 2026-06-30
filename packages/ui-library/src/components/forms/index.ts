@@ -8,6 +8,8 @@ export type { PlannerRadioGroupProps } from "./PlannerRadioGroup";
 export { PlannerRadioGroup } from "./PlannerRadioGroup";
 export type { PlannerSelectProps } from "./PlannerSelect";
 export { PlannerSelect } from "./PlannerSelect";
+export type { PlannerSubmitButtonProps } from "./PlannerSubmitButton";
+export { PlannerSubmitButton } from "./PlannerSubmitButton";
 export type { PlannerTextAreaProps } from "./PlannerTextArea";
 export { PlannerTextArea } from "./PlannerTextArea";
 export type { PlannerTextInputProps } from "./PlannerTextInput";

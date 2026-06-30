@@ -29,7 +29,7 @@ export function RecommendationDecisionNotice({
       <div className="planner-decision-notice-focus" ref={noticeRef} tabIndex={-1}>
         <PlannerAlert title="Decision recorded" tone="success">
           <p>
-            {decision} was recorded for {packageNumber} through the planner service boundary.
+            Latest decision: {decision} for {packageNumber}. The package queue has been updated.
           </p>
         </PlannerAlert>
       </div>
@@ -50,7 +50,7 @@ export function RecommendationDecisionNotice({
     return (
       <div className="planner-decision-notice-focus" ref={noticeRef} tabIndex={-1}>
         <PlannerAlert title="Decision was not recorded" tone="critical">
-          <p>The planner service could not record the decision. Review the input and try again.</p>
+          <p>The decision could not be saved. Review the form and try again.</p>
         </PlannerAlert>
       </div>
     );

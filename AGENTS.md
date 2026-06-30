@@ -34,6 +34,13 @@ Durable repo guidance for the maintenance-planning web prototype.
 - `packages/ui-tokens` owns design token exports.
 - `packages/utils` owns framework-neutral helpers.
 
+## Component Design
+
+- Aim each file, class and function at a single responsibility.
+- Extract reusable UI behavior into named `packages/ui-library` components
+  instead of hiding generic form, feedback or adapter logic inside a
+  route-specific or workflow-specific component.
+
 ## Tests And Checks
 
 - Run guard scripts after public-doc, config or browser-source changes.

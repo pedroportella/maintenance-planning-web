@@ -342,8 +342,64 @@ describe("planner services", () => {
       horizon: "two-week",
       horizonStartUtc: "2026-01-16T00:00:00Z",
       horizonEndUtc: "2026-01-30T00:00:00Z",
-      requestedBy: "planner-workbench-e2e"
+      requestedBy: "planner-workbench-e2e",
+      idempotencyKey: expect.stringMatching(/^planner-workbench:two-week:[0-9a-f]{16}$/)
     });
+  });
+
+  it("uses a stable backend planning-run idempotency key for repeated automatic creation", async () => {
+    const createdRunRequests: CreatePlanningRunRequest[] = [];
+    const fetchImpl: FetchLike = async (input, init) => {
+      if (input.endsWith("/api/v1/planning-runs")) {
+        createdRunRequests.push(JSON.parse(String(init?.body)) as CreatePlanningRunRequest);
+
+        return jsonResponse<PlanningRunResult>(
+          {
+            id: "50000000-0000-4000-8000-000000009061",
+            runNumber: "RUN-BACKEND-IDEMPOTENT",
+            status: "Completed",
+            horizon: "two-week",
+            horizonStartUtc: "2026-01-16T00:00:00.000Z",
+            horizonEndUtc: "2026-01-30T00:00:00.000Z",
+            startedAtUtc: "2026-01-15T08:00:00.000Z",
+            completedAtUtc: "2026-01-15T08:01:00.000Z",
+            requestedBy: "planner-workbench-e2e",
+            recommendationCount: 0,
+            readyRecommendationCount: 0,
+            blockedRecommendationCount: 0
+          },
+          202
+        );
+      }
+
+      if (input.endsWith("/api/v1/planning-runs/50000000-0000-4000-8000-000000009061/recommendations")) {
+        return jsonResponse<PlanningRecommendationsResult>({
+          planningRunId: "50000000-0000-4000-8000-000000009061",
+          runNumber: "RUN-BACKEND-IDEMPOTENT",
+          status: "Completed",
+          recommendations: []
+        });
+      }
+
+      return jsonResponse({ error: "unexpected request" }, 404);
+    };
+
+    const services = createPlannerServices({
+      env: {
+        [DATA_MODE_ENV]: "backend",
+        [API_URL_ENV]: "https://api.example.test",
+        [BACKEND_HORIZON_START_ENV]: "2026-01-16T00:00:00Z",
+        [BACKEND_HORIZON_END_ENV]: "2026-01-30T00:00:00Z",
+        [BACKEND_REQUESTED_BY_ENV]: "planner-workbench-e2e"
+      },
+      fetchImpl
+    });
+
+    await services.getRecommendationSet();
+    await services.getRecommendationSet();
+
+    expect(createdRunRequests).toHaveLength(2);
+    expect(createdRunRequests[0]?.idempotencyKey).toBe(createdRunRequests[1]?.idempotencyKey);
   });
 
   it("derives backend scenario outcomes from posture and recommendation contracts", async () => {

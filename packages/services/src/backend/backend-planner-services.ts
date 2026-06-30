@@ -153,7 +153,8 @@ async function resolvePlanningRunId(
     horizon: query?.horizon ?? "two-week",
     horizonStartUtc: query?.horizonStartUtc,
     horizonEndUtc: query?.horizonEndUtc,
-    requestedBy: query?.requestedBy ?? "planner-workbench"
+    requestedBy: query?.requestedBy ?? "planner-workbench",
+    idempotencyKey: buildPlanningRunIdempotencyKey(query)
   };
 
   const createdRun = await client.postJson<CreatePlanningRunRequest, PlanningRunResult>(
@@ -163,4 +164,29 @@ async function resolvePlanningRunId(
   );
 
   return createdRun.id;
+}
+
+function buildPlanningRunIdempotencyKey(query: RecommendationQuery | undefined) {
+  const horizon = query?.horizon ?? "two-week";
+  const fingerprint = JSON.stringify({
+    horizon,
+    horizonStartUtc: query?.horizonStartUtc ?? null,
+    horizonEndUtc: query?.horizonEndUtc ?? null,
+    requestedBy: query?.requestedBy ?? "planner-workbench"
+  });
+
+  return `planner-workbench:${horizon}:${hashString(fingerprint)}`;
+}
+
+function hashString(value: string) {
+  let hash = 0xcbf29ce484222325n;
+  const prime = 0x100000001b3n;
+  const mask = 0xffffffffffffffffn;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= BigInt(value.charCodeAt(index));
+    hash = (hash * prime) & mask;
+  }
+
+  return hash.toString(16).padStart(16, "0");
 }

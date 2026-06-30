@@ -70,6 +70,7 @@ describe("ui-library theme", () => {
     expect(themeScss).toContain("../components/data/PlannerPagination/PlannerPagination");
     expect(themeScss).toContain("../components/data/PlannerSegmentedNav/PlannerSegmentedNav");
     expect(themeScss).toContain("../components/data/PlannerSummaryList/PlannerSummaryList");
+    expect(themeScss).toContain("../components/forms/PlannerSubmitButton/PlannerSubmitButton");
     expect(themeScss).toContain("../components/radix/RadixDataList/RadixDataList");
     expect(themeScss).toContain("../components/radix/RadixIconButton/RadixIconButton");
     expect(themeScss).toContain("../components/radix/RadixTable/RadixTable");

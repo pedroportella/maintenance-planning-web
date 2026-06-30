@@ -18,10 +18,10 @@ import {
 import {
   PlannerRadioCards,
   PlannerRadioGroup,
+  PlannerSubmitButton,
   PlannerTextArea
 } from "../../forms";
 import {
-  RadixButton,
   RadixText
 } from "../../radix";
 
@@ -240,15 +240,15 @@ export function PlannerDecisionPanel({
         ) : null}
 
         <footer className="planner-decision-panel-action-bar">
-          <RadixButton
+          <PlannerSubmitButton
             aria-describedby={decisionStatusId}
             className="planner-decision-panel-submit"
             disabled={isSubmitDisabled}
+            pendingChildren="Recording decision..."
             tone={submitTone}
-            type="submit"
           >
             {getSubmitLabel(selectedDecision)}
-          </RadixButton>
+          </PlannerSubmitButton>
           {secondaryAction ? (
             <span className="planner-decision-panel-secondary">{secondaryAction}</span>
           ) : null}

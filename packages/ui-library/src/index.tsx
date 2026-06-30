@@ -56,6 +56,7 @@ export type {
   PlannerRadioCardsProps,
   PlannerRadioGroupProps,
   PlannerSelectProps,
+  PlannerSubmitButtonProps,
   PlannerTextAreaProps,
   PlannerTextInputProps
 } from "./components/forms";
@@ -65,6 +66,7 @@ export {
   PlannerRadioCards,
   PlannerRadioGroup,
   PlannerSelect,
+  PlannerSubmitButton,
   PlannerTextArea,
   PlannerTextInput
 } from "./components/forms";

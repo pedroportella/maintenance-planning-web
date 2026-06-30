@@ -5,6 +5,7 @@ export type CreatePlanningRunRequest = {
   readonly horizonStartUtc?: IsoDateTimeString | null;
   readonly horizonEndUtc?: IsoDateTimeString | null;
   readonly requestedBy?: string | null;
+  readonly idempotencyKey: string;
 };
 
 export type RecordPackageDecisionRequest = {

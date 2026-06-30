@@ -16,6 +16,7 @@ import {
   PlannerSegmentedNav,
   PlannerSelect,
   PlannerSideNav,
+  PlannerSubmitButton,
   PlannerTextArea,
   PlannerTextInput,
   PlannerWorkflowLayout,
@@ -63,6 +64,7 @@ const requiredComponentFolders = [
   "src/components/forms/PlannerRadioCards",
   "src/components/forms/PlannerRadioGroup",
   "src/components/forms/PlannerSelect",
+  "src/components/forms/PlannerSubmitButton",
   "src/components/forms/PlannerTextArea",
   "src/components/forms/PlannerTextInput"
 ] as const;
@@ -231,6 +233,9 @@ describe("ui-library Radix adapter architecture", () => {
               }
             ]
           }),
+          createElement(PlannerSubmitButton, {
+            children: "Save decision"
+          }),
           createElement(PlannerRadioGroup, {
             label: "Action",
             name: "action",
@@ -297,6 +302,7 @@ describe("ui-library Radix adapter architecture", () => {
     expect(markup).toContain("radix-link");
     expect(markup).toContain("radix-callout");
     expect(markup).toContain("radix-select-trigger");
+    expect(markup).toContain("planner-submit-button");
     expect(markup).toContain("radix-radio-group");
     expect(markup).toContain("radix-radio-cards");
     expect(markup).toContain("radix-table");
