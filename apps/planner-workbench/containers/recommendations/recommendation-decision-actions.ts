@@ -51,7 +51,8 @@ export async function recordRecommendationDecision(formData: FormData) {
       {
         decision: action.decision,
         decisionResult: "success",
-        packageNumber: result.packageNumber
+        packageNumber: result.packageNumber,
+        reasonCode: action.reasonCode
       },
       packageId,
       planningRunId

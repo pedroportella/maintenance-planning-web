@@ -32,13 +32,14 @@ import {
 } from "@/lib/planner-format";
 import { decisionHistoryItemKey } from "@/lib/decision-history";
 import { RecommendationDecisionForm } from "./recommendation-decision-form";
-import { packageRecommendationHref } from "./recommendation-links";
+import { packageRecommendationHref, recommendationsHref } from "./recommendation-links";
 import {
   changeDecisionQuery,
   decisionKindFromLatest,
   deferActionCodeFromLatest,
   latestRecommendationDecision,
-  recommendationDetailQuery
+  recommendationDetailQuery,
+  recommendationQueueDecisionQuery
 } from "./recommendation-decision-state";
 
 type RecommendationDetailPanelProps = {
@@ -250,7 +251,13 @@ function RecommendationDecisionState({
         actions={
           <>
             <PlannerActionLink asChild>
-              <Link href="/recommendations">Back to queue</Link>
+              <Link
+                href={recommendationsHref(
+                  recommendationQueueDecisionQuery(recommendation, latestDecision)
+                )}
+              >
+                Back to queue
+              </Link>
             </PlannerActionLink>
             <PlannerActionLink asChild priority="secondary">
               <Link

@@ -7,3 +7,9 @@ export function packageRecommendationHref(
 
   return query ? `${path}?${query}` : path;
 }
+
+export function recommendationsHref(params: Record<string, string> = {}) {
+  const query = new URLSearchParams(params).toString();
+
+  return query ? `/recommendations?${query}` : "/recommendations";
+}

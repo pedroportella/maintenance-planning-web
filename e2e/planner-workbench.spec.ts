@@ -51,14 +51,40 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
 
   await expect(page).toHaveURL(/decisionResult=success/);
   await expect(page.locator(".planner-decision-notice-focus")).toBeFocused();
+  await expect(page.getByText("Accepted PKG-BASE-001")).toBeVisible();
   await expect(
-    page.getByText("Latest decision: Accepted for PKG-BASE-001. The package queue has been updated.")
+    page.getByText("Latest decision: planner-accepted. The package queue has been updated.")
   ).toBeVisible();
   await expect(page.getByRole("heading", { name: "Latest decision recorded" })).toBeVisible();
   await expect(page.getByText("Accepted for planner-accepted on 2026-01-15 08:00 UTC.")).toBeVisible();
   await expect(page.getByText("planner-accepted", { exact: true }).first()).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Decision note" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Change decision" })).toBeVisible();
+
+  await page.getByRole("link", { name: "Back to queue" }).click();
+  await expect(page).toHaveURL(/recommendations\?.*decisionResult=success/);
+  await expect(page.locator(".planner-decision-notice-focus")).toBeFocused();
+  await expect(
+    page.getByRole("status").filter({
+      hasText: "Accepted PKG-BASE-001"
+    })
+  ).toBeVisible();
+  await expect(
+    page.getByRole("status").filter({
+      hasText: "Latest decision: planner-accepted. The package queue has been updated."
+    })
+  ).toBeVisible();
+  await expect(
+    page
+      .getByLabel("Recommendation workbench summary")
+      .filter({ hasText: "Decision history" })
+      .filter({ hasText: "1" })
+  ).toBeVisible();
+  await expect(
+    packageQueue.getByRole("row", {
+      name: /PKG-BASE-001.*Accepted for planner-accepted/
+    })
+  ).toBeVisible();
 
   await page.getByRole("link", { name: "Open planning run" }).click();
   await expect(page).toHaveURL(/planning-runs\/50000000-0000-4000-8000-000000002000/);
@@ -89,10 +115,27 @@ test("opens packages from the first visible mobile recommendation column", async
   page
 }, testInfo) => {
   await page.setViewportSize({ height: 844, width: 390 });
-  await page.goto("/recommendations");
+  await page.goto(
+    "/recommendations?decision=Rejected&decisionResult=success&packageNumber=PKG-BASE-REVIEW&reasonCode=planning-conflict"
+  );
 
   const packageQueue = page.getByRole("table", { name: "Package recommendation queue" });
   await expect(packageQueue).toBeVisible();
+  const recentDecisionNotice = page.getByRole("status").filter({
+    hasText: "Rejected PKG-BASE-REVIEW"
+  });
+  await expect(recentDecisionNotice).toBeVisible();
+  await expect(
+    page.getByText("Latest decision: planning-conflict. The package queue has been updated.")
+  ).toBeVisible();
+
+  const noticeBounds = await recentDecisionNotice.boundingBox();
+  const tableBounds = await packageQueue.boundingBox();
+  if (!noticeBounds || !tableBounds) {
+    throw new Error("Expected the recent decision notice and package queue to have bounds.");
+  }
+
+  expect(noticeBounds.y).toBeLessThan(tableBounds.y);
 
   const packageLink = packageQueue
     .getByRole("rowheader", { name: /PKG-BASE-001/ })
@@ -118,6 +161,35 @@ test("opens packages from the first visible mobile recommendation column", async
   await packageLink.click();
   await expect(page).toHaveURL(/recommendations\/60000000-0000-4000-8000-000000002000/);
   await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
+});
+
+test("renders recommendation queue decision query states", async ({ page }) => {
+  await page.goto(
+    "/recommendations?decision=Accepted&decisionResult=success&packageNumber=PKG-BASE-001&reasonCode=planner-accepted"
+  );
+
+  await expect(
+    page.getByRole("status").filter({
+      hasText: "Accepted PKG-BASE-001"
+    })
+  ).toBeVisible();
+  await expect(
+    page.getByText("Latest decision: planner-accepted. The package queue has been updated.")
+  ).toBeVisible();
+
+  await page.goto("/recommendations?decisionResult=unauthorized");
+  await expect(
+    page.getByRole("alert").filter({
+      hasText: "Planner access needs attention before a decision can be recorded."
+    })
+  ).toBeVisible();
+
+  await page.goto("/recommendations?decisionResult=error");
+  await expect(
+    page.getByRole("alert").filter({
+      hasText: "The decision could not be saved. Review the form and try again."
+    })
+  ).toBeVisible();
 });
 
 test("supports keyboard and low-vision access through the work-order triage route", async ({

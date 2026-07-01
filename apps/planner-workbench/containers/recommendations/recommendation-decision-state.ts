@@ -68,3 +68,16 @@ export function changeDecisionQuery(planningRunId: string | undefined): Record<s
     [changeDecisionParam]: "true"
   });
 }
+
+export function recommendationQueueDecisionQuery(
+  recommendation: Pick<PlannerRecommendation, "packageId" | "packageNumber">,
+  decision: Pick<PlannerDecisionRecord, "decision" | "reasonCode">
+): Record<string, string> {
+  return {
+    decision: decision.decision,
+    decisionResult: "success",
+    packageId: recommendation.packageId,
+    packageNumber: recommendation.packageNumber,
+    reasonCode: decision.reasonCode
+  };
+}

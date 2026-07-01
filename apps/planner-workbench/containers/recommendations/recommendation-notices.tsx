@@ -22,14 +22,20 @@ export function RecommendationDecisionNotice({
   }, [result]);
 
   if (result === "success") {
-    const decision = readRecommendationSearchParam(params, "decision") ?? "Decision";
-    const packageNumber = readRecommendationSearchParam(params, "packageNumber") ?? "the package";
+    const decision = readRecommendationSearchParam(params, "decision");
+    const packageNumber = readRecommendationSearchParam(params, "packageNumber");
+    const reasonCode = readRecommendationSearchParam(params, "reasonCode");
+    const title =
+      decision && packageNumber
+        ? `${decision} ${packageNumber}`
+        : "Decision recorded";
 
     return (
       <div className="planner-decision-notice-focus" ref={noticeRef} tabIndex={-1}>
-        <PlannerAlert title="Decision recorded" tone="success">
+        <PlannerAlert role="status" title={title} tone="success">
           <p>
-            Latest decision: {decision} for {packageNumber}. The package queue has been updated.
+            {reasonCode ? `Latest decision: ${reasonCode}. ` : ""}
+            The package queue has been updated.
           </p>
         </PlannerAlert>
       </div>
@@ -39,7 +45,7 @@ export function RecommendationDecisionNotice({
   if (result === "unauthorized") {
     return (
       <div className="planner-decision-notice-focus" ref={noticeRef} tabIndex={-1}>
-        <PlannerAlert title="Decision was not recorded" tone="critical">
+        <PlannerAlert role="alert" title="Decision was not recorded" tone="critical">
           <p>Planner access needs attention before a decision can be recorded.</p>
         </PlannerAlert>
       </div>
@@ -49,7 +55,7 @@ export function RecommendationDecisionNotice({
   if (result === "error") {
     return (
       <div className="planner-decision-notice-focus" ref={noticeRef} tabIndex={-1}>
-        <PlannerAlert title="Decision was not recorded" tone="critical">
+        <PlannerAlert role="alert" title="Decision was not recorded" tone="critical">
           <p>The decision could not be saved. Review the form and try again.</p>
         </PlannerAlert>
       </div>
