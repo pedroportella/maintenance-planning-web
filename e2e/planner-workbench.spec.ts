@@ -42,6 +42,13 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
   await packageQueue.getByRole("link", { name: /Open package PKG-BASE-001/ }).click();
   await expect(page).toHaveURL(/recommendations\/60000000-0000-4000-8000-000000002000/);
   await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Why this package/ })).toHaveAttribute(
+    "aria-expanded",
+    "true"
+  );
+  const workOrdersTrigger = page.getByRole("button", { name: /Work orders \(1\)/ });
+  await expect(workOrdersTrigger).toHaveAttribute("aria-expanded", "false");
+  await workOrdersTrigger.click();
   await expect(page.getByRole("table", { name: "PKG-BASE-001 work orders" })).toBeVisible();
   await expect(page.getByText("Ready work can be grouped inside the current planning horizon.")).toBeVisible();
 
@@ -281,6 +288,8 @@ test("resolves visible package numbers to stable package detail routes", async (
 test("keeps a rejected blocked package completed until change is explicit", async ({ page }) => {
   await page.goto("/recommendations/60000000-0000-4000-8000-000000002001");
   await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-REVIEW" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Blockers \(1\)/ })).toHaveCount(0);
+  await expect(page.getByRole("alert").filter({ hasText: "Acceptance is blocked" })).toBeVisible();
 
   await openRecommendationDecisionForm(page);
   await page.getByRole("radio", { name: /Reject package/ }).click();
@@ -297,6 +306,37 @@ test("keeps a rejected blocked package completed until change is explicit", asyn
   await expect(page.getByRole("heading", { name: "Change decision" })).toBeVisible();
   await expect(page.getByRole("radio", { name: /Reject package/ })).toBeChecked();
   await expect(page.getByRole("button", { name: /Reject package/ })).toBeVisible();
+});
+
+test("toggles recommendation evidence accordion sections from the keyboard", async ({ page }) => {
+  await page.goto("/recommendations/60000000-0000-4000-8000-000000002000");
+  await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
+
+  const sourceReadinessTrigger = page.getByRole("button", {
+    name: /Source-data readiness/
+  });
+  const workOrdersTrigger = page.getByRole("button", { name: /Work orders \(1\)/ });
+  const workOrdersTable = page.getByRole("table", { name: "PKG-BASE-001 work orders" });
+
+  await expect(sourceReadinessTrigger).toHaveAttribute("aria-expanded", "false");
+  await expect(workOrdersTrigger).toHaveAttribute("aria-expanded", "false");
+  await expect(workOrdersTable).toHaveCount(0);
+
+  await workOrdersTrigger.focus();
+  await page.keyboard.press("Enter");
+  await expect(workOrdersTrigger).toHaveAttribute("aria-expanded", "true");
+  await expect(workOrdersTable).toBeVisible();
+
+  await page.keyboard.press("Space");
+  await expect(workOrdersTrigger).toHaveAttribute("aria-expanded", "false");
+  await expect(workOrdersTable).toHaveCount(0);
+
+  await sourceReadinessTrigger.focus();
+  await page.keyboard.press("Enter");
+  await expect(sourceReadinessTrigger).toHaveAttribute("aria-expanded", "true");
+  await expect(
+    page.getByLabel("PKG-BASE-001 source-data readiness facts")
+  ).toBeVisible();
 });
 
 test("keeps repeated mock decision history free of duplicate React keys", async ({ page }) => {

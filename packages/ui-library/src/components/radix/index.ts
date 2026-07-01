@@ -1,3 +1,5 @@
+export type { RadixAccordionItem, RadixAccordionProps } from "./RadixAccordion";
+export { RadixAccordion } from "./RadixAccordion";
 export type { RadixBadgeProps, RadixBadgeVariant } from "./RadixBadge";
 export { RadixBadge } from "./RadixBadge";
 export type { RadixButtonProps, RadixButtonVariant } from "./RadixButton";

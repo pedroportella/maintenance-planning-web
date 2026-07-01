@@ -39,6 +39,10 @@ test("renders the UI library evidence route with accessible landmarks and state 
   ).toBeVisible();
   await expect(page.getByRole("article", { name: "PKG-PARTS-REPLAN" })).toBeVisible();
   await expect(page.getByRole("article", { name: "PKG-PARTS-BLOCKED" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /Why this package.*Score/ }).first()
+  ).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByRole("button", { name: /Source-data readiness/ }).first()).toBeVisible();
 
   await expect(page.locator(".planner-loading-state[role='status']")).toContainText(
     "Loading planner review data"

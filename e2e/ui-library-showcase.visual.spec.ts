@@ -15,10 +15,10 @@ const routeEvidence = [
     tableName: "Package recommendation queue"
   },
   {
+    disclosureName: /Work orders \(1\)/,
     heading: "PKG-PARTS-REPLAN",
     path: "/recommendations/60000000-0000-4000-8000-000000002200?planningRunId=50000000-0000-4000-8000-000000002200",
-    slug: "recommendation-detail",
-    tableName: "PKG-PARTS-REPLAN work orders"
+    slug: "recommendation-detail"
   },
   {
     heading: "Planning runs",
@@ -78,6 +78,10 @@ test("captures RU8 route rollout visual evidence", async ({ page }, testInfo) =>
 
     if (route.tableName) {
       await expect(page.getByRole("table", { name: route.tableName })).toBeVisible();
+    }
+
+    if (route.disclosureName) {
+      await expect(page.getByRole("button", { name: route.disclosureName })).toBeVisible();
     }
 
     await hideLocalDevChrome(page);

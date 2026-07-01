@@ -23,7 +23,8 @@ export default defineConfig({
     command: `pnpm --dir apps/planner-workbench exec next dev --hostname ${host} --port ${port}`,
     env: {
       MAINTENANCE_PLANNING_WEB_DATA_MODE: "mock",
-      MAINTENANCE_PLANNING_WEB_MOCK_SCENARIO: "parts-delay-replan"
+      MAINTENANCE_PLANNING_WEB_MOCK_SCENARIO: "parts-delay-replan",
+      MP_NEXT_DIST_DIR: ".next/showcase"
     },
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

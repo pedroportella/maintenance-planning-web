@@ -1,13 +1,12 @@
 import {
   PlannerActionLink,
-  PlannerAlert,
   PlannerBadgeGroup,
   PlannerContentSection,
   PlannerDataTable,
   PlannerDecisionSummary,
+  PlannerEvidenceAccordion,
   PlannerMetadataPanel,
   PlannerPlainList,
-  PlannerResponsiveGrid,
   PlannerSummaryList,
   PlannerQuietNote,
   PlannerStatusBadge,
@@ -17,7 +16,6 @@ import {
 import type {
   PlannerDecisionRecord,
   PlannerRecommendation,
-  RecommendationBlockerView,
   WorkOrderBacklogItem
 } from "@maintenance-planning/services";
 import Link from "next/link";
@@ -105,15 +103,126 @@ export function RecommendationDetailPanel({
           ))}
         </PlannerBadgeGroup>
       }
-      description={recommendation.title}
       eyebrow="Package recommendation"
-      title="Why this package"
+      title="Recommendation decision review"
       titleId={headingId}
       variant="surface"
     >
+      <PlannerEvidenceAccordion
+        ariaLabel={`${recommendation.packageNumber} recommendation evidence`}
+        defaultValue={getDefaultEvidenceSections({
+          isChangingDecision,
+          latestDecision,
+          recommendation
+        })}
+        items={buildEvidenceItems(recommendation, latestDecision)}
+        type="multiple"
+      />
 
+      <RecommendationDecisionState
+        isChangingDecision={isChangingDecision}
+        latestDecision={latestDecision}
+        planningRunId={planningRunId}
+        recommendation={recommendation}
+      />
+    </PlannerContentSection>
+  );
+}
+
+function buildEvidenceItems(
+  recommendation: PlannerRecommendation,
+  latestDecision?: PlannerDecisionRecord
+) {
+  return [
+    {
+      badge: (
+        <PlannerStatusBadge tone="info">
+          Score {recommendation.score}
+        </PlannerStatusBadge>
+      ),
+      children: (
+        <RecommendationExplanation recommendation={recommendation} />
+      ),
+      summary: `${formatHours(recommendation.estimatedHours)} across ${recommendation.workOrders.length} work orders.`,
+      title: "Why this package",
+      value: "recommendation-explanation"
+    },
+    {
+      badge: (
+        <PlannerStatusBadge tone={toneForReadiness(recommendation.sourceDataReadiness.status)}>
+          {recommendation.sourceDataReadiness.status}
+        </PlannerStatusBadge>
+      ),
+      children: (
+        <RecommendationReadiness recommendation={recommendation} />
+      ),
+      summary: recommendation.sourceDataReadiness.summary,
+      title: "Source-data readiness",
+      value: "source-readiness"
+    },
+    {
+      children: (
+        <PlannerDataTable
+          caption={`${recommendation.packageNumber} work orders`}
+          columns={workOrderColumns}
+          density="compact"
+          description={`Use the work-order row header, readiness, asset context, hours and due-date columns to review the work included in ${recommendation.packageNumber}.`}
+          getRowKey={(item) => item.id}
+          rows={recommendation.workOrders}
+        />
+      ),
+      summary: `${recommendation.workOrders.length} rows, ${formatHours(recommendation.estimatedHours)} total.`,
+      title: `Work orders (${recommendation.workOrders.length})`,
+      value: "work-orders"
+    },
+    {
+      badge: latestDecision ? (
+        <PlannerStatusBadge tone={toneForDecision(latestDecision.decision)}>
+          {latestDecision.decision}
+        </PlannerStatusBadge>
+      ) : undefined,
+      children: (
+        <RecommendationDecisionHistory decisions={recommendation.decisions} />
+      ),
+      summary: latestDecision
+        ? `Latest ${latestDecision.decision} for ${latestDecision.reasonCode}.`
+        : "No decision recorded yet.",
+      title: `Decision history (${recommendation.decisions.length})`,
+      value: "decision-history"
+    }
+  ];
+}
+
+function getDefaultEvidenceSections({
+  isChangingDecision,
+  latestDecision,
+  recommendation
+}: {
+  isChangingDecision: boolean;
+  latestDecision?: PlannerDecisionRecord;
+  recommendation: PlannerRecommendation;
+}) {
+  if (latestDecision && !isChangingDecision) {
+    return [];
+  }
+
+  if (recommendation.blockers.length > 0) {
+    return ["source-readiness"];
+  }
+
+  return ["recommendation-explanation"];
+}
+
+function RecommendationExplanation({
+  recommendation
+}: {
+  recommendation: PlannerRecommendation;
+}) {
+  return (
+    <>
+      <p>{recommendation.explanation.text}</p>
       <PlannerSummaryList
-        ariaLabel={`${recommendation.packageNumber} summary`}
+        ariaLabel={`${recommendation.packageNumber} explanation facts`}
         items={[
           {
             id: "score",
@@ -131,101 +240,45 @@ export function RecommendationDetailPanel({
             id: "estimated-work",
             label: "Estimated work",
             value: formatHours(recommendation.estimatedHours)
-          },
-          {
-            id: "blockers",
-            label: "Blockers",
-            tone: recommendation.blockers.length > 0 ? "warning" : "success",
-            value: recommendation.blockers.length
-          },
-          {
-            id: "work-orders",
-            label: "Work orders",
-            value: recommendation.workOrders.length
           }
         ]}
         variant="compact"
       />
-
-      <PlannerResponsiveGrid balance="secondary">
-        <PlannerContentSection
-          title="Recommendation explanation"
-          titleId={`${headingId}-explanation`}
-        >
-          <p>{recommendation.explanation.text}</p>
-        </PlannerContentSection>
-
-        <PlannerMetadataPanel
-          description={recommendation.sourceDataReadiness.summary}
-          density="compact"
-          items={[
-            {
-              id: "ready",
-              label: "Ready",
-              tone: "success",
-              value: recommendation.sourceDataReadiness.readyCount
-            },
-            {
-              id: "review",
-              label: "Review",
-              tone: "warning",
-              value: recommendation.sourceDataReadiness.needsReviewCount
-            },
-            {
-              id: "blocked",
-              label: "Blocked",
-              tone: "critical",
-              value: recommendation.sourceDataReadiness.blockedCount
-            }
-          ]}
-          summaryAriaLabel={`${recommendation.packageNumber} source-data readiness facts`}
-          title="Source-data readiness"
-          titleId={`${headingId}-source-readiness`}
-        />
-      </PlannerResponsiveGrid>
-
-      <RecommendationBlockers blockers={recommendation.blockers} />
-
-      <PlannerDataTable
-        caption={`${recommendation.packageNumber} work orders`}
-        columns={workOrderColumns}
-        density="compact"
-        description={`Use the work-order row header, readiness, asset context, hours and due-date columns to review the work included in ${recommendation.packageNumber}.`}
-        getRowKey={(item) => item.id}
-        rows={recommendation.workOrders}
-      />
-
-      <RecommendationDecisions decisions={recommendation.decisions} />
-
-      <RecommendationDecisionState
-        isChangingDecision={isChangingDecision}
-        latestDecision={latestDecision}
-        planningRunId={planningRunId}
-        recommendation={recommendation}
-      />
-    </PlannerContentSection>
+    </>
   );
 }
 
-function RecommendationBlockers({ blockers }: { blockers: readonly RecommendationBlockerView[] }) {
-  if (blockers.length === 0) {
-    return (
-      <PlannerQuietNote title="No package blockers">
-        Service-owned constraints do not show a blocker for this package group.
-      </PlannerQuietNote>
-    );
-  }
-
+function RecommendationReadiness({
+  recommendation
+}: {
+  recommendation: PlannerRecommendation;
+}) {
   return (
-    <PlannerAlert title="Package blockers" tone="warning">
-      <PlannerPlainList>
-        {blockers.map((blocker, index) => (
-          <li key={`${blocker.code}-${blocker.workOrderNumbers.join("-")}-${index}`}>
-            <strong>{blocker.code}</strong>: {blocker.summary}
-          </li>
-        ))}
-      </PlannerPlainList>
-    </PlannerAlert>
+    <PlannerMetadataPanel
+      description={recommendation.sourceDataReadiness.summary}
+      density="compact"
+      items={[
+        {
+          id: "ready",
+          label: "Ready",
+          tone: "success",
+          value: recommendation.sourceDataReadiness.readyCount
+        },
+        {
+          id: "review",
+          label: "Review",
+          tone: "warning",
+          value: recommendation.sourceDataReadiness.needsReviewCount
+        },
+        {
+          id: "blocked",
+          label: "Blocked",
+          tone: "critical",
+          value: recommendation.sourceDataReadiness.blockedCount
+        }
+      ]}
+      summaryAriaLabel={`${recommendation.packageNumber} source-data readiness facts`}
+    />
   );
 }
 
@@ -304,7 +357,7 @@ function RecommendationDecisionState({
   );
 }
 
-function RecommendationDecisions({
+function RecommendationDecisionHistory({
   decisions
 }: {
   decisions: readonly PlannerDecisionRecord[];
@@ -318,21 +371,16 @@ function RecommendationDecisions({
   }
 
   return (
-    <PlannerContentSection
-      title="Decision history"
-      titleId="planner-decision-history"
-    >
-      <PlannerPlainList>
-        {decisions.map((decision, index) => (
-          <li key={decisionHistoryItemKey(decision, index)}>
-            <PlannerStatusBadge tone={toneForDecision(decision.decision)}>
-              {decision.decision}
-            </PlannerStatusBadge>
-            <span>{decision.reasonCode}</span>
-            <small>{formatUtc(decision.decidedAtUtc)}</small>
-          </li>
-        ))}
-      </PlannerPlainList>
-    </PlannerContentSection>
+    <PlannerPlainList>
+      {decisions.map((decision, index) => (
+        <li key={decisionHistoryItemKey(decision, index)}>
+          <PlannerStatusBadge tone={toneForDecision(decision.decision)}>
+            {decision.decision}
+          </PlannerStatusBadge>
+          <span>{decision.reasonCode}</span>
+          <small>{formatUtc(decision.decidedAtUtc)}</small>
+        </li>
+      ))}
+    </PlannerPlainList>
   );
 }

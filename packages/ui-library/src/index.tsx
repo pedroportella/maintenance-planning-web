@@ -99,6 +99,8 @@ export {
   PlannerWorkflowLayout
 } from "./components/layout";
 export type {
+  RadixAccordionItem,
+  RadixAccordionProps,
   RadixBadgeProps,
   RadixBadgeVariant,
   RadixButtonProps,
@@ -132,6 +134,7 @@ export type {
   RadixTextTone
 } from "./components/radix";
 export {
+  RadixAccordion,
   RadixBadge,
   RadixButton,
   RadixCallout,
@@ -170,10 +173,13 @@ export type {
   PlannerDecisionPanelBlocker,
   PlannerDecisionPanelProps,
   PlannerDecisionSummaryProps,
+  PlannerEvidenceAccordionItem,
+  PlannerEvidenceAccordionProps,
   PlannerMetadataPanelProps
 } from "./components/workflow";
 export {
   PlannerDecisionPanel,
   PlannerDecisionSummary,
+  PlannerEvidenceAccordion,
   PlannerMetadataPanel
 } from "./components/workflow";

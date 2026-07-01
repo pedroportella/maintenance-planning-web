@@ -1,0 +1,35 @@
+.planner-evidence-accordion {
+  gap: var(--space-3);
+}
+
+.planner-evidence-accordion .radix-accordion-item {
+  background: var(--gray-a2);
+}
+
+.planner-evidence-accordion .radix-accordion-trigger {
+  min-height: 52px;
+}
+
+.planner-evidence-accordion-title {
+  color: var(--gray-12);
+  font-size: var(--mp-font-size-md);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.planner-evidence-accordion-summary {
+  display: block;
+  color: var(--gray-11);
+  font-size: var(--mp-font-size-sm);
+  line-height: 1.35;
+}
+
+.planner-evidence-accordion-body {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.planner-evidence-accordion-body > * {
+  min-width: 0;
+}

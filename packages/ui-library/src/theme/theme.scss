@@ -32,6 +32,7 @@
 @use "../components/layout/PlannerResponsiveGrid/PlannerResponsiveGrid";
 @use "../components/layout/PlannerSideNav/PlannerSideNav";
 @use "../components/layout/PlannerWorkflowLayout/PlannerWorkflowLayout";
+@use "../components/radix/RadixAccordion/RadixAccordion";
 @use "../components/radix/RadixBadge/RadixBadge";
 @use "../components/radix/RadixButton/RadixButton";
 @use "../components/radix/RadixCallout/RadixCallout";
@@ -53,6 +54,7 @@
 @use "../components/radix/RadixTextInput/RadixTextInput";
 @use "../components/workflow/PlannerDecisionPanel/PlannerDecisionPanel";
 @use "../components/workflow/PlannerDecisionSummary/PlannerDecisionSummary";
+@use "../components/workflow/PlannerEvidenceAccordion/PlannerEvidenceAccordion";
 @use "../components/workflow/PlannerMetadataPanel/PlannerMetadataPanel";
 
 @import "@radix-ui/themes/styles.css";
