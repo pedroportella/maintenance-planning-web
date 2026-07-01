@@ -31,6 +31,17 @@ test("records automated accessibility evidence for mock planner routes", async (
     await expect(page.getByRole("heading", { level: 1, name: fixture.heading })).toBeVisible();
 
     if (fixture.table) {
+      if (fixture.disclosure) {
+        const disclosureTrigger = page.getByRole("button", { name: fixture.disclosure });
+        await expect(disclosureTrigger).toBeVisible();
+
+        if ((await disclosureTrigger.getAttribute("aria-expanded")) !== "true") {
+          await disclosureTrigger.click();
+        }
+
+        await expect(disclosureTrigger).toHaveAttribute("aria-expanded", "true");
+      }
+
       const tableRegion = page.getByRole("region", { name: fixture.table });
       const table = page.getByRole("table", { name: fixture.table });
 

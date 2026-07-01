@@ -1,4 +1,5 @@
 export type PlannerRouteAccessibilityFixture = {
+  readonly disclosure?: RegExp | string;
   readonly form?: string;
   readonly heading: string;
   readonly path: string;
@@ -6,6 +7,7 @@ export type PlannerRouteAccessibilityFixture = {
 };
 
 export const recommendationDecisionRoute = {
+  disclosure: /Work orders \(1\)/,
   form: "Record planner decision for PKG-BASE-001",
   heading: "PKG-BASE-001",
   path: "/recommendations/60000000-0000-4000-8000-000000002000",

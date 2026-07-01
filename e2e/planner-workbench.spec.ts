@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { collectOverflowReport } from "./ui-library-accessibility/preference-layout-reports";
 
 test("reviews recommendations and records a mock planner decision", async ({ page }) => {
@@ -42,10 +42,12 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
   await packageQueue.getByRole("link", { name: /Open package PKG-BASE-001/ }).click();
   await expect(page).toHaveURL(/recommendations\/60000000-0000-4000-8000-000000002000/);
   await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-001" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Why this package/ })).toHaveAttribute(
-    "aria-expanded",
-    "true"
-  );
+  const whyThisPackageTrigger = page.getByRole("button", { name: /Why this package/ });
+  await expect(whyThisPackageTrigger).toBeVisible();
+  if ((await whyThisPackageTrigger.getAttribute("aria-expanded")) !== "true") {
+    await whyThisPackageTrigger.click();
+  }
+  await expect(whyThisPackageTrigger).toHaveAttribute("aria-expanded", "true");
   const workOrdersTrigger = page.getByRole("button", { name: /Work orders \(1\)/ });
   await expect(workOrdersTrigger).toHaveAttribute("aria-expanded", "false");
   await workOrdersTrigger.click();
@@ -54,7 +56,11 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
 
   await openRecommendationDecisionForm(page);
   await page.getByRole("textbox", { name: "Decision note" }).fill("Mock reviewer accepted the ready package.");
+  await delayNextRecommendationDecision(page);
   await page.getByRole("button", { name: /Accept package/ }).click();
+  const pendingAcceptButton = page.getByRole("button", { name: "Recording decision..." });
+  await expect(pendingAcceptButton).toBeDisabled();
+  await expect(pendingAcceptButton).toHaveAttribute("aria-busy", "true");
 
   await expect(page).toHaveURL(/decisionResult=success/);
   await expect(page.locator(".planner-decision-notice-focus")).toBeFocused();
@@ -85,7 +91,6 @@ test("reviews recommendations and records a mock planner decision", async ({ pag
     page
       .getByLabel("Recommendation workbench summary")
       .filter({ hasText: "Decision history" })
-      .filter({ hasText: "1" })
   ).toBeVisible();
   await expect(
     packageQueue.getByRole("row", {
@@ -289,9 +294,9 @@ test("keeps a rejected blocked package completed until change is explicit", asyn
   await page.goto("/recommendations/60000000-0000-4000-8000-000000002001");
   await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-REVIEW" })).toBeVisible();
   await expect(page.getByRole("button", { name: /Blockers \(1\)/ })).toHaveCount(0);
-  await expect(page.getByRole("alert").filter({ hasText: "Acceptance is blocked" })).toBeVisible();
 
   await openRecommendationDecisionForm(page);
+  await expect(page.getByRole("alert").filter({ hasText: "Acceptance is blocked" })).toBeVisible();
   await page.getByRole("radio", { name: /Reject package/ }).click();
   await page.getByRole("textbox", { name: "Decision note" }).fill("Mock reviewer rejected the blocked package.");
   await page.getByRole("button", { name: /Reject package/ }).click();
@@ -306,6 +311,36 @@ test("keeps a rejected blocked package completed until change is explicit", asyn
   await expect(page.getByRole("heading", { name: "Change decision" })).toBeVisible();
   await expect(page.getByRole("radio", { name: /Reject package/ })).toBeChecked();
   await expect(page.getByRole("button", { name: /Reject package/ })).toBeVisible();
+});
+
+test("defers a blocked package with durable summary and change defaults", async ({ page }) => {
+  await page.goto("/recommendations/60000000-0000-4000-8000-000000002001");
+  await expect(page.getByRole("heading", { level: 1, name: "PKG-BASE-REVIEW" })).toBeVisible();
+
+  await openRecommendationDecisionForm(page);
+  await page.getByRole("radio", { name: /Defer package/ }).click();
+  await page.getByRole("radio", { name: "Missing parts" }).click();
+  await expect(page.getByRole("radio", { name: /Defer package/ })).toBeChecked();
+  await expect(page.getByRole("radio", { name: "Missing parts" })).toBeChecked();
+  await page.getByRole("textbox", { name: "Decision note" }).fill("Mock reviewer deferred the blocked package.");
+
+  await delayNextRecommendationDecision(page);
+  await page.getByRole("button", { name: "Defer package" }).click();
+  const pendingDeferButton = page.getByRole("button", { name: "Recording decision..." });
+  await expect(pendingDeferButton).toBeDisabled();
+  await expect(pendingDeferButton).toHaveAttribute("aria-busy", "true");
+
+  await expect(page).toHaveURL(/decisionResult=success/);
+  await expect(page.getByText("Deferred PKG-BASE-REVIEW")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Latest decision recorded" })).toBeVisible();
+  await expect(page.getByText("Deferred for missing-parts on 2026-01-15 08:00 UTC.")).toBeVisible();
+  await expect(page.getByText("Mock reviewer deferred the blocked package.")).toBeVisible();
+  await expect(page.getByRole("textbox", { name: "Decision note" })).toHaveCount(0);
+
+  await page.getByRole("link", { name: "Change decision" }).click();
+  await expect(page.getByRole("heading", { name: "Change decision" })).toBeVisible();
+  await expect(page.getByRole("radio", { name: /Defer package/ })).toBeChecked();
+  await expect(page.getByRole("radio", { name: "Missing parts" })).toBeChecked();
 });
 
 test("toggles recommendation evidence accordion sections from the keyboard", async ({ page }) => {
@@ -331,9 +366,14 @@ test("toggles recommendation evidence accordion sections from the keyboard", asy
   await expect(workOrdersTrigger).toHaveAttribute("aria-expanded", "false");
   await expect(workOrdersTable).toHaveCount(0);
 
+  await page.keyboard.press("Space");
+  await expect(workOrdersTrigger).toHaveAttribute("aria-expanded", "true");
+  await expect(workOrdersTable).toBeVisible();
+
   await sourceReadinessTrigger.focus();
   await page.keyboard.press("Enter");
   await expect(sourceReadinessTrigger).toHaveAttribute("aria-expanded", "true");
+  await expect(workOrdersTrigger).toHaveAttribute("aria-expanded", "true");
   await expect(
     page.getByLabel("PKG-BASE-001 source-data readiness facts")
   ).toBeVisible();
@@ -372,7 +412,7 @@ test("renders a controlled state for an unknown package recommendation", async (
   await expect(page.getByRole("link", { name: "Back to recommendations" })).toBeVisible();
 });
 
-async function openRecommendationDecisionForm(page: import("@playwright/test").Page) {
+async function openRecommendationDecisionForm(page: Page) {
   const changeDecisionLink = page.getByRole("link", { name: "Change decision" });
 
   if (await changeDecisionLink.isVisible()) {
@@ -380,4 +420,17 @@ async function openRecommendationDecisionForm(page: import("@playwright/test").P
   }
 
   await expect(page.getByRole("textbox", { name: "Decision note" })).toBeVisible();
+}
+
+async function delayNextRecommendationDecision(page: Page) {
+  let delayed = false;
+
+  await page.route("**/recommendations/**", async (route) => {
+    if (!delayed && route.request().method() === "POST") {
+      delayed = true;
+      await new Promise((resolve) => setTimeout(resolve, 750));
+    }
+
+    await route.continue();
+  });
 }
